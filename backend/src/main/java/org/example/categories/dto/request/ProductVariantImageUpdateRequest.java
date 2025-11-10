@@ -1,0 +1,14 @@
+package org.example.categories.dto.request;
+
+public record ProductVariantImageUpdateRequest(
+        String imageUrl,
+        String  altText,
+        boolean isMain,
+        Integer width,
+        Integer height,
+        String mimeType,
+        Long size_bytes,
+        String checksum
+
+) {
+}
