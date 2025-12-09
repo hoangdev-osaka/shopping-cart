@@ -1,0 +1,128 @@
+/* ===== BASE BUTTON ===== */
+.btn {
+    padding: var(--space-md) var(--space-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* cho icon + text có khoảng cách */
+    text-align: center;
+}
+
+/* Disabled */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== VARIANTS ===== */
+
+/* Primary */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+}
+
+/* Secondary */
+.btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-text);
+}
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-secondary-dark);
+}
+
+/* Outline */
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+/* Danger */
+.btn-danger {
+    background-color: var(--color-danger);
+    color: #fff;
+}
+.btn-danger:hover:not(:disabled) {
+    background-color: var(--color-danger-dark);
+}
+
+/* ===== SIZE ===== */
+
+.btn-small {
+    padding: calc(var(--space-xs) + 2px) var(--space-sm);
+    font-size: var(--font-size-xs);
+}
+
+.btn-large {
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--font-size-md);
+}
+
+/* Full width */
+.btn-full {
+    width: 100%;
+}
+
+/* ===== ICON BUTTONS ===== */
+
+.btn-icon-left i,
+.btn-icon-left svg {
+    margin-right: 4px;
+}
+
+.btn-icon-right i,
+.btn-icon-right svg {
+    margin-left: 4px;
+}
+
+/* ===== LOADING STATE ===== */
+
+.btn-loading {
+    position: relative;
+    pointer-events: none; /* chặn click */
+}
+
+/* làm chữ mờ nhẹ khi loading (optional) */
+.btn-loading span {
+    opacity: 0.7;
+}
+
+/* spinner */
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-top-color: rgba(255, 255, 255, 1);
+    animation: btn-spin 0.7s linear infinite;
+}
+
+/* nếu là outline/secondary thì chỉnh màu spinner tối hơn */
+.btn-outline.btn-loading::after,
+.btn-secondary.btn-loading::after {
+    border-color: rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

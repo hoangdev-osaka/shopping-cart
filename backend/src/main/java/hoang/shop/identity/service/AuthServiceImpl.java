@@ -144,4 +144,5 @@ public class AuthServiceImpl implements AuthService {
         passwordResetTokenRepository.save(resetToken);
         userSessionRepository.revokeAllActiveSessionsByUserId(user.getId(), now);
     }
+
 }

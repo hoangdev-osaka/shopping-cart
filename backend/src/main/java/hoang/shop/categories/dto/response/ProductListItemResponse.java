@@ -13,8 +13,8 @@ public record ProductListItemResponse(
         String tagName,
         String tagSlug,
 
-        BigDecimal minPrice,
-        BigDecimal maxPrice,
+        BigDecimal regularPrice,
+        BigDecimal salePrice,
 
 
         Double averageRating,

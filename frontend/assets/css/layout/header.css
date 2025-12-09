@@ -1,0 +1,159 @@
+/* ===== HEADER CHUNG ===== */
+.top-bar {
+  height: 40px;
+  width: 100%;
+  background: #111; /* đen sang */
+  color: #fff;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.top-bar p {
+  margin: 0;
+}
+.main-header {
+  transition: top 0.25s ease;
+}
+.header {
+  position: sticky;
+  top: 0;
+  background-color: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border-light);
+  min-height: 56px; /* độ dày thanh header, chỉnh 50–64 tùy mắt */
+  padding: 0;
+}
+
+.header-inner {
+  min-height: 56px; /* chiều cao tối thiểu, muốn mỏng hơn thì giảm số này */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-md);
+}
+
+/* ===== LOGO ===== */
+#logo {
+  max-height: 70px;
+  display: block;
+}
+
+.header-logo a {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+}
+
+/* ===== ACTIONS (login, đăng ký) ===== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-left: auto;
+}
+
+/* ===== SEARCH ===== */
+.header-search {
+  max-width: 320px;
+  flex: 1;
+  margin: 0 var(--space-md);
+  display: flex;
+  align-items: center;
+}
+
+/* Cả input và button cùng chiều cao */
+.header-search input,
+.header-search button {
+  height: 36px; /* chỉnh 36–40px tùy mắt bạn */
+  font-size: var(--font-size-sm);
+  box-sizing: border-box;
+}
+
+/* Input bên trái */
+.header-search input {
+  flex: 1;
+  padding: 0 10px; /* chỉ padding ngang */
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border: 1px solid var(--color-border-light);
+  border-right: none;
+   border-color: none;
+}
+
+/* Button bên phải */
+.header-search button {
+  padding: 0 12px; /* chỉ padding ngang */
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: none;
+  color: rgb(0, 0, 0);
+  border-color: none;
+  cursor: pointer;
+}
+.cart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+  display: flex;
+  align-items: center;
+}
+
+.cart-btn svg {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  color: var(--color-primary-dark);
+}
+
+.cart-btn:hover svg {
+  transform: scale(1.3);
+  opacity: 0.9;
+
+}
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+  display: flex;
+  align-items: center;
+  color: var(--color-primary-dark);
+}
+
+.hamburger-btn svg {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.hamburger-btn:hover svg {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* ===== (TẠM THỜI) BỎ HẾT NAV VÌ CHƯA DÙNG ===== */
+/* .header-nav, .header-nav-list, .header-nav-link ... có thể xoá hoặc giữ nguyên, nhưng hiện HTML của bạn không dùng */
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-wrap: wrap;
+    min-height: auto;
+    padding: var(--space-sm) 0;
+    gap: var(--space-sm);
+  }
+
+  .header-search {
+    order: 3;
+    max-width: 100%;
+    margin: 0;
+    width: 100%;
+  }
+
+  .header-actions {
+    order: 2;
+  }
+
+  .header-logo {
+    order: 1;
+  }
+}

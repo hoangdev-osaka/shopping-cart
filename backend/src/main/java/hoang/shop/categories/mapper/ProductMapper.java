@@ -7,6 +7,7 @@ import hoang.shop.categories.model.*;
 import hoang.shop.config.MapStructConfig;
 import org.mapstruct.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,8 @@ public interface ProductMapper {
 
     @Mapping(target = "brandName", source = "product.brand.name")
     @Mapping(target = "brandSlug", source = "product.brand.slug")
-    @Mapping(target = "minPrice", source = "product.minPrice")
-    @Mapping(target = "maxPrice", source = "product.maxPrice")
+    @Mapping(target = "regularPrice", expression = "java(toDefaultRegularPrice(product))")
+    @Mapping(target = "salePrice", expression = "java(toDefaultSalePrice(product))")
     @Mapping(target = "averageRating",source = "stats.averageRating")
     @Mapping(target = "reviewCount",source = "stats.reviewCount")
     @Mapping(target = "imageUrl", expression = "java(toDefaultImageUrl(product))")
@@ -94,6 +95,19 @@ public interface ProductMapper {
                 .findFirst()
                 .orElse(images.get(0).getImageUrl());
     }
+    default BigDecimal toDefaultRegularPrice(Product product){
+        List<ProductColor> colors = product.getColors();
+        if (colors == null || colors.isEmpty()) return null;
+        ProductColor color = colors.stream().filter(ProductColor::isMain).toList().getFirst();
+        return  color.getVariants().getFirst().getRegularPrice();
+    }
+    default BigDecimal toDefaultSalePrice(Product product){
+        List<ProductColor> colors = product.getColors();
+        if (colors == null || colors.isEmpty()) return null;
+        ProductColor color = colors.stream().filter(ProductColor::isMain).toList().getFirst();
+        return  color.getVariants().getFirst().getSalePrice();
+    }
+
 
 
 

@@ -1,0 +1,70 @@
+:root {
+  /* ===== MÀU CHÍNH (primary /ˈpraɪˌmɛri/) ===== */
+  --color-primary: #000000;
+  --color-primary-dark: #113039;
+  --color-primary-light: #eae9e9;
+
+  /* ===== MÀU PHỤ (secondary /ˈsɛkənˌdɛri/) ===== */
+  --color-secondary: #fefefe;
+  --color-secondary-dark: #000000;
+  --color-secondary-text: #ffffff;
+
+  /* ===== MÀU TRẠNG THÁI (state /steɪt/) ===== */
+  --color-success: #2e7d32;
+  --color-success-light: #e6f4ea;
+
+  --color-danger: #e53935;
+  --color-danger-dark: #271919;
+  --color-danger-light: #fdecea;
+
+  --color-warning: #f9a825;
+  --color-warning-light: #fff8e1;
+
+  /* ===== TEXT ===== */
+  --color-text-main: #222222;
+  --color-text-muted: #000000;
+  --color-text-light: #ffffff;
+
+  /* ===== BACKGROUND ===== */
+  --color-bg-header: #ffffff;
+  --color-bg-body: #ffffff;
+  --color-bg-form: #f3f0f0;
+  --color-bg-card: #ffffff;
+  --color-bg-footer: #f1f1f1;
+  /* ===== SHADOW ===== */
+  --shadow-light: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 6px 20px rgba(0, 0, 0, 0.16);
+
+  /* ===== BORDER ===== */
+  --color-border-light: #fdfdfd; /* viền rất nhẹ – input, card mờ */
+  --color-border-medium: #cccccc; /* viền trung bình – khung form */
+  --color-border-dark: #000000; /* viền đậm hơn – hover, active */
+  --color-border-focus: #4a7aff; /* viền khi focus input */
+  --color-border-danger: #ff4d4f;
+
+  /* ===== RADIUS (bo góc /ˈreɪdiəs/) ===== */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 999px;
+
+  /* ===== SPACING (khoảng cách /ˈspeɪsɪŋ/) ===== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* ===== FONT SIZE (cỡ chữ /fɔnt saɪz/) ===== */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+
+  /* ===== Z-INDEX (/ˈziːˌɪndɛks/) ===== */
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-modal: 1000;
+}
