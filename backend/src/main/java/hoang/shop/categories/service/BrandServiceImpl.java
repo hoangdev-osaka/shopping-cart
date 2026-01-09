@@ -9,7 +9,7 @@ import hoang.shop.categories.dto.response.BrandResponse;
 import hoang.shop.categories.mapper.BrandMapper;
 import hoang.shop.categories.model.Brand;
 import hoang.shop.categories.repository.BrandRepository;
-import hoang.shop.common.enums.BrandStatus;
+import hoang.shop.common.enums.status.BrandStatus;
 import hoang.shop.common.exception.DuplicateResourceException;
 import hoang.shop.common.exception.NotFoundException;
 import org.springframework.data.domain.Pageable;

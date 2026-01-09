@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import hoang.shop.cart.model.CartItem;
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

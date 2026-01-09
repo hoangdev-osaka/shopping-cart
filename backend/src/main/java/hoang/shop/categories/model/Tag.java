@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.TagStatus;
+import hoang.shop.common.enums.status.TagStatus;
 
 import java.util.ArrayList;
 import java.util.List;

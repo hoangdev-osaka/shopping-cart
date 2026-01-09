@@ -2,11 +2,8 @@ package hoang.shop.categories.spec;
 
 import hoang.shop.categories.dto.request.ProductVariantSearchCondition;
 import hoang.shop.categories.model.ProductVariant;
-import hoang.shop.common.enums.ProductVariantStatus;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.math.BigDecimal;
 
 public class ProductVariantSpec {
     public static Specification<ProductVariant> build( ProductVariantSearchCondition condition){

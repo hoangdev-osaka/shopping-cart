@@ -4,10 +4,13 @@ import hoang.shop.common.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.OrderStatus;
-import hoang.shop.common.enums.PaymentStatus;
+import hoang.shop.common.enums.status.OrderStatus;
+import hoang.shop.common.enums.status.PaymentStatus;
 import hoang.shop.identity.model.User;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -19,6 +22,8 @@ import java.util.List;
 @Setter @Getter
 @NoArgsConstructor @AllArgsConstructor
 @SuperBuilder
+@EntityListeners(AuditingEntityListener.class)
+
 public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
@@ -30,7 +35,7 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_number")
+    @Column(name = "order_number",unique = true)
     private String orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,15 +59,15 @@ public class Order extends BaseEntity {
 
     @Column(name = "order_status")
     @Builder.Default
-    private OrderStatus orderStatus = OrderStatus.PENDING;
+    private OrderStatus orderStatus = OrderStatus.CREATED;
 
     @Column(name = "payment_status")
     @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
-    @Column(name = "payment_method")
-    @Builder.Default
-    private PaymentMethod paymentMethod = PaymentMethod.CASH;
+    @Column(name = "payment_method",nullable = false)
+    private PaymentMethod paymentMethod;
+
 
     @Column(nullable = false)
     private String name;
@@ -77,10 +82,11 @@ public class Order extends BaseEntity {
     @Column(name = "full_address",nullable = false)
     private String fullAddress;
 
-    @Column(name = "placed_ad")
+    @Column(name = "placed_at")
+    @CreatedDate
     private Instant placedAt;
 
-    @Column(name = "paid_ad")
+    @Column(name = "paid_at")
     private Instant paidAt;
 
     @Column(name = "shipped_at")

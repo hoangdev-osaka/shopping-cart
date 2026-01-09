@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.ProductStatus;
+import hoang.shop.common.enums.status.ProductStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,11 +34,14 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<ProductReview> reviews = new ArrayList<>();
 
+    @OneToOne(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private ProductReviewStats stats ;
+
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductTag> tags = new ArrayList<>();
-
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductColor> colors = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id",foreignKey = @ForeignKey(name = "fk_products_brand"))

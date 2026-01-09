@@ -1,6 +1,7 @@
 package hoang.shop.identity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hoang.shop.common.enums.status.UserStatus;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Index;
@@ -88,7 +89,9 @@ public class User extends BaseEntity {
 
     @Column(name = "last_login")
     private Instant lastLogin;
+
     @Column(nullable = false)
-    private boolean deleted = false;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status = UserStatus.ACTIVE;
 
 }

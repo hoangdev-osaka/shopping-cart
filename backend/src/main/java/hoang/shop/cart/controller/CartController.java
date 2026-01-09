@@ -1,7 +1,9 @@
 package hoang.shop.cart.controller;
 
 import hoang.shop.cart.dto.request.CheckoutRequest;
+import hoang.shop.cart.dto.response.CartSummary;
 import hoang.shop.identity.service.CurrentUserService;
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.cart.dto.request.CartItemCreateRequest;
@@ -27,6 +29,11 @@ public class CartController {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(cartService.getMyCart(userId));
     }
+    @GetMapping("/summary")
+    public ResponseEntity<CartSummary> getQuantity(){
+        Long userId = currentUserService.getCurrentUserId();
+        return ResponseEntity.ok(cartService.getQuantity(userId));
+    }
 
     @PostMapping("/items")
     public ResponseEntity<CartResponse> addItem(@RequestBody CartItemCreateRequest request) {
@@ -38,6 +45,7 @@ public class CartController {
     public ResponseEntity<CartResponse> updateItem(@PathVariable Long itemId,
                                                    @RequestBody CartItemUpdateRequest request) {
         Long userId = currentUserService.getCurrentUserId();
+
         return ResponseEntity.ok(cartService.updateItem(userId, itemId, request));
     }
 
@@ -56,7 +64,7 @@ public class CartController {
 //    }
 
     @PostMapping("/checkout")
-    public ResponseEntity<OrderResponse> checkout(@RequestBody CheckoutRequest request) {
+    public ResponseEntity<OrderResponse> checkout(@RequestBody @Valid CheckoutRequest request) {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(cartService.checkout(userId,request));
     }

@@ -8,7 +8,7 @@ import hoang.shop.categories.model.Product;
 import hoang.shop.categories.model.ProductReview;
 import hoang.shop.categories.repository.ProductRepository;
 import hoang.shop.categories.repository.ProductReviewRepository;
-import hoang.shop.common.enums.ProductStatus;
+import hoang.shop.common.enums.status.ProductStatus;
 import hoang.shop.common.enums.status.ProductReviewStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;

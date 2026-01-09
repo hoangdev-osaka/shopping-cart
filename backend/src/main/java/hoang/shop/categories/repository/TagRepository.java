@@ -1,7 +1,7 @@
 package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.Tag;
-import hoang.shop.common.enums.TagStatus;
+import hoang.shop.common.enums.status.TagStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

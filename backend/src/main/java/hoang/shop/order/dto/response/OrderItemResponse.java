@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public record OrderItemResponse (
         Long id,
         Long productVariantId,
+        String productName,
         String sizeName,
         String colorName,
         String colorHex,

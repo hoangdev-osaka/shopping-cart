@@ -10,7 +10,7 @@ import org.mapstruct.*;
 public interface UserMapper {
     User toEntity(RegisterRequest dto);
     @BeanMapping(nullValuePropertyMappingStrategy  = NullValuePropertyMappingStrategy.IGNORE)
-    void updateEntityFromDto(UserUpdateRequest dto , @MappingTarget User entity);
+    void merge(UserUpdateRequest dto , @MappingTarget User entity);
 
     UserResponse toResponse(User entity);
 

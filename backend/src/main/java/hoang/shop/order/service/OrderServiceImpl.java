@@ -5,7 +5,8 @@ import hoang.shop.cart.model.Cart;
 import hoang.shop.cart.model.CartItem;
 import hoang.shop.cart.repository.CartItemRepository;
 import hoang.shop.cart.repository.CartRepository;
-import hoang.shop.common.enums.CartStatus;
+import hoang.shop.common.enums.status.CartStatus;
+import hoang.shop.common.enums.status.AddressStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;
 import hoang.shop.identity.model.Address;
@@ -17,7 +18,7 @@ import hoang.shop.order.model.OrderItem;
 import hoang.shop.order.model.OrderStatusHistory;
 import hoang.shop.order.spec.OrderSpec;
 import lombok.RequiredArgsConstructor;
-import hoang.shop.common.enums.OrderStatus;
+import hoang.shop.common.enums.status.OrderStatus;
 import hoang.shop.order.dto.request.OrderSearchCondition;
 import hoang.shop.order.dto.request.OrderUpdateRequest;
 import hoang.shop.order.dto.response.OrderItemResponse;
@@ -38,13 +39,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderStatusHistoryRepository historyRepository;
@@ -59,7 +64,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public Page<OrderResponse> findOrders(OrderSearchCondition condition, Pageable pageable) {
         Specification<Order> spec = OrderSpec.build(condition);
-        Page<Order> page =orderRepository.findAll(spec,pageable);
+        Page<Order> page = orderRepository.findAll(spec, pageable);
         return page.map(orderMapper::toResponse);
     }
 
@@ -75,7 +80,7 @@ public class OrderServiceImpl implements OrderService{
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("error.order.id.not-found"));
         OrderStatus oldStatus = order.getOrderStatus();
-        if (order.getOrderStatus() != OrderStatus.PENDING) {
+        if (order.getOrderStatus() != OrderStatus.CREATED) {
             throw new BadRequestException("error.order.status.invalid-confirm");
         }
         order.setUpdatedBy(adminId);
@@ -201,11 +206,10 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public OrderItemResponse getOrderItem(Long orderId, Long itemId) {
-        OrderItem orderItem = orderItemRepository.findByOrder_User_IdAndId(orderId,itemId)
-                .orElseThrow(()-> new NotFoundException("{error.order-item.id.not-found}"));
+        OrderItem orderItem = orderItemRepository.findByOrder_User_IdAndId(orderId, itemId)
+                .orElseThrow(() -> new NotFoundException("{error.order-item.id.not-found}"));
         return itemMapper.toResponse(orderItem);
     }
-
 
 
     @Override
@@ -219,9 +223,9 @@ public class OrderServiceImpl implements OrderService{
         if (request.addressId() == null) {
             address = addressRepository.findDefaultAddressByUserId(userId)
                     .orElseThrow(() -> new NotFoundException("{error.address.default.not-found}"));
-        } else{
-            address = addressRepository.findByIdAndUser_Id(request.addressId(), userId)
-                .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
+        } else {
+            address = addressRepository.findByIdAndUser_IdAndStatusAndIsDefault(request.addressId(), userId, AddressStatus.ACTIVE, true)
+                    .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
         }
 
         List<CartItem> cartItems = cartItemRepository.findByCart_Id(cart.getId());
@@ -236,7 +240,13 @@ public class OrderServiceImpl implements OrderService{
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (CartItem cartItem : cartItems) {
-            BigDecimal price = cartItem.getProductVariant().getSalePrice();
+            BigDecimal price = BigDecimal.ZERO;
+            if (cartItem.getProductVariant().getSalePrice() == null ||
+                    cartItem.getProductVariant().getSalePrice().compareTo(BigDecimal.ZERO) == 0) {
+                price = cartItem.getProductVariant().getRegularPrice();
+            } else {
+                price = cartItem.getProductVariant().getSalePrice();
+            }
             BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
             subtotalAmount = subtotalAmount.add(lineTotal);
@@ -252,9 +262,11 @@ public class OrderServiceImpl implements OrderService{
 
             orderItems.add(orderItem);
         }
-        if (subtotalAmount.compareTo(BigDecimal.valueOf(10000)) > 0) {
+        if (subtotalAmount.compareTo(BigDecimal.valueOf(20000)) > 0) {
             shippingFee = BigDecimal.ZERO;
-        }else {
+        } else if (subtotalAmount.compareTo(BigDecimal.valueOf(10000)) > 0) {
+            shippingFee = BigDecimal.valueOf(200);
+        } else {
             shippingFee = BigDecimal.valueOf(500);
         }
 
@@ -264,10 +276,11 @@ public class OrderServiceImpl implements OrderService{
 
         BigDecimal taxAmount = taxableBase.multiply(taxRate);
         BigDecimal grandTotal = taxableBase.add(taxAmount);
-        String name = request.name().isBlank() ? address.getName() : request.name();
+        String name = address.getLastName() + " " + address.getFirstName();
 
         Order order = Order.builder()
                 .user(user)
+                .orderNumber(generateOrderCode())
                 .name(name)
                 .phone(address.getPhone())
                 .postalCode(address.getPostalCode())
@@ -287,25 +300,24 @@ public class OrderServiceImpl implements OrderService{
         }
 
         Order saved = orderRepository.save(order);
-        cartRepository.delete(cart);
+        cart.setStatus(CartStatus.CHECKED_OUT);
         return orderMapper.toResponse(saved);
     }
 
     @Override
-    public OrderResponse updateOrderByUser(Long userId, Long orderId, OrderUpdateRequest request) {
+    public OrderResponse updateOrderByUser(Long userId, String orderNumber, OrderUpdateRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        Order order = orderRepository.findByUserIdAndId(userId,orderId)
-                .orElseThrow(()-> new NotFoundException("{error.order.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        Order order = orderRepository.findByUserIdAndOrderNumber(userId, orderNumber)
+                .orElseThrow(() -> new NotFoundException("{error.order.id.not-found}"));
         Address address = addressRepository.findById(request.newAddressId())
-                .orElseThrow(()-> new NotFoundException("{error.address.id.not-found}"));
-        if (order.getOrderStatus()==OrderStatus.CANCELLED)
+                .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
+        if (order.getOrderStatus() == OrderStatus.CANCELLED)
             throw new BadRequestException("error.order.status.invalid-cancel");
-        if (order.getOrderStatus()==OrderStatus.SHIPPING)
+        if (order.getOrderStatus() == OrderStatus.SHIPPING)
             throw new BadRequestException("error.order.status.invalid-shipping");
-        if (order.getOrderStatus()==OrderStatus.DELIVERED)
+        if (order.getOrderStatus() == OrderStatus.DELIVERED)
             throw new BadRequestException("error.order.status.invalid-delivered");
-        order.setName(address.getName());
         order.setPhone(address.getPhone());
         order.setPostalCode(address.getPostalCode());
         order.setFullAddress(address.getFullAddress());
@@ -313,16 +325,16 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderResponse cancelOrderByUser(Long userId, Long orderId, String reason) {
+    public OrderResponse cancelOrderByUser(Long userId, String orderNumber, String reason) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        Order order = orderRepository.findByUserIdAndId(userId,orderId)
-                .orElseThrow(()-> new NotFoundException("{error.order.id.not-found}"));
-        if (order.getOrderStatus()==OrderStatus.CANCELLED)
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        Order order = orderRepository.findByUserIdAndOrderNumber(userId, orderNumber)
+                .orElseThrow(() -> new NotFoundException("{error.order.id.not-found}"));
+        if (order.getOrderStatus() == OrderStatus.CANCELLED)
             throw new BadRequestException("error.order.status.invalid-cancel");
-        if (order.getOrderStatus()==OrderStatus.SHIPPING)
+        if (order.getOrderStatus() == OrderStatus.SHIPPING)
             throw new BadRequestException("error.order.status.invalid-shipping");
-        if (order.getOrderStatus()==OrderStatus.DELIVERED)
+        if (order.getOrderStatus() == OrderStatus.DELIVERED)
             throw new BadRequestException("error.order.status.invalid-delivered");
         order.setReason(reason);
         order.setOrderStatus(OrderStatus.CANCELLED);
@@ -341,44 +353,44 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderResponse getOrderDetailForUser(Long userId, Long orderId) {
+    public OrderResponse getOrderDetailForUser(Long userId, String orderNumber) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        Order order = orderRepository.findByUserIdAndId(userId,orderId)
-                .orElseThrow(()-> new NotFoundException("{error.order.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        Order order = orderRepository.findByUserIdAndOrderNumber(userId, orderNumber)
+                .orElseThrow(() -> new NotFoundException("{error.order.id.not-found}"));
         return orderMapper.toResponse(order);
     }
 
     @Override
-    public List<OrderResponse> findOrdersOfUser(Long userId) {
+    public Page<OrderResponse> findOrdersOfUser(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        List<Order> orders = orderRepository.findAllByUser_Id(userId);
-        return orders.stream().map(orderMapper::toResponse).toList();
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        Page<Order> orders = orderRepository.findAllByUser_Id(userId, pageable);
+        return orders.map(orderMapper::toResponse);
     }
 
     @Override
     public List<OrderResponse> findOrdersOfUserByStatus(Long userId, OrderStatus status) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        List<Order> orders = orderRepository.findAllByUserIdAndOrderStatus(userId,status);
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        List<Order> orders = orderRepository.findAllByUserIdAndOrderStatus(userId, status);
         return orders.stream().map(orderMapper::toResponse).toList();
     }
 
     @Override
     public OrderItemResponse getOrderItemForUser(Long userId, Long orderItemId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        OrderItem orderItem = orderItemRepository.findByOrder_User_IdAndId(userId,orderItemId)
-                .orElseThrow(()-> new NotFoundException("{error.order-item.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        OrderItem orderItem = orderItemRepository.findByOrder_User_IdAndId(userId, orderItemId)
+                .orElseThrow(() -> new NotFoundException("{error.order-item.id.not-found}"));
 
         return itemMapper.toResponse(orderItem);
     }
 
     @Override
-    public Slice<OrderItemResponse> findItemsOfOrderForUser(Long userId, Long orderId,Pageable pageable) {
+    public Slice<OrderItemResponse> findItemsOfOrderForUser(Long userId, Long orderId, Pageable pageable) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         Slice<OrderItem> items = orderItemRepository.findByOrderId(orderId, pageable);
         return items.map(itemMapper::toResponse);
     }
@@ -386,8 +398,21 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public List<OrderStatusHistoryResponse> findStatusHistoryByOrderIdForUser(Long userId, Long orderId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
-        List<OrderStatusHistory> histories = historyRepository.findByOrder_User_IdAndOrder_Id(userId,orderId);
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
+        List<OrderStatusHistory> histories = historyRepository.findByOrder_User_IdAndOrder_Id(userId, orderId);
         return List.of();
+    }
+
+    private String generateOrderCode() {
+        String date = LocalDate.now(ZoneId.of("Asia/Tokyo"))
+                .format(DateTimeFormatter.BASIC_ISO_DATE);
+
+        String rand = UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, 6)
+                .toUpperCase();
+
+        return date + "-" + rand;
     }
 }

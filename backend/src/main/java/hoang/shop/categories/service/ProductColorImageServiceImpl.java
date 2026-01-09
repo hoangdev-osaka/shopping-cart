@@ -8,7 +8,7 @@ import hoang.shop.categories.model.ProductColor;
 import hoang.shop.categories.model.ProductColorImage;
 import hoang.shop.categories.repository.ProductColorImageRepository;
 import hoang.shop.categories.repository.ProductColorRepository;
-import hoang.shop.common.enums.ImageStatus;
+import hoang.shop.common.enums.status.ImageStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;
 import hoang.shop.common.storage.FileStorageService;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 @Service
 @Transactional

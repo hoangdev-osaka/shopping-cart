@@ -51,6 +51,8 @@ public class ProductReview extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductReviewStatus status = ProductReviewStatus.ACTIVE;
 
 }

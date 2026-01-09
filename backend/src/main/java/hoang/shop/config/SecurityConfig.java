@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/auth/forgot-password",
                                 "/api/auth/reset-password",
-                                "/uploads/**"
+                                "/uploads/**",
+                                "/images/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/api/products/**",

@@ -1,6 +1,6 @@
 package hoang.shop.categories.dto.request;
 
-import hoang.shop.common.enums.CategoryStatus;
+import hoang.shop.common.enums.status.CategoryStatus;
 import jakarta.validation.constraints.NotBlank;
 
 public record CategoryUpdateRequest(

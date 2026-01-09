@@ -46,18 +46,6 @@ public class PasswordResetToken {
     @Column(name = "used_at")
     private Instant usedAt;
 
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    @LastModifiedBy
-    @Column(name = "updated_by")
-    private Long updatedBy;
-
-    @Column(name = "deleted_at")
-    private Instant deletedAt;
-
-
 
     public void markUsed(Instant now) {
         used = true;

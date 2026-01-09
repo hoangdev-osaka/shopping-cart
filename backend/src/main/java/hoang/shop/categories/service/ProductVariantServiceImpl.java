@@ -2,7 +2,6 @@ package hoang.shop.categories.service;
 
 import hoang.shop.categories.dto.request.ProductVariantSearchCondition;
 import hoang.shop.categories.dto.response.AdminVariantResponse;
-import hoang.shop.categories.dto.response.VariantResponse;
 import hoang.shop.categories.model.ProductColor;
 import hoang.shop.categories.repository.ProductColorRepository;
 import hoang.shop.categories.spec.ProductVariantSpec;
@@ -11,9 +10,8 @@ import hoang.shop.categories.dto.request.ProductVariantCreateRequest;
 import hoang.shop.categories.dto.request.ProductVariantUpdateRequest;
 import hoang.shop.categories.mapper.VariantMapper;
 import hoang.shop.categories.model.ProductVariant;
-import hoang.shop.categories.repository.ProductRepository;
 import hoang.shop.categories.repository.ProductVariantRepository;
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 import hoang.shop.common.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,7 +2,7 @@ package hoang.shop.order.model;
 
 import jakarta.persistence.*;
 import hoang.shop.common.enums.ChangedByType;
-import hoang.shop.common.enums.OrderStatus;
+import hoang.shop.common.enums.status.OrderStatus;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

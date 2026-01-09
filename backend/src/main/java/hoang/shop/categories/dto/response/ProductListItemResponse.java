@@ -2,8 +2,8 @@ package hoang.shop.categories.dto.response;
 
 import java.math.BigDecimal;
 public record ProductListItemResponse(
-
-        Long defaultColorId,
+        Long id,
+        Long colorId,
 
         String name,
         String slug,

@@ -1,7 +1,7 @@
 package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.Category;
-import hoang.shop.common.enums.CategoryStatus;
+import hoang.shop.common.enums.status.CategoryStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,6 +45,6 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     Optional<Category> findWithProductsById(@Param("id") Long id);
     Optional<Category> findBySlugAndStatus(String slug, CategoryStatus categoryStatus);
     Optional<Category> findByIdAndStatus(Long brandId, CategoryStatus categoryStatus);
-    Slice<Category> findAllByStatus(CategoryStatus status, Pageable pageable);
+    Slice<Category> findAllByStatusAndParentIsNull(CategoryStatus status, Pageable pageable);
 
 }

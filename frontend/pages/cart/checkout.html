@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <p>今だけ！全品送料無料キャンペーン中 🎉</p>
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="/index.html">
+            <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
+          </a>
+          <form class="header-search">
+            <div class="header-search__box">
+              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+            </div>
+
+            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </a>
+          </form>
+        </div>
+
+        <section class="categories-list" id="categoriesList">
+          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
+          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
+        </section>
+
+        <nav class="header-actions">
+          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
+          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
+
+          <a href="/pages/cart/cart.html" class="cart-btn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 6h2" />
+              <path d="M7 6h11l-1.2 7H8.2L7 6z" />
+              <circle cx="10" cy="18.5" r="1.3" />
+              <circle cx="17" cy="18.5" r="1.3" />
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+
+          <button class="hamburger-btn" id="hamburgerBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+      <ul class="suggestions" id="suggestList"></ul>
+    </header>
+
+    <main class="check-out">
+      <div class="check-out__divider"></div>
+      <h6 class="hello">こんにちは、Nguyễnさん！</h6>
+      <div class="cart-summary__divider"></div>
+
+      <div class="check-out__title">
+        <h2>チェックアウト</h2>
+        <div class="price-total"></div>
+      </div>
+      <div class="check-out__inner">
+        <sction class="check-out__form">
+          <div class="information">
+            <h3>連絡先</h3>
+            <div class="information__email"></div>
+            <div class="cart-summary__divider"></div>
+            <h3>ご住所</h3>
+            <h6>お届け先住所</h6>
+            <form class="information__address">
+              <div class="information__name">
+                <input  class="form-input information__name--first-name" name="lastName" type="text" placeholder="姓 * " required />
+                <input  class="form-input information__name--last-name" name="firstName" type="text" placeholder="名 *" required />
+              </div>
+              <div class="postal-field">
+                <input  class="form-input" id="postalCode" type="text" name="postalCode" placeholder="郵便番号 *" required />
+                <span class="postal-spinner">
+                  <span class="postal-spinner__ring"></span>
+                </span>
+              </div>
+              <input class="form-input"  id="prefecture" type="text" name="prefecture" placeholder="都道府県 *" required />
+              <input class="form-input" id="municipality" type="text" name="municipality" placeholder="住所（町名以降）*" required />
+              <input class="form-input" type="text" name="streetNumber" placeholder="番地 (3-2-29)" />
+              <input class="form-input" type="text" name="building" placeholder="マンション・アパート／部屋番号(任意)" />
+              <input class="form-input" type="text" name="phone" placeholder="電話番号 *" required />
+              <button class="checkout__submit" type="submit">保存する</button>
+            </form>
+            <div class="address-loading hidden" id="addressLoading">
+              <span class="spinner"></span>
+            </div>
+          </div>
+          <address class="address-confirm hidden" id="addressConfirm" data-address-id="2">
+            <div class="confirm__name">
+              <div>
+                <span class="confirm__name--last-name"></span>
+                <span class="confirm__name--first-name"> </span>
+              </div>
+              <button class="address__edit" data-action="edit-address">編集する</button>
+            </div>
+
+            <div class="confirm__postal-code"></div>  
+            <div class="confirm__address1"></div>
+            <div class="confirm__address2"></div>
+            <div class="confirm__phone"></div>
+          </address>
+
+          <h4 class="checkout-section__title text-muted" id="deliveryAddress">お届け先住所への配送</h4>
+          <div class="delivery hidden" id="deliveryComfirm">
+            <div class="delivery__detail">
+              <div class="delivery__menthod">
+                <span class="delivery__menthod--name">通常配送</span>
+                <span class="delivery__menthod--price">無料</span>
+              </div>
+              <div><span>12月25日（木）～12月26日（金）</span> <span>の間にお届け</span></div>
+              <div>09:00-21:00</div>
+            </div>
+            <button class="delivery-confirm-btn" data-action="open-payment">次へ</button>
+          </div>
+
+          <h4 class="checkout-section__title text-muted" id="paymentTitle">お支払い</h4>
+
+          <div class="payment-confirm hidden" tabindex="-1">
+            <div>お支払いは SSL で暗号化されるため、クレジットカード情報やお支払い情報は安全に保護されます。</div>
+
+            <label class="payment-credit" data-method="CREDIT_CARD">
+              <input type="radio" name="paymentMethod" value="CREDIT_CARD" />
+              <span class="payment-methods__name">クレジットカード</span>
+              <div class="payment-credit__img">
+                <img class="payment-methods__img payment-methods__img--visa" src="/assets/images/payments/visa.png" />
+                <img class="payment-methods__img" src="/assets/images/payments/mastercard.png" />
+                <img class="payment-methods__img" src="/assets/images/payments/jcb.svg" />
+                <img class="payment-methods__img" src="/assets/images/payments/amec.png" />
+              </div>
+            </label>
+
+            <label class="payment-paypay" data-method="PAYPAY">
+              <input type="radio" name="paymentMethod" value="PAYPAY" />
+              <span class="payment-methods__name">PayPay</span>
+              <div class="payment-credit__img">
+                <img class="payment-methods__img" src="/assets/images/payments/paypay.png" />
+              </div>
+            </label>
+
+            <label class="payment-rankuten" data-method="RAKUTEN_PAY">
+              <input type="radio" name="paymentMethod" value="RAKUTEN_PAY" />
+              <span class="payment-methods__name">楽天ペイ</span>
+              <div class="payment-credit__img">
+                <img class="payment-methods__img" src="/assets/images/payments/rakuten.jpeg" />
+              </div>
+            </label>
+            <button class="payment-btn" data-action="confirm-order">
+              <span class="btn-text">注文を確認する</span>
+              <span class="payment-btn-spinner"></span>
+            </button>
+            <div class="checkout-log"></div>
+            ※ デモ決済（実際の課金は発生しません）
+          </div>
+        </sction>
+
+        <section class="check-out__summary">
+          <h3>注文内容</h3>
+
+          <div class="checkout-summary__body">
+          
+          </div>
+        </section>
+      </div>
+      
+    </main>
+    <footer class="main-footer" id="app-footer"></footer>
+    <script type="module" src="/assets/js/core/render/load-layout.js"></script>
+    <script type="module" src="/assets/js/components/header-search.js"></script>
+    <script type="module" src="/assets/js/pages/check-out.js"></script>
+  </body>
+</html>

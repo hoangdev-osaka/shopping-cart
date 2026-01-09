@@ -9,7 +9,7 @@ import hoang.shop.categories.model.Product;
 import hoang.shop.categories.model.ProductColor;
 import hoang.shop.categories.repository.ProductColorRepository;
 import hoang.shop.categories.repository.ProductRepository;
-import hoang.shop.common.enums.ProductColorStatus;
+import hoang.shop.common.enums.status.ProductColorStatus;
 import hoang.shop.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

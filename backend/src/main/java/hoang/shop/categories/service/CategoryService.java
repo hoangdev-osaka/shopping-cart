@@ -5,14 +5,15 @@ import hoang.shop.categories.dto.request.CategoryUpdateRequest;
 import hoang.shop.categories.dto.response.AdminCategoryResponse;
 import hoang.shop.categories.dto.response.CategoryDetailResponse;
 import hoang.shop.common.IdListRequest;
-import hoang.shop.common.enums.CategoryStatus;
+import hoang.shop.common.enums.status.CategoryStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CategoryService {
 
     //Admin
-    AdminCategoryResponse create(CategoryCreateRequest createRequest);
+    AdminCategoryResponse create(CategoryCreateRequest createRequest, MultipartFile file);
     AdminCategoryResponse update(Long categoryId, CategoryUpdateRequest updateRequest);
     AdminCategoryResponse replaceParent(Long categoryId, Long parentId);
     AdminCategoryResponse unsetParent(Long categoryId);

@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:/app/uploads}

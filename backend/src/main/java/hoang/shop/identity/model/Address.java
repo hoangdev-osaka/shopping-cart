@@ -1,4 +1,5 @@
 package hoang.shop.identity.model;
+import hoang.shop.common.enums.status.AddressStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import hoang.shop.common.baseEntity.BaseEntity;
@@ -20,8 +21,13 @@ public class Address extends BaseEntity {
                 foreignKey = @ForeignKey(name = "fk_addresses_user_id_users"))
     private User user;
 
-    @Column(name = "name",nullable = false)
-    private String name;
+    @Column(name = "first_name",nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name",nullable = false)
+    private String lastName;
+
+
 
     @Column(nullable = false)
     private String phone;
@@ -45,8 +51,6 @@ public class Address extends BaseEntity {
 
     @Column(name = "building")
     private String building;
-    @Column(name = "room-number")
-    private String roomNumber;
     @Column(name = "full_address")
     private String fullAddress;
 
@@ -57,6 +61,7 @@ public class Address extends BaseEntity {
     private boolean isDefault = false;
 
     @Column(nullable = false)
-    private boolean deleted = false;
+    @Enumerated(EnumType.STRING)
+    private AddressStatus status = AddressStatus.ACTIVE ;
 
 }

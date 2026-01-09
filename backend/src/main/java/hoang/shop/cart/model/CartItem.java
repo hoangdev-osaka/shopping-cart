@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import hoang.shop.categories.model.ProductVariant;
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.CartItemStatus;
+import hoang.shop.common.enums.status.CartItemStatus;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -66,7 +66,7 @@ public class CartItem  extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
     public void recalculateLineTotals(){
-        if (unitPriceAtOrder == null) unitPriceAtOrder = unitPriceBefore;
+        if (unitPriceAtOrder == null || unitPriceAtOrder.compareTo(BigDecimal.ZERO) == 0) unitPriceAtOrder = unitPriceBefore;
         if (quantity == null) quantity = 1;
 
         this.lineTotal = unitPriceAtOrder

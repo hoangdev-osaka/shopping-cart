@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -67,6 +68,26 @@ public class FileStorageService {
             return "/uploads/" + folder + "/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("Cannot save color image", e);
+        }
+    }
+    public String saveCategoryImage(Long categoryId, MultipartFile file) {
+        try {
+            String folder = "categories/" + categoryId;
+
+            String original = Objects.requireNonNull(file.getOriginalFilename()).replace(" ", "_");
+            String fileName = UUID.randomUUID() + "-" + original;
+
+            Path targetFolder = rootPath.resolve(folder);
+            Files.createDirectories(targetFolder);
+
+            Path target = targetFolder.resolve(fileName);
+
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+
+            return "/uploads/" + folder + "/" + fileName;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot save category image", e);
         }
     }
 

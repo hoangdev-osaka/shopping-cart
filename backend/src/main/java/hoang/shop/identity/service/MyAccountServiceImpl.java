@@ -1,12 +1,10 @@
 package hoang.shop.identity.service;
 
 import hoang.shop.common.exception.NotFoundException;
-import hoang.shop.identity.dto.request.ChangeEmailRequest;
-import hoang.shop.identity.dto.request.ChangePasswordRequest;
-import hoang.shop.identity.dto.request.DeleteAccountRequest;
-import hoang.shop.identity.dto.request.VerifyPasswordRequest;
+import hoang.shop.identity.dto.request.*;
 import hoang.shop.identity.dto.response.MyAccountResponse;
 import hoang.shop.identity.dto.response.SessionInfoResponse;
+import hoang.shop.identity.dto.response.UserResponse;
 import hoang.shop.identity.mapper.MyAccountMapper;
 import hoang.shop.identity.mapper.UserMapper;
 import hoang.shop.identity.model.User;
@@ -15,6 +13,7 @@ import hoang.shop.identity.repository.UserRepository;
 import hoang.shop.identity.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,14 +26,22 @@ public class MyAccountServiceImpl implements MyAccountService {
     private final UserRepository userRepository;
     private final UserSessionRepository userSessionRepository;
     private final MyAccountMapper myAccountMapper;
-
+    private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public MyAccountResponse getMyAccount() {
         Long userId = currentUserService.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         return myAccountMapper.fromUser(user);
+    }
+
+    @Override
+    public UserResponse updateMyAccount(Long id, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("{error.user.id.notFound}"));
+        userMapper.merge(userUpdateRequest, user);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Override

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注文履歴</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <p>今だけ！全品送料無料キャンペーン中 🎉</p>
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="/index.html">
+            <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
+          </a>
+          <form class="header-search">
+            <div class="header-search__box">
+              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+            </div>
+
+            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </a>
+          </form>
+        </div>
+
+        <section class="categories-list" id="categoriesList">
+          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
+          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
+        </section>
+
+        <nav class="header-actions">
+          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
+          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
+
+          <a href="/pages/cart/cart.html" class="cart-btn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 6h2" />
+              <path d="M7 6h11l-1.2 7H8.2L7 6z" />
+              <circle cx="10" cy="18.5" r="1.3" />
+              <circle cx="17" cy="18.5" r="1.3" />
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+
+          <button class="hamburger-btn" id="hamburgerBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+      <ul class="suggestions" id="suggestList"></ul>
+    </header>
+    <main class="page">
+      <div class="container">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">HOANG SHOP</h1>
+            <p class="breadcrumb">My Account <span>→</span> Orders</p>
+          </div>
+
+          <a class="btn btn-ghost btn-small" href="/index.html">トップへ戻る</a>
+        </div>
+
+        <section class="orders">
+          <div class="orders-toolbar">
+            <div class="tabs" role="tablist" aria-label="Order filters">
+              <button class="tab is-active" data-status="ALL">すべて</button>
+              <button class="tab" data-status="CREATED">作成</button>
+              <button class="tab" data-status="PAID">支払い済み</button>
+              <button class="tab" data-status="SHIPPED">発送済み</button>
+              <button class="tab" data-status="CANCELLED">キャンセル</button>
+            </div>
+
+            <div class="toolbar-right">
+              <input class="search" id="orderSearch" placeholder="注文番号で検索..." />
+            </div>
+          </div>
+
+          <div class="orders-list" id="ordersList">
+            <div class="address-loading hidden" id="addressLoading">
+              <span class="spinner"></span>
+            </div>
+
+            <div id="ordersList">
+              <article class="order-card hidden">
+                <div class="order-card__top">
+                  <div class="order-meta">
+                    <div class="order-no">
+                      <span class="muted">注文番号</span>
+                      <strong>20260108-060B40</strong>
+                      <button class="pill-btn" type="button">コピー</button>
+                    </div>
+                    <div class="order-sub">
+                      <span class="muted">注文日</span>
+                      <span>2026-01-08</span>
+                    </div>
+                  </div>
+
+                  <div class="order-pills">
+                    <span class="pill pill--money">合計 ¥14,300</span>
+                    <span class="pill pill--status">ステータス CREATED</span>
+                  </div>
+                </div>
+
+                <div class="order-card__body">
+                  <section class="order-left">
+                    <h3 class="section-title">ご注文内容</h3>
+
+                    <div class="item-row">
+                      <img class="item-thumb" src="/assets/images/sample-shoe.png" alt="" />
+                      <div class="item-info">
+                        <div class="item-name">アディダス スニーカー</div>
+                        <div class="item-opts muted">サイズ: 25.5 / 数量: 1</div>
+                        <div class="item-opts muted">カラー: ブラック</div>
+                      </div>
+                      <div class="item-price">¥13,000</div>
+                    </div>
+                    <div class="item-row">
+                      <img class="item-thumb" src="/assets/images/sample-shoe.png" alt="" />
+                      <div class="item-info">
+                        <div class="item-name">アディダス スニーカー</div>
+                        <div class="item-opts muted">サイズ: 25.5 / 数量: 1</div>
+                        <div class="item-opts muted">カラー: ブラック</div>
+                      </div>
+                      <div class="item-price">¥13,000</div>
+                    </div>
+                  </section>
+
+                  <aside class="order-right">
+                    <h3 class="section-title">配送・支払い</h3>
+
+                    <div class="kv">
+                      <div class="kv-row">
+                        <span class="muted">配送先</span>
+                        <strong>Ha Trang</strong>
+                      </div>
+                      <div class="kv-row">
+                        <span class="muted">配送先</span>
+                        <strong>大阪府大阪市浪速区大国3-2-14 エスリードなんばザ・プレミア1305</strong>
+                      </div>
+                    </div>
+
+                    <div class="order-actions">
+                      <a class="btn btn-primary btn-small" href="/pages/orders/order-detail.html?id=1">注文詳細を見る</a>
+                      <a class="btn btn-outline btn-small" href="/pages/products/product-list.html">買い物を続ける</a>
+                    </div>
+                  </aside>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="main-footer" id="app-footer"></footer>
+    <script type="module" src="/assets/js/core/render/load-layout.js"></script>
+    <script type="module" src="/assets/js/components/header-search.js"></script>
+    <script type="module" src="/assets/js/pages/orders.js"></script>
+  </body>
+</html>

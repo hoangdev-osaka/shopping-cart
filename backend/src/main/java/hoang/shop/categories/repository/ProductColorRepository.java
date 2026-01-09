@@ -1,7 +1,7 @@
 package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.ProductColor;
-import hoang.shop.common.enums.ProductColorStatus;
+import hoang.shop.common.enums.status.ProductColorStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,5 +14,6 @@ public interface ProductColorRepository extends JpaRepository<ProductColor,Long>
 
     Optional<ProductColor> findFirstByProduct_IdAndMainTrue(Long productId);
 
+    Optional<ProductColor> findByProduct_IdAndColorFamily(Long id, String c);
 }
 

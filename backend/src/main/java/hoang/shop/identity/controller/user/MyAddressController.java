@@ -7,14 +7,11 @@ import hoang.shop.identity.service.AddressService;
 import hoang.shop.identity.service.CurrentUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/my-account/addresses")
@@ -69,20 +66,6 @@ public class MyAddressController {
                 : ResponseEntity.notFound().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Page<AddressResponse>> list(
-            @PageableDefault(
-                    page = 0,
-                    size = 15,
-                    sort = {"id", "createdAt"},
-                    direction = Sort.Direction.DESC
-            ) Pageable pageable
-    ) {
-        Long userId = currentUserService.getCurrentUserId();
-        Page<AddressResponse> addresses = addressService.list(userId, pageable);
-        return ResponseEntity.ok(addresses);
-    }
-
     @PatchMapping("/{addressId}/default")
     public ResponseEntity<Void> setDefault(
             @PathVariable Long addressId
@@ -92,12 +75,17 @@ public class MyAddressController {
         return updated ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
-
     @GetMapping("/default")
     public ResponseEntity<AddressResponse> getDefault() {
         Long userId = currentUserService.getCurrentUserId();
-        AddressResponse res = addressService.getDefault(userId);
-        return res != null ? ResponseEntity.ok(res)
-                : ResponseEntity.noContent().build();
+        AddressResponse address = addressService.getDefaultAddress(userId);
+        return ResponseEntity.ok(address);
     }
+    @GetMapping
+    public ResponseEntity<List<AddressResponse>> getAddresses() {
+        Long userId = currentUserService.getCurrentUserId();
+        List<AddressResponse> addresses = addressService.getAddresses(userId);
+        return ResponseEntity.ok(addresses);
+    }
+
 }

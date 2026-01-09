@@ -3,7 +3,7 @@ package hoang.shop.categories.service;
 import com.github.slugify.Slugify;
 import hoang.shop.categories.dto.response.AdminCategoryResponse;
 import hoang.shop.categories.dto.response.CategoryDetailResponse;
-import hoang.shop.identity.service.CurrentUserService;
+import hoang.shop.common.storage.FileStorageService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,14 @@ import hoang.shop.categories.mapper.CategoryMapper;
 import hoang.shop.categories.model.Category;
 import hoang.shop.categories.repository.CategoryRepository;
 import hoang.shop.categories.repository.ProductRepository;
-import hoang.shop.common.enums.CategoryStatus;
+import hoang.shop.common.enums.status.CategoryStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -31,22 +32,29 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CategoryMapper categoryMapper;
+    private final FileStorageService fileStorageService;
 
     @PersistenceContext
     EntityManager em;
 
 
     @Override
-    public AdminCategoryResponse create(CategoryCreateRequest createRequest) {
-        if (categoryRepository.existsByName(createRequest.name())){
+    public AdminCategoryResponse create(CategoryCreateRequest createRequest, MultipartFile file) {
+        String slug = Slugify.builder().build().slugify(createRequest.name());
+
+        if (categoryRepository.existsByName(createRequest.name())) {
             throw new BadRequestException("{error.category.name.exists}");
-        }else if (categoryRepository.existsBySlug(createRequest.name())){
+        }
+        if (categoryRepository.existsBySlug(slug)) {
             throw new BadRequestException("{error.category.slug.exists}");
         }
-        String slug = Slugify.builder().build().slugify(createRequest.name());
         Category category = categoryMapper.toEntity(createRequest);
         category.setSlug(slug);
         category = categoryRepository.save(category);
+        if (file != null && !file.isEmpty()) {
+            String imageUrl = fileStorageService.saveCategoryImage(category.getId(), file);
+            category.setImageUrl(imageUrl);
+        }
         return categoryMapper.toAdminResponse(category);
     }
 
@@ -116,7 +124,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Slice<AdminCategoryResponse> findAllByStatus(CategoryStatus status, Pageable pageable) {
-        Slice<Category> categoryPage = categoryRepository.findAllByStatus(status,pageable);
+        Slice<Category> categoryPage = categoryRepository.findAllByStatusAndParentIsNull(status,pageable);
         return categoryPage.map(categoryMapper::toAdminResponse);
     }
 
@@ -190,7 +198,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Slice<CategoryDetailResponse> findActiveBrands(Pageable pageable) {
-        Slice<Category> categories = categoryRepository.findAllByStatus(CategoryStatus.ACTIVE,pageable);
+        Slice<Category> categories = categoryRepository.findAllByStatusAndParentIsNull(CategoryStatus.ACTIVE,pageable);
         return categories.map(categoryMapper::toDetailResponse);
     }
 }

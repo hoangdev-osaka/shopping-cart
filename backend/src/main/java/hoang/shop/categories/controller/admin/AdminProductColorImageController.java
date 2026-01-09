@@ -1,12 +1,11 @@
 package hoang.shop.categories.controller.admin;
 
 
-import hoang.shop.categories.dto.request.ProductColorImageCreateRequest;
 import hoang.shop.categories.dto.response.AdminImageResponse;
 import hoang.shop.categories.service.ProductColorImageService;
 import hoang.shop.common.IdListRequest;
 import hoang.shop.categories.dto.request.ProductColorImageUpdateRequest;
-import hoang.shop.common.enums.ImageStatus;
+import hoang.shop.common.enums.status.ImageStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;

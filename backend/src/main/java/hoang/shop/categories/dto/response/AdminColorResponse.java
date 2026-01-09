@@ -1,10 +1,8 @@
 package hoang.shop.categories.dto.response;
 
-import hoang.shop.common.enums.ProductColorStatus;
+import hoang.shop.common.enums.status.ProductColorStatus;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
 public record AdminColorResponse(
 
@@ -13,7 +11,7 @@ public record AdminColorResponse(
         String name,
         String hex,
         ProductColorStatus status,
-        boolean isDefault,
+        boolean main,
         Instant createdAt,
         Long createdBy,
         Instant updatedAt,

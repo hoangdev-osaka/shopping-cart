@@ -1,5 +1,6 @@
 package hoang.shop.identity.controller.admin;
 
+import hoang.shop.common.enums.status.RoleStatus;
 import hoang.shop.identity.dto.request.RoleCreateRequest;
 import hoang.shop.identity.dto.request.RoleUpdateRequest;
 import hoang.shop.identity.dto.response.RoleResponse;
@@ -18,41 +19,25 @@ public class AdminRoleController {
     public ResponseEntity<RoleResponse> create(@RequestBody RoleCreateRequest roleCreateRequest) {
         return ResponseEntity.ok(roleService.create(roleCreateRequest));
     }
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<RoleResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(roleService.findById(id));
     }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<RoleResponse> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(roleService.findByName(name));
+    @GetMapping
+    public ResponseEntity<Page<RoleResponse>> search(@RequestParam("keyword") String keyword,@RequestParam("status") RoleStatus status, Pageable pageable) {
+        return ResponseEntity.ok(roleService.search(keyword,status, pageable));
     }
-    @GetMapping("/active")
-    public ResponseEntity<Page<RoleResponse>> findAllActive(Pageable pageable) {
-        return ResponseEntity.ok(roleService.findAllActive(pageable));
-    }
-    @GetMapping("/deleted")
-    public ResponseEntity<Page<RoleResponse>> findAllDeleted(Pageable pageable) {
-        return ResponseEntity.ok(roleService.findAllDeleted(pageable));
-    }
-    @GetMapping("/keyword/{keyword}")
-    public ResponseEntity<Page<RoleResponse>> search(@PathVariable String keyword, Pageable pageable) {
-        return ResponseEntity.ok(roleService.search(keyword, pageable));
-    }
-    @PatchMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<RoleResponse> update(@PathVariable Long id, @RequestBody RoleUpdateRequest roleUpdateRequest) {
         return ResponseEntity.ok(roleService.update(id, roleUpdateRequest));
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> softDeleteById(@PathVariable Long id) {
-        return ResponseEntity.ok(roleService.softDeleteById(id));
+    @PatchMapping("/{id}/delete")
+    public ResponseEntity<Void> softDeleteById(@PathVariable Long id) {
+        return ResponseEntity.noContent().build();
     }
-    @PutMapping("/restore/{id}")
-    public ResponseEntity<Boolean> restoreById(@PathVariable Long id) {
-        return ResponseEntity.ok(roleService.restoreById(id));
-    }
-    @GetMapping("/exists/name/{name}")
-    public ResponseEntity<Boolean> existsByName(@PathVariable String name) {
-        return ResponseEntity.ok(roleService.existsByName(name));
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<Void> restoreById(@PathVariable Long id) {
+        return ResponseEntity.noContent().build();
     }
 }
 

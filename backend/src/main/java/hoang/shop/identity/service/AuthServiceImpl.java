@@ -1,5 +1,6 @@
 package hoang.shop.identity.service;
 
+import hoang.shop.common.enums.status.UserStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;
 import hoang.shop.identity.dto.request.ForgotPasswordRequest;
@@ -55,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setCreatedAt(now);
-        user.setDeleted(false);
+        user.setStatus(UserStatus.ACTIVE);
         Set<UserRole> userRoles = new HashSet<>();
         UserRole userRole = UserRole.builder()
                 .user(user)

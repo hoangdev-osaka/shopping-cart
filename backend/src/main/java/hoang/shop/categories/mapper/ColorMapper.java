@@ -10,7 +10,7 @@ import hoang.shop.config.MapStructConfig;
 import org.mapstruct.*;
 
 
-@Mapper(componentModel = "spring", config = MapStructConfig.class)
+@Mapper(componentModel = "spring", uses ={VariantMapper.class}, config = MapStructConfig.class)
 public interface ColorMapper {
 
     ProductColor toEntity(ProductColorCreateRequest createRequest);
@@ -21,7 +21,7 @@ public interface ColorMapper {
     ColorDetailResponse toDetailResponse(ProductColor productColor);
 
     ColorResponse toResponse(ProductColor productColor);
-
+    @Mapping(target = "productId",source = "product.id")
     AdminColorResponse toAdminResponse(ProductColor productColor);
 
 

@@ -1,5 +1,6 @@
 package hoang.shop.identity.security;
 
+import hoang.shop.common.enums.status.UserStatus;
 import hoang.shop.identity.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class UserPrincipal implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final String fullName;
     private final String avatarUrl;
-    private final boolean deleted;
+    private final UserStatus status;
 
     public static UserPrincipal from(User user, Collection<? extends GrantedAuthority> authorities) {
         return new UserPrincipal(
@@ -28,7 +29,7 @@ public class UserPrincipal implements UserDetails {
                 authorities,
                 user.getFullName(),
                 user.getAvatarUrl(),
-                user.isDeleted()
+                user.getStatus()
         );
     }
 
@@ -64,6 +65,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !deleted;
+        return status!=UserStatus.BANNED && status!=UserStatus.DELETED;
     }
 }

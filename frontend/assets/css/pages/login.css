@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+.container-login{
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+.login-form{
+    width: 400px;
+    background-color: var(--color-bg-form);
+    border: var(--color-boder-light);  
+    border-radius: 8px; 
+    box-shadow: var(--shadow-strong);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 12px;
+}
+
+.login-form__input{
+    size: 15px;
+    padding: 7px;
+}
+.login-form h2{
+    align-self: center;
+}
+.login-form .busearch-btnton{
+    font-weight: 700;
+    color: var(--color-text-light);
+    background-color: var(--color-text-muted);
+    height: 45px;
+    margin-top: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.password{
+    position: relative;
+    width: 100%;
+}
+.login-form__error {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

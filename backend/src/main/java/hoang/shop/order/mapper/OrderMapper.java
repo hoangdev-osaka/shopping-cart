@@ -1,5 +1,6 @@
 package hoang.shop.order.mapper;
 
+import hoang.shop.categories.mapper.ColorMapper;
 import hoang.shop.config.MapStructConfig;
 import hoang.shop.order.dto.request.OrderCreateRequest;
 import hoang.shop.order.dto.request.OrderUpdateRequest;
@@ -9,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", config = MapStructConfig.class)
+@Mapper(componentModel = "spring",uses = {OrderItemMapper.class}, config = MapStructConfig.class)
 
 public interface OrderMapper {
     Order toEntity(OrderCreateRequest request);

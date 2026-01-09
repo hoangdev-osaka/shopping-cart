@@ -1,7 +1,7 @@
 package hoang.shop.order.spec;
 
-import hoang.shop.common.enums.OrderStatus;
-import hoang.shop.common.enums.PaymentStatus;
+import hoang.shop.common.enums.status.OrderStatus;
+import hoang.shop.common.enums.status.PaymentStatus;
 import hoang.shop.order.dto.request.OrderSearchCondition;
 import hoang.shop.order.model.Order;
 import org.springframework.data.jpa.domain.Specification;

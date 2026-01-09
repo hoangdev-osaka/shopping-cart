@@ -6,6 +6,8 @@ import hoang.shop.cart.dto.response.ItemResponse;
 import hoang.shop.cart.model.CartItem;
 import org.mapstruct.*;
 
+import java.math.BigDecimal;
+
 @Mapper(componentModel = "spring")
 public interface CartItemMapper {
     @Mapping(target = "id", ignore = true)
@@ -37,7 +39,7 @@ public interface CartItemMapper {
     @Mapping(target = "unitPriceAtOrder", ignore = true)
     @Mapping(target = "lineTotal", ignore = true)
     @Mapping(target = "imageUrl", ignore = true)
-    void merge(CartItemUpdateRequest request,@MappingTarget CartItem entity);
+    void merge(CartItemUpdateRequest request, @MappingTarget CartItem entity);
 
 
     @Mapping(target = "cartItemId", source = "id")
@@ -46,7 +48,9 @@ public interface CartItemMapper {
     @Mapping(target = "colorLabel", source = "colorLabel")
     @Mapping(target = "hexLabel", source = "hexLabel")
     @Mapping(target = "sizeLabel", source = "sizeLabel")
+    @Mapping(target = "productSlug", source = "productVariant.color.product.slug")
     ItemResponse toResponse(CartItem item);
+
 
 
 }

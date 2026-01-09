@@ -1,7 +1,7 @@
 package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.ProductVariant;
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

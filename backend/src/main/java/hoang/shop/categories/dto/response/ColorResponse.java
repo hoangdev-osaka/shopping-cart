@@ -1,8 +1,7 @@
 package hoang.shop.categories.dto.response;
 
-import hoang.shop.common.enums.ProductColorStatus;
+import hoang.shop.common.enums.status.ProductColorStatus;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public record ColorResponse(

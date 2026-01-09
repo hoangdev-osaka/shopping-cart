@@ -5,10 +5,10 @@ import hoang.shop.categories.model.ProductColor;
 import hoang.shop.categories.model.ProductColorImage;
 import hoang.shop.categories.repository.ProductColorRepository;
 import hoang.shop.categories.repository.ProductVariantRepository;
-import hoang.shop.common.enums.CartItemStatus;
-import hoang.shop.common.enums.CartStatus;
-import hoang.shop.common.enums.ProductStatus;
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.CartItemStatus;
+import hoang.shop.common.enums.status.CartStatus;
+import hoang.shop.common.enums.status.ProductStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.cart.dto.request.CartItemCreateRequest;
 import hoang.shop.cart.dto.request.CartItemUpdateRequest;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CartItemServiceImpl implements CartItemService{
+public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
     private final CartItemMapper cartItemMapper;
@@ -48,9 +48,9 @@ public class CartItemServiceImpl implements CartItemService{
     @Override
     public List<ItemResponse> findAllByCartId(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(()-> new NotFoundException("{error.cart.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.cart.id.not-found}"));
         userRepository.findById(cart.getUser().getId())
-                .orElseThrow(()-> new NotFoundException("{error.cart.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.cart.id.not-found}"));
         List<CartItem> cartItem = cartItemRepository.findByCart_IdAndStatus(cartId, CartItemStatus.ACTIVE);
 
         return cartItem.stream().map(cartItemMapper::toResponse).collect(Collectors.toList());
@@ -66,22 +66,21 @@ public class CartItemServiceImpl implements CartItemService{
                 .orElseGet(() -> createEmptyCart(userId));
         cartRepository.save(cart);
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         Product product = productRepository.findByIdAndStatus(request.variantId(), ProductStatus.ACTIVE)
-                .orElseThrow(()-> new NotFoundException("{error.product.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.product.id.not-found}"));
         ProductVariant variant = variantRepository.findByIdAndStatus(request.variantId(), ProductVariantStatus.ACTIVE)
-                .orElseThrow(()-> new NotFoundException("{error.product-variant.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.product-variant.id.not-found}"));
         ProductColor color = variant.getColor();
         CartItem cartItem = cartItemRepository
-                .findByCart_IdAndProductVariant_Id(cart.getId(), color.getId()).orElse(null);
+                .findByCart_IdAndProductVariant_IdAndStatus(cart.getId(), color.getId(), CartItemStatus.ACTIVE).orElse(null);
         BigDecimal unitPriceAtOrder = variant.getSalePrice() == null ? variant.getRegularPrice()
-                :variant.getSalePrice();
+                : variant.getSalePrice();
         BigDecimal unitPriceBefore = variant.getRegularPrice();
         String productName = color.getName();
-        String size  = variant.getSize();
+        String size = variant.getSize();
         String defaultImage = color.getImages().stream()
                 .filter(ProductColorImage::isMain).toString();
-
 
 
         if (cartItem != null) {
@@ -100,34 +99,35 @@ public class CartItemServiceImpl implements CartItemService{
             if (variant.getStock() != null && request.quantity() > variant.getStock()) {
                 throw new BadRequestException("{error.cart-item.out-of-stock}");
             }
-             cartItem =  CartItem.builder()
-                     .cart(cart)
-                     .productVariant(variant)
-                     .hexLabel(color.getHex())
-                     .colorLabel(color.getName())
-                     .nameLabel(color.getName())
-                     .sizeLabel(variant.getSize())
-                     .unitPriceBefore(variant.getRegularPrice())
-                     .unitPriceAtOrder(variant.getSalePrice())
-                     .quantity(request.quantity())
-                     .lineTotal(variant.getSalePrice().multiply(BigDecimal.valueOf(request.quantity())))
-                     .build();
-             if (!color.getVariants().isEmpty())
-                 cartItem.setImageUrl(defaultImage);
+            cartItem = CartItem.builder()
+                    .cart(cart)
+                    .productVariant(variant)
+                    .hexLabel(color.getHex())
+                    .colorLabel(color.getName())
+                    .nameLabel(color.getName())
+                    .sizeLabel(variant.getSize())
+                    .unitPriceBefore(variant.getRegularPrice())
+                    .unitPriceAtOrder(variant.getSalePrice())
+                    .quantity(request.quantity())
+                    .lineTotal(unitPriceAtOrder.multiply(BigDecimal.valueOf(request.quantity())).multiply(BigDecimal.valueOf(1.1)))
+                    .build();
+            if (!color.getVariants().isEmpty())
+                cartItem.setImageUrl(defaultImage);
         }
         cartItem = cartItemRepository.saveAndFlush(cartItem);
+        cart.recalculateTotals();
         return cartItemMapper.toResponse(cartItem);
     }
 
     @Override
     public ItemResponse update(Long userId, Long cartItemId, CartItemUpdateRequest request) {
-        if (request.quantity()<=0)
+        if (request.quantity() <= 0)
             throw new BadRequestException("{error.cart-item.quantity.bad-request}");
 
-        Cart cart = cartRepository.findByUserIdAndStatus(userId,CartStatus.ACTIVE)
-                .orElseThrow(()-> new NotFoundException("{error.cart.not-found}"));
-        CartItem cartItem = cartItemRepository.findByCart_IdAndId(cart.getId(),cartItemId)
-                 .orElseThrow(()-> new NotFoundException("{error.cart-item.not-found}"));
+        Cart cart = cartRepository.findByUserIdAndStatus(userId, CartStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("{error.cart.not-found}"));
+        CartItem cartItem = cartItemRepository.findByCart_IdAndId(cart.getId(), cartItemId)
+                .orElseThrow(() -> new NotFoundException("{error.cart-item.not-found}"));
         ProductVariant productVariant = cartItem.getProductVariant();
         if (request.quantity() > cartItem.getProductVariant().getStock()) {
             throw new BadRequestException("{error.cart-item.quantity.exceeds-stock}");
@@ -135,7 +135,7 @@ public class CartItemServiceImpl implements CartItemService{
         cartItem.setQuantity(request.quantity());
         BigDecimal before = productVariant.getSalePrice();
         BigDecimal quantity = BigDecimal.valueOf(request.quantity());
-        BigDecimal unitPrice = productVariant.getSalePrice()!= null ?
+        BigDecimal unitPrice = productVariant.getSalePrice() != null ?
                 productVariant.getSalePrice() : productVariant.getRegularPrice();
         BigDecimal total = unitPrice.multiply(quantity);
         cartItem.setQuantity(request.quantity());
@@ -150,10 +150,10 @@ public class CartItemServiceImpl implements CartItemService{
 
     @Override
     public boolean delete(Long userId, Long cartItemId) {
-        Cart cart = cartRepository.findByUserIdAndStatus(userId,CartStatus.ACTIVE)
-                .orElseThrow(()-> new NotFoundException("{error.cart.not-found}"));
-        CartItem cartItem = cartItemRepository.findByCart_IdAndId(cart.getId(),cartItemId)
-                .orElseThrow(()-> new NotFoundException("{error.cart-item.not-found}"));
+        Cart cart = cartRepository.findByUserIdAndStatus(userId, CartStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("{error.cart.not-found}"));
+        CartItem cartItem = cartItemRepository.findByCart_IdAndId(cart.getId(), cartItemId)
+                .orElseThrow(() -> new NotFoundException("{error.cart-item.not-found}"));
         cart.getCartItems().removeIf(i -> i.getId().equals(cartItemId));
         cartRepository.save(cart);
         return true;
@@ -162,7 +162,7 @@ public class CartItemServiceImpl implements CartItemService{
     @Override
     public List<ItemResponse> findAllByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
 
         List<CartItem> items = cartItemRepository.findByCart_User_Id(userId);
         return items.stream().map(cartItemMapper::toResponse).toList();
@@ -171,7 +171,7 @@ public class CartItemServiceImpl implements CartItemService{
 
     private Cart createEmptyCart(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new NotFoundException("{error.user.id.not-found}"));
+                .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         return Cart.builder()
                 .user(user)
                 .status(CartStatus.ACTIVE)

@@ -15,37 +15,46 @@ import java.time.Instant;
 @Entity
 @Table(name = "product_review_stats")
 @Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor @AllArgsConstructor
-public class ProductReviewStats  {
+public class ProductReviewStats {
 
     @Id
     private Long productId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Builder.Default
     private BigDecimal averageRating = BigDecimal.ZERO;
+
+    @Builder.Default
     private long reviewCount = 0L;
 
+    @Builder.Default
     private long rating1 = 0L;
+    @Builder.Default
     private long rating2 = 0L;
+    @Builder.Default
     private long rating3 = 0L;
+    @Builder.Default
     private long rating4 = 0L;
+    @Builder.Default
     private long rating5 = 0L;
 
     @CreatedDate
-    @Column(name ="created_at",updatable = false)
-    private Instant createdAt = Instant.now();
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
 
     @CreatedBy
-    @Column(name = "created_by")
     private Long createdBy;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
     private Instant updatedAt;
 
     @LastModifiedBy
-    @Column(name = "updated_by")
     private Long updatedBy;
-
 }

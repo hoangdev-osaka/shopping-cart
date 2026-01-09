@@ -47,10 +47,4 @@ public class UserRole {
     private Long assignedBy;
     @Column(name = "assigned_at")
     private Instant assignedAt;
-    @Column(name = "removed_by")
-    private Long removedBy;
-    @Column(name = "removed_at")
-    private Instant removedAt;
-    @Column(nullable = false)
-    private boolean deleted = false;
 }

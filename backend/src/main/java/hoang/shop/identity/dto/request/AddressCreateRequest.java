@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 public record AddressCreateRequest(
-        String name,
 
+        String firstName,
+        String lastName,
+        @NotNull
         String phone,
 
         @Pattern(
@@ -32,8 +34,7 @@ public record AddressCreateRequest(
                 message = "{error.address.street-number.invalid}")
         String streetNumber,
 
-        String building,
+        String building
 
-        String roomNumber
 ) {
 }

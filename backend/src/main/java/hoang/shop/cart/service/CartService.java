@@ -4,6 +4,7 @@ import hoang.shop.cart.dto.request.CartItemCreateRequest;
 import hoang.shop.cart.dto.request.CartItemUpdateRequest;
 import hoang.shop.cart.dto.request.CheckoutRequest;
 import hoang.shop.cart.dto.response.CartResponse;
+import hoang.shop.cart.dto.response.CartSummary;
 import hoang.shop.order.dto.response.OrderResponse;
 
 public interface CartService {
@@ -15,4 +16,5 @@ public interface CartService {
     OrderResponse checkout(Long userId , CheckoutRequest request);
 
 
+    CartSummary getQuantity(Long userId);
 }

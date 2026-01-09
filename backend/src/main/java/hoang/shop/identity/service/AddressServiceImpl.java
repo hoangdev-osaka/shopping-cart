@@ -1,5 +1,6 @@
 package hoang.shop.identity.service;
 
+import hoang.shop.common.enums.status.AddressStatus;
 import hoang.shop.identity.model.User;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.common.exception.NotFoundException;
@@ -39,33 +40,18 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public boolean softDelete(Long addressId) {
-        return addressRepo.softDeleteById(addressId) > 0;
-    }
-
-    @Override
-    public boolean restore(Long addressId) {
-        return addressRepo.restoreById(addressId) > 0;
-    }
-
-    @Override
-    public boolean hardDelete(Long addressId) {
-        if (!addressRepo.existsById(addressId)) return false;
-        addressRepo.deleteById(addressId);
-        return true;
-    }
-
-    @Override
     public AddressResponse create(Long userId, AddressCreateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         Address address = addressMapper.toEntity(request);
-        if (addressRepo.findAllByUserId(userId).isEmpty()){
+        if (addressRepo.findAllByUserId(userId).isEmpty()) {
             address.setDefault(true);
         }
+        addressRepo.unsetDefault(userId);
+        address.setDefault(true);
         List<Address> addresses = user.getAddress();
         List<Address> listAddressMain =
-        addresses.stream().filter(i->i.isDefault()== true).toList();
+                addresses.stream().filter(i -> i.isDefault() == true).toList();
         if (listAddressMain.isEmpty())
             address.setDefault(true);
         String addressLine1 = address.getStreetNumber();
@@ -79,7 +65,6 @@ public class AddressServiceImpl implements AddressService {
         if (address.getMunicipality() != null) sb.append(address.getMunicipality());
         if (address.getStreetNumber() != null) sb.append(address.getStreetNumber());
         if (address.getBuilding() != null) sb.append(address.getBuilding());
-        if (address.getRoomNumber() != null) sb.append(" ").append(address.getRoomNumber());
         address.setFullAddress(sb.toString());
         address = addressRepo.save(address);
         return addressMapper.toResponse(address);
@@ -89,7 +74,7 @@ public class AddressServiceImpl implements AddressService {
     public AddressResponse getById(Long userId, Long addressId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
-        Address address = addressRepo.findByIdAndUser_Id(addressId, userId)
+        Address address = addressRepo.findByIdAndUser_IdAndStatus(addressId, userId, AddressStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
         String addressLine1 = address.getStreetNumber();
         String[] parts = addressLine1.split("-");
@@ -102,21 +87,21 @@ public class AddressServiceImpl implements AddressService {
         if (address.getStreetNumber() != null) sb.append(address.getStreetNumber());
         sb.append(" ");
         if (address.getBuilding() != null) sb.append(address.getBuilding());
-        if (address.getRoomNumber() != null) sb.append(" ").append(address.getRoomNumber());
         address.setFullAddress(sb.toString());
         return addressMapper.toResponse(address);
     }
 
     @Override
     public AddressResponse update(Long userId, Long addressId, AddressUpdateRequest request) {
-        Address a = addressRepo.findByIdAndUser_Id(addressId, userId)
-                .orElseThrow(() -> new NotFoundException(""));
+        Address a = addressRepo.findByIdAndUser_IdAndStatus(addressId, userId, AddressStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
         addressMapper.updateEntityFromDto(request, a);
         return addressMapper.toResponse(a);
     }
 
     @Override
     public boolean softDelete(Long userId, Long addressId) {
+
         return addressRepo.softDeleteByUser(addressId, userId) > 0;
     }
 
@@ -126,13 +111,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Page<AddressResponse> list(Long userId, Pageable pageable) {
-        return addressRepo.findAllActiveByUser(userId, pageable)
-                .map(addressMapper::toResponse);
-    }
-
-    @Override
     public boolean setDefault(Long userId, Long addressId) {
+        Address address = addressRepo.findByIdAndUser_IdAndStatus(addressId, userId, AddressStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
         if (addressRepo.unsetDefault(userId) > 0) {
             return addressRepo.setDefault(userId, addressId) > 0;
         }
@@ -140,10 +121,18 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponse getDefault(Long userId) {
-        Address a = addressRepo.findDefaultAddressByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(""));
-        return addressMapper.toResponse(a);
+    public AddressResponse getDefaultAddress(Long userId) {
+        List<Address> addresses = addressRepo.findByUser_IdAndStatus(userId, AddressStatus.ACTIVE);
+        if (addresses.isEmpty()) return null;
+        List<Address> addressDefault = addresses.stream().filter(Address::isDefault).toList();
+        if (addressDefault.getFirst() == null) return addressMapper.toResponse(addresses.getFirst());
+        return addressMapper.toResponse(addressDefault.getFirst());
+    }
+
+    @Override
+    public List<AddressResponse> getAddresses(Long userId) {
+        List<Address> addresses = addressRepo.findByUser_IdAndStatus(userId, AddressStatus.ACTIVE);
+        return addresses.stream().map(addressMapper::toResponse).toList();
     }
 
 }

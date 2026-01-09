@@ -11,7 +11,6 @@ import hoang.shop.identity.mapper.UserRoleMapper;
 import hoang.shop.identity.model.Role;
 import hoang.shop.identity.model.User;
 import hoang.shop.identity.model.UserRole;
-import hoang.shop.identity.model.UserRoleId;
 import hoang.shop.identity.repository.RoleRepository;
 import hoang.shop.identity.repository.UserRepository;
 import hoang.shop.identity.repository.UserRoleRepository;
@@ -20,8 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +40,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public boolean assignRoleToUser(Long userId, Long roleId,Long actorId ) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NotFoundException("{error.user.notFound}"));
         Role role = roleRepository.findById(roleId).orElseThrow(()-> new NotFoundException("{error.role.notFound}"));
-        if (userRoleRepo.existsByUser_IdAndRole_IdAndDeletedFalse(userId,roleId)) return false;
+        if (userRoleRepo.existsByUser_IdAndRole_Id(userId,roleId)) return false;
         try {
             UserRole ur = UserRole.builder()
                     .user(user)
@@ -58,14 +55,14 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public boolean removeRoleFromUser(Long userId, Long roleId,Long actorId) {
-        return userRoleRepo.findById(new UserRoleId(userId,roleId))
-                .filter(ur -> !ur.isDeleted())
-                .map(ur -> {
-                    ur.setDeleted(true);
-                    ur.setRemovedBy(actorId);
-                    ur.setRemovedAt(Instant.now());
-                    return true;
-                }).orElse(false);
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new NotFoundException("{error.user.notFound}"));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(()-> new NotFoundException("{error.role.notFound}"));
+        UserRole userRole = userRoleRepo.findByUser_IdAndRole_Id(userId,roleId)
+                .orElseThrow(()-> new NotFoundException("{error.role.notFound}"));
+        userRoleRepo.delete(userRole);
+        return true;
     }
 
     @Override
@@ -74,7 +71,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (!userRepository.existsById(userId)){
             throw new NotFoundException("{error.user.notFound}");
         }
-        return userRoleRepo.findRolesByUserIdAndDeletedFalse(userId,pageable).map(roleMapper::toResponse);
+        return userRoleRepo.findRolesByUserId(userId,pageable).map(roleMapper::toResponse);
     }
 
     @Override
@@ -83,13 +80,13 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (!roleRepository.existsById(roleId)){
             throw new NotFoundException("{error.role.notFound}");
         }
-        return userRoleRepo.findUsersByRoleIdAndDeletedFalse(roleId,pageable)
+        return userRoleRepo.findUsersByRoleId(roleId,pageable)
                 .map(userMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean userHasRole(Long userId, Long roleId) {
-        return userRoleRepo.existsByUser_IdAndRole_IdAndDeletedFalse(userId,roleId);
+        return userRoleRepo.existsByUser_IdAndRole_Id(userId,roleId);
     }
 }

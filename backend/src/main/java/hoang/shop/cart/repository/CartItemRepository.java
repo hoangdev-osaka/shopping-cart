@@ -1,7 +1,7 @@
 package hoang.shop.cart.repository;
 
 import hoang.shop.cart.model.CartItem;
-import hoang.shop.common.enums.CartItemStatus;
+import hoang.shop.common.enums.status.CartItemStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,7 +11,7 @@ public interface CartItemRepository extends JpaRepository<CartItem,Long> {
     List<CartItem> findByCart_Id(Long cartId);
 
 
-    Optional<CartItem> findByCart_IdAndProductVariant_Id(Long cardId, Long variantId);
+    Optional<CartItem> findByCart_IdAndProductVariant_IdAndStatus(Long cardId, Long variantId,CartItemStatus status);
 
     Optional<CartItem> findByCart_User_IdAndId(Long userId, Long cartItemId);
 

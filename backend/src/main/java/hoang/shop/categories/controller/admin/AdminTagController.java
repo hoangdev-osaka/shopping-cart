@@ -1,7 +1,7 @@
 package hoang.shop.categories.controller.admin;
 
 
-import hoang.shop.common.enums.TagStatus;
+import hoang.shop.common.enums.status.TagStatus;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.categories.dto.request.TagCreateRequest;
 import hoang.shop.categories.dto.request.TagUpdateRequest;

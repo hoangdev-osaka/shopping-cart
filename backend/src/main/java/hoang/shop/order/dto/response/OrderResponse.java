@@ -1,8 +1,8 @@
 package hoang.shop.order.dto.response;
 
-import hoang.shop.common.enums.OrderStatus;
+import hoang.shop.common.enums.status.OrderStatus;
 import hoang.shop.common.enums.PaymentMethod;
-import hoang.shop.common.enums.PaymentStatus;
+import hoang.shop.common.enums.status.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -10,9 +10,9 @@ import java.util.List;
 
 public record OrderResponse(
         OrderStatus orderStatus,
-        Long id,
         Long userId,
         String name,
+        String orderNumber,
         String postalCode,
         String phone,
         String fullAddress,

@@ -4,7 +4,7 @@ import hoang.shop.categories.dto.request.BrandCreateRequest;
 import hoang.shop.categories.dto.request.BrandUpdateRequest;
 import hoang.shop.categories.dto.response.AdminBrandResponse;
 import hoang.shop.categories.dto.response.BrandResponse;
-import hoang.shop.common.enums.BrandStatus;
+import hoang.shop.common.enums.status.BrandStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 

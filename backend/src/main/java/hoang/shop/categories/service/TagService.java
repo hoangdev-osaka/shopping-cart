@@ -4,7 +4,7 @@ import hoang.shop.categories.dto.request.TagCreateRequest;
 import hoang.shop.categories.dto.request.TagUpdateRequest;
 import hoang.shop.categories.dto.response.AdminTagResponse;
 import hoang.shop.categories.dto.response.TagResponse;
-import hoang.shop.common.enums.TagStatus;
+import hoang.shop.common.enums.status.TagStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 

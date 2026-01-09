@@ -3,7 +3,7 @@ package hoang.shop.categories.service;
 import hoang.shop.categories.dto.request.ProductColorImageCreateRequest;
 import hoang.shop.categories.dto.request.ProductColorImageUpdateRequest;
 import hoang.shop.categories.dto.response.AdminImageResponse;
-import hoang.shop.common.enums.ImageStatus;
+import hoang.shop.common.enums.status.ImageStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 

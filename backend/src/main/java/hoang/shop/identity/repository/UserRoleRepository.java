@@ -10,8 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface UserRoleRepository extends JpaRepository<UserRole,UserRoleId> {
-    boolean existsByUser_IdAndRole_IdAndDeletedFalse(Long userId, Long roleId);
+    boolean existsByUser_IdAndRole_Id(Long userId, Long roleId);
     int deleteByUser_IdAndRole_Id(Long userId, Long roleId);
 
     @Query( value = """
@@ -19,14 +21,13 @@ public interface UserRoleRepository extends JpaRepository<UserRole,UserRoleId> {
                     FROM UserRole ur
                     JOIN ur.role r
                 WHERE ur.user.id = :userId
-                    AND ur.deleted = false
                 """,
             countQuery = """
                 SELECT COUNT(DISTINCT r.id) FROM UserRole ur
                     JOIN ur.role r
-                WHERE ur.user.id = :userId AND ur.deleted = false
+                WHERE ur.user.id = :userId
                 """)
-    Page<Role> findRolesByUserIdAndDeletedFalse(@Param("userId") Long userId, Pageable pageable);
+    Page<Role> findRolesByUserId(@Param("userId") Long userId, Pageable pageable);
 
 
     @Query( value = """  
@@ -34,16 +35,16 @@ public interface UserRoleRepository extends JpaRepository<UserRole,UserRoleId> {
                     FROM UserRole ur
                     JOIN ur.user u
                 WHERE ur.role.id = :roleId
-                    AND ur.deleted = false
                 """,
             countQuery = """
                 SELECT COUNT(DISTINCT u.id)
                 FROM UserRole ur
                      JOIN ur.user u
                 WHERE ur.role.id = :roleId
-                    AND ur.deleted = false
                 """)
-    Page<User> findUsersByRoleIdAndDeletedFalse(@Param("roleId") Long roleId, Pageable pageable);
+    Page<User> findUsersByRoleId(@Param("roleId") Long roleId, Pageable pageable);
 
+
+    Optional<UserRole> findByUser_IdAndRole_Id(Long userId, Long roleId);
 
 }

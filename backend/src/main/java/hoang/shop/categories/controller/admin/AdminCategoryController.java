@@ -7,13 +7,15 @@ import hoang.shop.categories.dto.request.CategoryCreateRequest;
 import hoang.shop.categories.dto.request.CategoryUpdateRequest;
 import hoang.shop.common.IdListRequest;
 import hoang.shop.categories.service.CategoryService;
-import hoang.shop.common.enums.CategoryStatus;
+import hoang.shop.common.enums.status.CategoryStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 
@@ -23,9 +25,11 @@ import java.net.URI;
 public class AdminCategoryController {
     private final CategoryService categoryService;
 
-    @PostMapping
-    public ResponseEntity<AdminCategoryResponse> create(@RequestBody CategoryCreateRequest createRequest) {
-        AdminCategoryResponse saved = categoryService.create(createRequest);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdminCategoryResponse> create(
+            @RequestPart("file") MultipartFile file ,
+            @RequestPart("metadata") CategoryCreateRequest createRequest) {
+        AdminCategoryResponse saved = categoryService.create(createRequest,file);
         URI location = URI.create("/api/categories/"+saved.id());
         return ResponseEntity.created(location).body(saved);
     }

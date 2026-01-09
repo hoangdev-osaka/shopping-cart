@@ -1,6 +1,6 @@
 package hoang.shop.categories.dto.response;
 
-import hoang.shop.common.enums.BrandStatus;
+import hoang.shop.common.enums.status.BrandStatus;
 
 import java.time.Instant;
 

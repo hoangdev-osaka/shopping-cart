@@ -2,14 +2,12 @@ package hoang.shop.categories.model;
 
 
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.ImageStatus;
+import hoang.shop.common.enums.status.ImageStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Entity
 @Getter @Setter
@@ -45,6 +43,7 @@ public class ProductColorImage extends BaseEntity {
     private boolean main = false;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ImageStatus status = ImageStatus.ACTIVE;
 
 

@@ -14,17 +14,9 @@ public interface AddressService {
 
     List<AddressResponse> listByUser(Long userId);
 
-    boolean softDelete(Long addressId);
-
-    boolean restore(Long addressId);
-
-    boolean hardDelete(Long addressId);
-
-
-    //user
-    AddressResponse create(Long userId, AddressCreateRequest request);
-
     AddressResponse getById(Long userId, Long addressId);
+
+    AddressResponse create(Long userId, AddressCreateRequest request);
 
     AddressResponse update(Long userId, Long addressId, AddressUpdateRequest request);
 
@@ -32,10 +24,10 @@ public interface AddressService {
 
     boolean restore(Long userId, Long addressId);
 
-    Page<AddressResponse> list(Long userId, Pageable pageable);
-
     boolean setDefault(Long userId, Long addressId);
 
-    AddressResponse getDefault(Long userId);
 
+    AddressResponse getDefaultAddress(Long userId);
+
+    List<AddressResponse> getAddresses(Long userId);
 }

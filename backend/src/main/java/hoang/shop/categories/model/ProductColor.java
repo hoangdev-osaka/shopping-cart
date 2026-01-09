@@ -2,14 +2,14 @@ package hoang.shop.categories.model;
 
 
 import hoang.shop.common.baseEntity.BaseEntity;
-import hoang.shop.common.enums.ProductColorStatus;
+import hoang.shop.common.enums.ColorFamily;
+import hoang.shop.common.enums.status.ProductColorStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +49,19 @@ public class ProductColor extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "color_family", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ColorFamily colorFamily;
+
+
+
     @Column(name = "hex", length = 7)
     private String hex;
 
     @Column(name = "is_main", nullable = false)
     private boolean main = false;
-
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     public ProductColorStatus status = ProductColorStatus.ACTIVE;
 
     public void addImages(List<ProductColorImage> images) {

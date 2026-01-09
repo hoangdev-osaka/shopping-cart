@@ -1,7 +1,7 @@
 package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.Brand;
-import hoang.shop.common.enums.BrandStatus;
+import hoang.shop.common.enums.status.BrandStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

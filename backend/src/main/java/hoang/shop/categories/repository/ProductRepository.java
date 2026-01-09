@@ -2,13 +2,17 @@ package hoang.shop.categories.repository;
 
 import hoang.shop.categories.model.Category;
 import hoang.shop.categories.model.Product;
-import hoang.shop.common.enums.ProductStatus;
+import hoang.shop.common.enums.status.ProductStatus;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,10 +59,5 @@ public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpec
 
     Optional<Product> findBySlugAndStatus(String slug, ProductStatus status);
 
-
-
-
-
-
-
+    Slice<Product> findByCreatedAtGreaterThanEqual(Instant from, Pageable sorted);
 }

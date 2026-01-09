@@ -1,7 +1,7 @@
 package hoang.shop.order.dto.request;
 
-import hoang.shop.common.enums.OrderStatus;
-import hoang.shop.common.enums.PaymentStatus;
+import hoang.shop.common.enums.status.OrderStatus;
+import hoang.shop.common.enums.status.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;

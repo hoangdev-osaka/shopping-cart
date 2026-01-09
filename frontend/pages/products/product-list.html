@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="icon" type="image/png" href="/assets/images/logoshop.png" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <p>今だけ！全品送料無料キャンペーン中 🎉</p>
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="/index.html">
+            <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
+          </a>
+          <form class="header-search">
+            <div class="header-search__box">
+              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+            </div>
+
+            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </a>
+          </form>
+        </div>
+
+        <section class="categories-list" id="categoriesList">
+          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
+          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
+        </section>
+
+        <nav class="header-actions">
+          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
+          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
+
+          <a href="/pages/cart/cart.html" class="cart-btn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 6h2" />
+              <path d="M7 6h11l-1.2 7H8.2L7 6z" />
+              <circle cx="10" cy="18.5" r="1.3" />
+              <circle cx="17" cy="18.5" r="1.3" />
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+
+          <button class="hamburger-btn" id="hamburgerBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+      <ul class="suggestions" id="suggestList"></ul>
+    </header>
+
+    <main class="site-main">
+      <div class="category-layout">
+        <aside class="filter-panel" id="filterPanel">
+          <h3 class="filter-panel__name">フィルター</h3>
+
+          <form id="filter-form">
+            <hr />
+            <div class="filter-group filter__categories">
+              <h4>カテゴリー</h4>
+              <!-- <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label> -->
+            </div>
+            <hr />
+            <div class="filter-group filter__brands">
+              <h4>ブランド</h4>
+              <!-- <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="mens" />
+                <span class="checkbox-custom"></span> メンズ
+              </label> -->
+            </div>
+            <hr />
+            <div class="filter-group filter__price">
+              <h4>価格</h4>
+
+              <div class="price-values">
+                <span id="price-min">0¥</span>
+                <span id="price-max">50,000¥</span>
+              </div>
+
+              <input type="range" id="priceRange" min="0" max="50000" step="500" value="50000" />
+            </div>
+
+            <hr />
+            <div class="filter-group" data-filter="color">
+              <div class="filter-group" data-filter="color">
+                <h4>カラー</h4>
+                <div class="color-options">
+                  <label class="color-swatch">
+                    <input type="checkbox" value="black" />
+                    <span class="swatch" style="background: #000"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="white" />
+                    <span class="swatch" style="background: #fff"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="gray" />
+                    <span class="swatch" style="background: #9e9e9e"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="red" />
+                    <span class="swatch" style="background: #e53935"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="blue" />
+                    <span class="swatch" style="background: #1e88e5"></span>
+                  </label>
+                  <label class="color-swatch">
+                    <input type="checkbox" value="beige" />
+                    <span class="swatch" style="background: #d7ccc8"></span>
+                  </label>
+                  <label class="color-swatch">
+                    <input type="checkbox" value="green" />
+                    <span class="swatch" style="background: #43a047"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="brown" />
+                    <span class="swatch" style="background: #6d4c41"></span>
+                  </label>
+
+                  <label class="color-swatch">
+                    <input type="checkbox" value="navy" />
+                    <span class="swatch" style="background: #1a237e"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </aside>
+        <div>
+          <div class="listing-toolbar">
+            <div class="category-path" id="categoryPath">
+              <a href="#" class="category-path__back-btn" id="btnBack">←BACK </a>
+              <a class="category-path__back-home" href="/index.html">Home</a>
+            </div>
+            <div class="listing-toolbar__filter">
+              <button class="btn-outline btn-small" data-action="open-filter">フィルター＆並び替え</button>
+            </div>
+          </div>
+          <section class="product-grid" id="product-list">
+            <!-- <a href="/pages/products/product-detail.html" class="card">
+              <img src="/assets/image/default/no-image.png" class="card-img" />
+              <h3 class="card-title">No Content</h3>
+              <div class="card-rating">
+                <span class="stars"></span>
+                <span class="rating-count"></span>
+              </div>
+  
+              <div class="card-price"></div>
+            </a> -->
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="main-footer" id="app-footer"></footer>
+    <script type="module" src="/assets/js/core/render/load-layout.js"></script>
+    <script type="module" src="/assets/js/components/header-search.js"></script>
+    <script type="module" src="/assets/js/pages/product-list.js"></script>
+  </body>
+</html>

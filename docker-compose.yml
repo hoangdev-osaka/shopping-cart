@@ -1,0 +1,42 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shopping-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: shopping_cart
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: shopping-backend
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:mysql://mysql:3306/shopping_cart?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
+      DB_USER: root
+      DB_PASS: root
+      FILE_UPLOAD_DIR: /app/uploads
+    volumes:
+      - ./uploads:/app/uploads
+      
+  redis:
+    image: redis:7.2
+    container_name: shopping-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  redis-data:

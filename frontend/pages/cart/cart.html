@@ -1,54 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="/assets/css/main.css">
-</head>
-<body>
-    <header class="header">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
       <div class="top-bar">
-  <p>今だけ！全品送料無料キャンペーン中 🎉</p>
-</div>
-      <div class="container header-inner">
-        <!-- LOGO -->
-        <div class="header-logo">
+      <p>今だけ！全品送料無料キャンペーン中 🎉</p>
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
           <a href="/index.html">
             <img
-              id="logo"
-              src="/assets/image/ChatGPT Image 00_20_08 8 thg 12, 2025.png"
-              alt="Hoang Shop Logo"
+              class="logo_img"
+              src="/assets/images/logoshop.png"
+              alt="roll shop"
             />
           </a>
-        </div>
-
-        <!-- SEARCH -->
-        <form class="header-search">
-          <input type="text" placeholder="検索..." />
-          <button type="submit" class="search-btn">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
+           <form class="header-search">
+          <div class="header-search__box">
+            <input class="header-search__input" id="searchInput"  type="text" placeholder="検索..." autocomplete="off"a />
+          </div>
+          
+          <a class="search-btn" href="/pages/products/product-list.html" id = "searchButton" type="submit" >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-          </button>
+          </a>
         </form>
+
+
+        </div>
+
+        <section class="categories-list" id="categoriesList">
+          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
+          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
+
+        </section>
+     
+
+
+
+
+
         <nav class="header-actions">
-          <a href="/pages/auth/login.html" class="btn btn-outline btn-small"
+          <a
+            href="/pages/auth/login.html"
+            class="btn btn-outline btn-small"
             >ログイン</a
           >
-          <a href="/pages/auth/register.html" class="btn btn-primary btn-small"
+          <a
+            href="/pages/auth/register.html"
+            class="btn btn-primary btn-small"
             >ユーザー登録</a
           >
 
-          <a href="/pages/cart/cart.html"  class="cart-btn">
+          <a href="/pages/cart/cart.html" class="cart-btn">
             <svg
               width="24"
               height="24"
@@ -64,7 +79,9 @@
               <circle cx="10" cy="18.5" r="1.3" />
               <circle cx="17" cy="18.5" r="1.3" />
             </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
           </a>
+          
           <button class="hamburger-btn" id="hamburgerBtn">
             <svg width="24" height="24" viewBox="0 0 24 24">
               <path
@@ -77,7 +94,88 @@
           </button>
         </nav>
       </div>
+    <ul class="suggestions" id="suggestList"></ul>
+       
     </header>
-  
-</body>
+
+
+
+    
+
+      <main class="cart">
+      <div class="container cart__inner">
+        <div class="cart__head">
+          <h1 class="cart__title">カート</h1>
+          <div class="cart__sub" id="cartSub">読み込み中…</div>
+        </div>
+
+        <div class="cart__content">
+          <section class="cart__items" aria-label="Cart items">
+            <div class="cart__state cart__state--loading" id="cartLoading">
+            
+            </div> 
+            <div class="cart__state cart__state--empty" id="cartEmpty" hidden>
+              <p class="cart-empty__title">カートは空です</p>
+              <a class="btn btn-primary" href="/index.html">商品を見る</a>
+            </div>
+
+            <div class="cart__list" id="cartList" hidden></div>
+
+          </section>
+
+          <aside class="cart__summary" aria-label="Cart summary">
+            <div class="cart-summary">
+              <h2 class="cart-summary__title">注文内容</h2>
+
+              <div class="cart-summary__row">
+                <span class="cart-summary__label">小計</span>
+                <span class="cart-summary__value" id="cartSubtotal">¥0</span>
+              </div>
+
+              <div class="cart-summary__row">
+                <span class="cart-summary__label">送料</span>
+                <span class="cart-summary__value" id="cartShipping">無料</span>
+              </div>
+
+              <div class="cart-summary__divider"></div>
+
+              <div class="cart-summary__row cart-summary__row--total">
+                <span class="cart-summary__label">合計</span>
+                <span class="cart-summary__value" id="cartTotal">¥0</span>
+              </div>
+
+              <button
+                class="cart-summary__checkout-btn"
+                id="checkoutBtn"
+                disabled
+              >
+                <span class="btn-spinner" aria-hidden="true"></span>
+                レジに進む
+              </button>
+
+              <p class="cart-summary__note" id="cartNote">
+                在庫状況により注文できない場合があります。
+              </p>
+              
+            </div>
+            <section class="payment-methods">
+        <p class="payment-methods__title">ご利用可能なお支払い方法</p>
+
+          <div class="payment-methods__list">
+            <img class="payment-methods__list--visa" src="/assets/images/payments/visa.png" alt="VISA">
+            <img class="payment-methods__list--mastercard"  src="/assets/images/payments/mastercard.png" alt="Mastercard">
+            <img class="payment-methods__list--paypay" src="/assets/images/payments/paypay.png" alt="PayPay">
+            <img class="payment-methods__list--rakuten" src="/assets/images/payments/rakuten.jpeg" alt="Rakuten Pay">
+            <img class="payment-methods__list--amz" src="/assets/images/payments/amazon.svg" alt="Amazon Pay">
+          </div>
+        </section>
+          </aside>
+        </div>
+      </div>
+    </main>
+    <footer class="main-footer" id="app-footer"></footer>
+    <script type="module" src="/assets/js/core/render/load-layout.js"></script>
+    <script type="module" src="/assets/js/components/header-search.js"></script>
+    <script type="module" src="/assets/js/pages/cart.js"></script>
+  </body>
 </html>

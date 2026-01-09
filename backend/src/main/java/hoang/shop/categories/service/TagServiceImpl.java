@@ -9,7 +9,7 @@ import hoang.shop.categories.dto.response.TagResponse;
 import hoang.shop.categories.mapper.TagMapper;
 import hoang.shop.categories.model.Tag;
 import hoang.shop.categories.repository.TagRepository;
-import hoang.shop.common.enums.TagStatus;
+import hoang.shop.common.enums.status.TagStatus;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.ConflictException;
 import hoang.shop.common.exception.DuplicateResourceException;

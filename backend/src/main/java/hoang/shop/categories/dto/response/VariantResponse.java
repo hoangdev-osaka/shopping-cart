@@ -1,6 +1,6 @@
 package hoang.shop.categories.dto.response;
 
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 
 import java.math.BigDecimal;
 

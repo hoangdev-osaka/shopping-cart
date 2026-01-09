@@ -37,6 +37,8 @@ public interface ProductMapper {
     @Mapping(target = "averageRating",source = "stats.averageRating")
     @Mapping(target = "reviewCount",source = "stats.reviewCount")
     @Mapping(target = "imageUrl", expression = "java(toDefaultImageUrl(product))")
+
+
     ProductListItemResponse toListItemResponse(Product product,ProductReviewStats stats);
 
 
@@ -68,6 +70,7 @@ public interface ProductMapper {
         return result;
     }
     default ProductRatingStatsResponse toRatingStats(ProductReviewStats stats) {
+        if (stats == null) return null;
         return new ProductRatingStatsResponse(
                 stats.getRating1(),
                 stats.getRating2(),
@@ -84,7 +87,7 @@ public interface ProductMapper {
         ProductColor color = colors.stream()
                 .filter(ProductColor::isMain)
                 .findFirst()
-                .orElse(colors.get(0));
+                .orElse(colors.getFirst());
 
         List<ProductColorImage> images = color.getImages();
         if (images == null || images.isEmpty()) return "/uploads/default/no-image.png";
@@ -93,19 +96,57 @@ public interface ProductMapper {
                 .filter(ProductColorImage::isMain)
                 .map(ProductColorImage::getImageUrl)
                 .findFirst()
-                .orElse(images.get(0).getImageUrl());
+                .orElse(images.getFirst().getImageUrl());
     }
-    default BigDecimal toDefaultRegularPrice(Product product){
+    default BigDecimal toDefaultRegularPrice(Product product) {
+        if (product == null) {
+            return null;
+        }
         List<ProductColor> colors = product.getColors();
-        if (colors == null || colors.isEmpty()) return null;
-        ProductColor color = colors.stream().filter(ProductColor::isMain).toList().getFirst();
-        return  color.getVariants().getFirst().getRegularPrice();
+        if (colors == null || colors.isEmpty()) {
+            return null;
+        }
+        ProductColor targetColor = colors.stream()
+                .filter(ProductColor::isMain)
+                .findFirst()
+                .orElse(colors.getFirst());
+        if (targetColor == null) {
+            return null;
+        }
+        var variants = targetColor.getVariants();
+        if (variants == null || variants.isEmpty()) {
+            return null;
+        }
+        var firstVariant = variants.getFirst();
+        if (firstVariant == null) {
+            return null;
+        }
+        return firstVariant.getRegularPrice().multiply(BigDecimal.valueOf(1.10));
     }
     default BigDecimal toDefaultSalePrice(Product product){
+        if (product == null) {
+            return null;
+        }
         List<ProductColor> colors = product.getColors();
-        if (colors == null || colors.isEmpty()) return null;
-        ProductColor color = colors.stream().filter(ProductColor::isMain).toList().getFirst();
-        return  color.getVariants().getFirst().getSalePrice();
+        if (colors == null || colors.isEmpty()) {
+            return null;
+        }
+        ProductColor targetColor = colors.stream()
+                .filter(ProductColor::isMain)
+                .findFirst()
+                .orElse(colors.getFirst());
+        if (targetColor == null) {
+            return null;
+        }
+        var variants = targetColor.getVariants();
+        if (variants == null || variants.isEmpty()) {
+            return null;
+        }
+        var firstVariant = variants.getFirst();
+        if (firstVariant == null) {
+            return null;
+        }
+        return firstVariant.getSalePrice().multiply(BigDecimal.valueOf(1.10));
     }
 
 

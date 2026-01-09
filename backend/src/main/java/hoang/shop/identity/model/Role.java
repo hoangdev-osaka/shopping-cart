@@ -1,5 +1,6 @@
 package hoang.shop.identity.model;
 
+import hoang.shop.common.enums.status.RoleStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import hoang.shop.common.baseEntity.BaseEntity;
@@ -19,11 +20,16 @@ public class Role extends BaseEntity {
 
         @OneToMany(mappedBy = "role",cascade = CascadeType.ALL,orphanRemoval = true)
         private Set<UserRole> userRoles = new HashSet<>();
+
         @Column(nullable = false,length = 12)
         private String name;
+
         @Column(length = 255)
         private String description;
-        private boolean deleted = false;
+
+        @Column(nullable = false)
+        @Enumerated(EnumType.STRING)
+        private RoleStatus status = RoleStatus.ACTIVE;
 
 
 }

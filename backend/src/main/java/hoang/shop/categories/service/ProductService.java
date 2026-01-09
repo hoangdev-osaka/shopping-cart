@@ -7,6 +7,7 @@ import hoang.shop.categories.dto.response.ProductListItemResponse;
 import hoang.shop.common.IdListRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface ProductService {
     AdminListItemProductResponse create(ProductCreateRequest createRequest);
@@ -22,4 +23,5 @@ public interface ProductService {
     ProductDetailResponse getActiveBySlug(String slug);
     Page<ProductListItemResponse> search(PublicProductSearchCondition condition, Pageable pageable);
 
+    Slice<ProductListItemResponse> getNewProducts(Pageable pageable);
 }

@@ -43,22 +43,5 @@ public class AdminUserRoleController {
         return removed ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
-
-    @GetMapping("/roles/{roleId}/is")
-    public ResponseEntity<Boolean> userHasRole(
-            @PathVariable Long userId,
-            @PathVariable Long roleId) {
-        boolean hasRole = userRoleService.userHasRole(userId, roleId);
-        return ResponseEntity.ok(hasRole);
-    }
-    @GetMapping
-    public ResponseEntity<Page<UserRoleResponse>> listUserRole(
-            @PageableDefault(
-                    page = 0,size = 20,sort = {"assignedAt","userId"},
-                    direction = Sort.Direction.DESC)
-            Pageable pageable){
-        Page<UserRoleResponse> userRoleResponses = userRoleService.listUserRole(pageable);
-        return ResponseEntity.ok(userRoleResponses);
-    }
 }
 

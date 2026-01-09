@@ -1,5 +1,6 @@
 package hoang.shop.identity.service;
 
+import hoang.shop.common.enums.status.RoleStatus;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.common.exception.AlreadyExistsException;
 import hoang.shop.common.exception.NotFoundException;
@@ -29,54 +30,47 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleMapper.toEntity(roleCreateRequest);
         return roleMapper.toResponse(roleRepository.save(role));
     }
-    // tìm role bằng id
     @Override
     public RoleResponse findById(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("error.role.id.notFound"));
+                .orElseThrow(()-> new NotFoundException("{error.role.id.not-found}"));
         return roleMapper.toResponse(role);
     }
-    // tìm role bằng tên quyền
     @Override
     public RoleResponse findByName(String name) {
         Role role = roleRepository.findByName(name)
-                .orElseThrow(()-> new NotFoundException("error.role.name.notFound"));
+                .orElseThrow(()-> new NotFoundException("{error.role.name.not-found}"));
         return roleMapper.toResponse(role);
     }
-    // tìm list role active
     @Override
     public Page<RoleResponse> findAllActive(Pageable pageable) {
-        return roleRepository.findAllByDeletedFalse(pageable).map(roleMapper::toResponse);
+        return roleRepository.findAllByStatus(RoleStatus.ACTIVE,pageable).map(roleMapper::toResponse);
     }
-    // tìm list role deleted
     @Override
     public Page<RoleResponse> findAllDeleted(Pageable pageable) {
-        return roleRepository.findAllByDeletedTrue(pageable).map(roleMapper::toResponse);
+        return roleRepository.findAllByStatus(RoleStatus.INACTIVE,pageable).map(roleMapper::toResponse);
     }
-    // tìm kiếm role bằng từ khóa
     @Override
-    public Page<RoleResponse> search(String keyword, Pageable pageable) {
-        return roleRepository.searchByKeyword(keyword,pageable).map(roleMapper::toResponse);
+    public Page<RoleResponse> search(String keyword,RoleStatus status, Pageable pageable) {
+        return roleRepository.searchByKeyword(keyword,status,pageable).map(roleMapper::toResponse);
     }
-    // cập nhật role bằng id
     @Override
     public RoleResponse update(Long id, RoleUpdateRequest roleUpdateRequest) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("error.role.id.notFound"));
+                .orElseThrow(()-> new NotFoundException("{error.role.id.not-found}"));
         roleMapper.updateEntityFromDto(roleUpdateRequest,role);
         return roleMapper.toResponse(role);
     }
-    // xóa mềm role bằng id
     @Override
-    public boolean softDeleteById(Long id) {
-        return roleRepository.softDeleteById(id)>0;
+    public void softDeleteById(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("{error.role.id.not-found}"));
     }
-    // khôi phục role đã xóa bằng id
     @Override
-    public boolean restoreById(Long id) {
-        return roleRepository.softDeleteById(id)>0;
+    public void restoreById(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("{error.role.id.not-found}"));
     }
-    // kiểm tra tên của role có tồn tại hay không (cả hoa cả thường)
     @Override
     public boolean existsByName(String name) {
         return roleRepository.existsByNameIgnoreCase(name);

@@ -1,6 +1,6 @@
 package hoang.shop.categories.dto.request;
 
-import hoang.shop.common.enums.ProductVariantStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 
 public record ProductVariantSearchCondition(
         Long productId,

@@ -27,11 +27,6 @@
     color: var(--color-text-muted);
 }
 
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
 
 .footer-section ul li {
     margin-bottom: var(--space-xs);

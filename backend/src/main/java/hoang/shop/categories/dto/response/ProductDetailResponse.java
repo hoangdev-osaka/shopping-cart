@@ -1,5 +1,8 @@
 package hoang.shop.categories.dto.response;
 
+import hoang.shop.categories.model.ProductReview;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public record ProductDetailResponse(
@@ -20,6 +23,7 @@ public record ProductDetailResponse(
 
         String description,
         List<CategoryResponse> categoryPath,
-        List<ColorResponse> colors
+        List<ColorResponse> colors,
+        List<ProductReviewResponse> reviews
 ) {
 }

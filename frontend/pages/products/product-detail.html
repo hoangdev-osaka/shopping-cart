@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <p>今だけ！全品送料無料キャンペーン中 🎉</p>
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="/index.html">
+            <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
+          </a>
+          <form class="header-search">
+            <div class="header-search__box">
+              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+            </div>
+
+            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </a>
+          </form>
+        </div>
+
+        <section class="categories-list" id="categoriesList">
+          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
+          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
+          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
+        </section>
+
+        <nav class="header-actions">
+          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
+          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
+
+          <a href="/pages/cart/cart.html" class="cart-btn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 6h2" />
+              <path d="M7 6h11l-1.2 7H8.2L7 6z" />
+              <circle cx="10" cy="18.5" r="1.3" />
+              <circle cx="17" cy="18.5" r="1.3" />
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+
+          <button class="hamburger-btn" id="hamburgerBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+      <ul class="suggestions" id="suggestList"></ul>
+    </header>
+
+    <main class="product-detail">
+      <div class="product-detail__inner">
+        <section id="productDetail" class="product-detail__gallery">
+          <div class="product-img">
+            <div class="product-img__thumbnails">
+              <img class="product-img__thumbnail" src="/assets/images/default/no-image.png" alt="list image" />
+              <img class="product-img__thumbnail" src="/assets/images/default/no-image.png" alt="list image" />
+              <img class="product-img__thumbnail" src="/assets/images/default/no-image.png" alt="list image" />
+            </div>
+
+            <div class="product-img__main">
+              <div class="product-img__track">
+                <img class="product-img__slide" src="/assets/images/default/no-image.png" alt="list image" />
+              </div>
+            </div>
+          </div>
+
+          <div class="product-content">
+            <h3 id="productName">アディダス ランニングシューズDrop + Harry Potter™ Quidditch™ Desk Mat</h3>
+            <span class="discount-percent">-20% OFF</span>
+
+            <div class="card-price__detail">
+              <span class="price-current price-current__detail">¥19,999</span>
+              <span class="price-old">¥25000</span>
+            </div>
+            <h5 class="tax-text">(税込)</h5>
+
+            <div class="color-option" id="colorList">
+              <input type="radio" name="color" id="color-black" value="black" />
+              <label for="color-black" class="color-option__item">
+                <img src="/assets/images/default/no-image.png" alt="Black" />
+              </label>
+
+              <input type="radio" name="color" id="color-white" value="white" />
+              <label for="color-white" class="color-option__item">
+                <img src="/assets/images/default/no-image.png" alt="White" />
+              </label>
+
+              <input type="radio" name="color" id="color-red" value="red" />
+              <label for="color-red" class="color-option__item">
+                <img src="/assets/images/default/no-image.png" alt="Red" />
+              </label>
+            </div>
+
+            <h4>サイズ</h4>
+            <div class="size-selector">
+              <!-- <input type="radio" name="size" id="size-26" value="26" />
+              <label for="size-26">26cm</label>
+
+              <input type="radio" name="size" id="size-26-5" value="26.5" />
+              <label for="size-26-5">26.5cm</label>
+
+              <input type="radio" name="size" id="size-27" value="26.5" />
+              <label for="size-27">27.cm</label>
+
+              <input type="radio" name="size" id="size-27-5" value="26.5" />
+              <label for="size-27-5">27.5cm</label>
+              <input type="radio" name="size" id="size-26" value="26" />
+              <label for="size-26">26cm</label>
+
+              <input type="radio" name="size" id="size-26-5" value="26.5" />
+              <label for="size-26-5">26.5cm</label>
+
+              <input type="radio" name="size" id="size-27" value="26.5" />
+              <label for="size-27">27.cm</label>
+
+              <input type="radio" name="size" id="size-27-5" value="26.5" />
+              <label for="size-27-5">27.5cm</label> -->
+            </div>
+
+            <button class="btn btn--primary" id="addToCartBtn">
+              <span class="btn-spinner" aria-hidden="true"></span>
+              カートに追加
+            </button>
+
+            <h4>説明</h4>
+            <div>
+              <p class="product__description" id="productDescription">
+                エア マックス
+                95は、人間の身体と90年代のトラック競技の美しいスタイルから着想を得たデザイン。抜群に快適な履き心地とスピード感のあるスタイルを兼ね備えています。
+                波状のサイドパネルで、あらゆるコーディネートに自然な流れをプラス。ヒールと前足部に外から見えるクッショニングを配し、機能性が高く快適な履き心地を実現しています。
+              </p>
+            </div>
+          </div>
+        </section>
+        <h3>他のおすすめ商品</h3>
+        <section></section>
+        <hr />
+        <section class="reviews">
+          <h3 class="reviews__title">レビュー</h3>
+
+          <div class="reviews-summary">
+            <div class="reviews-summary__avg">
+              <div id="avgStars" class="stars"></div>
+              <div class="reviews-summary__score">
+                <span id="avgRating" class="score">4.7</span>
+                <span id="reviewCount" class="count">(3件のレビュー)</span>
+              </div>
+            </div>
+
+            <div id="ratingBreakdown" class="reviews-summary__breakdown"></div>
+          </div>
+
+          <hr />
+          <div id="reviewList" class="review-list"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Hoang Shop</h3>
+          <p>品質を大切に、価値をその先へ。</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>クイックリンク</h4>
+          <ul>
+            <li><a href="/home">ホーム</a></li>
+            <li><a href="/products">商品一覧</a></li>
+            <li><a href="/login">ログイン</a></li>
+            <li><a href="/register">ユーザー登録</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>お問い合わせ</h4>
+          <p>メール: support@hoangshop.com</p>
+          <p>所在地: 大阪府, 日本</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">© 2025 Hoang Shop. 全著作権所有。</div>
+    </footer>
+    <script type="module" src="/assets/js/components/header-search.js"></script>
+    <script type="module" src="/assets/js/pages/product-detail.js"></script>
+  </body>
+</html>
