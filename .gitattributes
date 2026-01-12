@@ -1,0 +1,3 @@
+backend/** linguist-detectable=true
+frontend/** linguist-detectable=true
+uploads/** linguist-detectable=false
