@@ -165,25 +165,14 @@
     <main class="container container-login">
       <form class="register-form" id="registerForm" autocomplete="off">
         <h2>新規登録</h2>
-        <input
-          type="text"
-          name="username"
-          autocomplete="username"
-          style="position: absolute; left: -9999px; opacity: 0; height: 0; width: 0"
-        />
-        <input
-          type="password"
-          name="password"
-          autocomplete="current-password"
-          style="position: absolute; left: -9999px; opacity: 0; height: 0; width: 0"
-        />
+      
         <label class="form-label" for="email">メール</label>
-        <input class="form-input" id="email" type="email" placeholder="メールアドレス" inputmode="none" />
+        <input class="form-input" id="email" type="email" placeholder="メールアドレス" autocomplete="off"/>
 
         <div class="form-group">
           <label class="form-label" for="password">パスワード</label>
           <div class="password-wrapper">
-            <input class="form-input" id="password" type="password" placeholder="パスワード" inputmode="none" />
+            <input class="form-input" id="password" type="password" placeholder="パスワード" autocomplete="off"/>
             <button type="button" class="toggle-password" data-target="password" aria-label="パスワード表示切替">👁</button>
           </div>
         </div>
