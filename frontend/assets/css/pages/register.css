@@ -16,6 +16,7 @@
   box-shadow: var(--shadow-strong);
   display: flex;
   flex-direction: column;
+  font-size: 18px;
   padding: 24px;
   gap: 10px;
   margin: 100px auto;
@@ -92,4 +93,11 @@
 }
 .modal__name{
   color: rgb(105, 232, 105);
+}
+@media (max-width: 758px) {
+  .register-form{
+    margin: 20px auto;
+    
+  }
+
 }

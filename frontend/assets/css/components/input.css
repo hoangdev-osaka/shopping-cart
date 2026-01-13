@@ -16,7 +16,7 @@
   border-radius: 8px;
   border: 1px solid #d0d0d0;
   background-color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   color: #222;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -74,4 +74,11 @@
 }
 .form-message__error {
   color: #e02424;
+}
+@media (hover: none) and (pointer: coarse) {
+  .form-input,
+  .form-input--sm,
+  .form-input--lg {
+    font-size: 16px !important;
+  }
 }
