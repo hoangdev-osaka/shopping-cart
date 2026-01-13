@@ -1,5 +1,7 @@
 import { API_BASE } from "../api/config.js";
 import { loadCartBadge } from "../core/render/loadCartBadge.js";
+import { checkLogin } from "../components/check-login.js";
+
 const token = localStorage.getItem("token");
 
 const elLoading = document.getElementById("cartLoading");
@@ -8,12 +10,13 @@ const elList = document.getElementById("cartList");
 
 const elSub = document.getElementById("cartSub");
 const elSubtotal = document.getElementById("cartSubtotal");
-const elShipping = document.getElementById("cartShipping");
+const elTaxAmount = document.getElementById("taxFee");
 const elTotal = document.getElementById("cartTotal");
 const elCheckoutBtn = document.getElementById("checkoutBtn");
+const loadingEl = document.getElementById("loading");
 
 function yen(n) {
-  const v = Number(n)
+  const v = Number(n);
   if (!v) return `無料`;
   return `¥${v.toLocaleString()}`;
 }
@@ -32,7 +35,9 @@ async function fetchText(url, options = {}) {
   const res = await fetch(url, options);
   const raw = await res.text();
   let data = null;
-  try { data = raw ? JSON.parse(raw) : null; } catch {}
+  try {
+    data = raw ? JSON.parse(raw) : null;
+  } catch {}
   return { res, raw, data };
 }
 
@@ -48,7 +53,6 @@ function normalizeImageUrl(url) {
   }
   return `${API_BASE}/${url}`;
 }
-
 
 function renderCart(cart) {
   const items = cart?.cartItems || [];
@@ -70,17 +74,18 @@ function renderCart(cart) {
   elSub.textContent = `${lineCount}件（合計${totalQty}点）`;
   showState({ list: true });
 
-  elList.innerHTML = items.map((it) => {
-    const itemId = it.cartItemId;       
-    const img = normalizeImageUrl(it.imageUrl);
-    const name = it.nameLabel || "商品";        
-    const size = it.sizeLabel ? `${it.sizeLabel}cm` : ""; 
-    const color = it.colorLabel || "";      
-    const qty = Number(it.quantity ?? 1);     
-    const unit = Number(it.unitPriceAtOrder ?? it.unitPriceBefore ?? 0);
-    const lineTotal = Number(it.lineTotal ?? (unit * qty));          
+  elList.innerHTML = items
+    .map((it) => {
+      const itemId = it.cartItemId;
+      const img = normalizeImageUrl(it.imageUrl);
+      const name = it.nameLabel || "商品";
+      const size = it.sizeLabel ? `${it.sizeLabel}cm` : "";
+      const color = it.colorLabel || "";
+      const qty = Number(it.quantity ?? 1);
+      const unit = Number(it.unitPriceAtOrder ?? it.unitPriceBefore ?? 0);
+      const lineTotal = Number(it.lineTotal ?? unit * qty);
 
-    return `
+      return `
       <article class="cart-item" data-item-id="${itemId}">
         <a href = "/pages/products/product-detail.html?slug=${encodeURIComponent(it.productSlug)}">
         <img class="cart-item__img" src="${img}" alt="${name}">
@@ -110,22 +115,26 @@ function renderCart(cart) {
         </div>
       </article>
     `;
-  }).join("");
-  
-  const subtotal = Number(cart?.grandTotal ?? items.reduce((s, it) => s + Number(it.lineTotal || 0), 0));
-  const shipping = 0; 
-  const total = subtotal + shipping;
+    })
+    .join("");
 
-  elSubtotal.textContent = yen(subtotal);
-  elShipping.textContent = yen(shipping);
-  elTotal.textContent = yen(total);
+  const subtotalAmount = Number(cart?.subtotalAmount);
+  const taxAmount = Number(cart?.taxAmount);
+
+  const grandTotal = Number(cart?.grandTotal);
+
+  elSubtotal.textContent = yen(subtotalAmount);
+  elTaxAmount.textContent = yen(taxAmount);
+  elTotal.textContent = yen(grandTotal);
 
   elCheckoutBtn.disabled = false;
 }
 
 async function loadCart() {
-  if (!token) {
-    elSub.textContent = "ログインしてください";
+  const user = await checkLogin();
+  if (!user) {
+    document.getElementById("cartAlert").textContent = "ログインしてください！";
+
     showState({ empty: true });
     elCheckoutBtn.disabled = true;
     return;
@@ -136,24 +145,31 @@ async function loadCart() {
 
   const start = Date.now();
 
-  const { res, data, raw } = await fetchText(`${API_BASE}/api/my-cart`, {
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    loadingEl.classList.toggle("hidden");
+    const { res, data, raw } = await fetchText(`${API_BASE}/api/my-cart`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const elapsed = Date.now() - start;
-  if (elapsed < 300) await wait(300 - elapsed);
+    const elapsed = Date.now() - start;
+    if (elapsed < 300) await wait(300 - elapsed);
 
-  if (!res.ok) {
-    elSub.textContent = `読み込み失敗 (${res.status})`;
-    console.log("CART LOAD ERROR", raw);
-    showState({ empty: true });
-    return;
+    if (!res.ok) {
+      elSub.textContent = `読み込み失敗 (${res.status})`;
+      console.log("CART LOAD ERROR", raw);
+      showState({ empty: true });
+      return;
+    }
+
+    renderCart(data);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loadingEl.classList.toggle("hidden");
   }
-
-  renderCart(data);
 }
 
 async function updateQty(cartItemId, newQty) {
@@ -198,7 +214,7 @@ elList?.addEventListener("click", async (e) => {
 
   const action = btn.dataset.action;
   const itemEl = btn.closest(".cart-item");
-  const itemId = itemEl?.dataset.itemId; 
+  const itemId = itemEl?.dataset.itemId;
   if (!itemId) return;
 
   const input = itemEl.querySelector('.cart-qty__input[data-action="input"]');
@@ -236,7 +252,6 @@ elList?.addEventListener("change", async (e) => {
 
   const ok = await updateQty(itemId, input.value);
   if (ok) loadCart();
-
 });
 
 elCheckoutBtn?.addEventListener("click", async () => {

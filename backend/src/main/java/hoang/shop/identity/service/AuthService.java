@@ -13,9 +13,12 @@ public interface AuthService {
     UserResponse register(RegisterRequest req);
 
     AuthResponse login(LoginRequest request);
+
     void logout(String refreshToken);
 
     void forgotPassword(ForgotPasswordRequest request);
 
     void resetPassword(ResetPasswordRequest request);
+
+    AuthResponse refresh(String refreshToken);
 }

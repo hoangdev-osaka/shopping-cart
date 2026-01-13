@@ -1,4 +1,10 @@
 package hoang.shop.cart.dto.response;
 
-public class ShippingEstimateResponse {
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public record ShippingEstimateResponse(
+        LocalDate estimatedDeliveryFrom,
+        LocalDate estimatedDeliveryTo
+) {
 }

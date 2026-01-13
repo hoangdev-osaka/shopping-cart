@@ -5,9 +5,11 @@ import hoang.shop.identity.model.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
@@ -21,7 +23,8 @@ public class UserPrincipal implements UserDetails {
     private final String avatarUrl;
     private final UserStatus status;
 
-    public static UserPrincipal from(User user, Collection<? extends GrantedAuthority> authorities) {
+    public static UserPrincipal from(User user,Collection<? extends GrantedAuthority> authorities) {
+
         return new UserPrincipal(
                 user.getId(),
                 user.getEmail(),

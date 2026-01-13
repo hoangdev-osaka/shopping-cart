@@ -30,7 +30,7 @@ public interface OrderItemMapper {
     @Mapping(target = "sku", source = "entity.sku")
     @Mapping(target = "productName", source = "entity.productVariant.color.product.name")
     @Mapping(target = "imageUrl", expression = "java(toDefaultImageUrl(entity))")
-
+    @Mapping(target = "lineTotal", expression = "java(toPriceTaxIncluded(entity.getLineTotal()))")
     OrderItemResponse toResponse(OrderItem entity);
 
     default String toDefaultImageUrl(OrderItem orderItem) {
@@ -45,5 +45,11 @@ public interface OrderItemMapper {
                 .findFirst()
                 .orElse(images.getFirst().getImageUrl());
     }
-   
+
+    default BigDecimal toPriceTaxIncluded(BigDecimal price) {
+        if (price == null) return null;
+        return price
+                .multiply(BigDecimal.valueOf(110))
+                .divide(BigDecimal.valueOf(100)); // tax 10%
+    }
 }

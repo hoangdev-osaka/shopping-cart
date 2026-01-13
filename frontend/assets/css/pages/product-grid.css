@@ -11,9 +11,14 @@
   margin-bottom: 20px;
   gap: 6px;
 }
-.listing-toolbar{
+.product-list {
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  width: 100%;
+}
+.listing-toolbar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
 }
 .category-path__name {
   font-size: 16px;
@@ -52,10 +57,13 @@
   background-color: black;
   color: rgb(240, 239, 239);
 }
-.listing-toolbar__filter{
+.listing-toolbar__filter {
   display: flex;
   justify-content: end;
-  padding: 15px;
+  justify-items: center;
+  align-items: center;
+  height: 30px;
+  margin: auto 0;
 }
 
 .filter-panel {
@@ -65,12 +73,11 @@
   border-radius: 8px;
   overflow-y: scroll;
   top: 50px;
-  height: 80vh;
+  height: 90vh;
 }
 .filter-panel.is-hidden {
   display: none;
 }
-
 
 .category-layout {
   padding-top: 20px;
@@ -80,6 +87,7 @@
   grid-template-columns: auto 1fr;
   gap: 24px;
 }
+
 .filter-group {
   margin-bottom: 10px;
 }
@@ -90,7 +98,6 @@
 .filter__brands {
   display: flex;
   flex-direction: column;
-
 }
 
 .filter-group h4 {
@@ -201,7 +208,6 @@
   outline: none;
 }
 
-/* Thumb */
 .filter__price input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px;
@@ -229,19 +235,35 @@
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
-
-  
 }
 @media (max-width: 1000px) {
+  .category-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 999;
+  }
+
+  .category-modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
   .product-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+    width: 100%;
+  }
+  .listing-toolbar {
+    width: 100%;
   }
 
   .category-path {
+    width: 100%;
     margin-left: 0;
-    padding: 0 12px;
     flex-wrap: wrap;
   }
 
@@ -251,11 +273,27 @@
     font-size: 14px;
   }
   .filter-panel {
-    position: static;
-    width: 100%;
+    position: fixed;
     top: 120px;
-    z-index: 999;
-    overflow-y: scroll;
-    display: none;
+    left: 0;
+    width: 27vh;
+    height: calc(100vh - 120px);
+    background: #fff;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 1000;
+  }
+  .filter-panel.is-open {
+    transform: translateX(0);
+  }
+  .category-layout {
+    padding: 0 10px;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .product-list {
+    display: grid;
+    width: 100%;
   }
 }

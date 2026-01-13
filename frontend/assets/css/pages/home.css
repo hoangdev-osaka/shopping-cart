@@ -80,6 +80,8 @@
 }
 
 .brand-row {
+  width: 100%;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   background-color: rgb(215, 215, 215);
@@ -112,8 +114,19 @@
   .categories-list {
     display: none;
   }
-  .product-row{
+  .product-row {
     margin: 0 7px;
   }
 
+  .product-row .cards .card {
+    width: 21vh;
+  }
+  .brand-row {
+    gap: 20px;
+  }
+  .brand-img {
+    height: 50px;
+    width: 50px;
+    transition: transform 0.25s ease;
+  }
 }

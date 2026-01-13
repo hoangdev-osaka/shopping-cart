@@ -2,8 +2,13 @@ package hoang.shop.cart.service;
 
 import hoang.shop.cart.dto.request.CheckoutRequest;
 import hoang.shop.cart.dto.response.CartSummary;
+import hoang.shop.cart.dto.response.ShippingEstimateResponse;
 import hoang.shop.categories.model.ProductColorImage;
+import hoang.shop.common.enums.ShippingRegion;
+import hoang.shop.common.enums.status.AddressStatus;
 import hoang.shop.common.enums.status.CartItemStatus;
+import hoang.shop.identity.model.Address;
+import hoang.shop.identity.repository.AddressRepository;
 import hoang.shop.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import hoang.shop.cart.dto.request.CartItemCreateRequest;
@@ -28,7 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -37,11 +44,77 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductVariantRepository productVariantRepository;
+    private final AddressRepository addressRepository;
     private final CartMapper cartMapper;
     private final CartItemMapper cartItemMapper;
     private final UserRepository userRepository;
     private final OrderService orderService;
+    private static final Map<String, ShippingRegion> PREFECTURE_REGION_MAP = Map.ofEntries(
+            // KANTO
+            Map.entry("東京都", ShippingRegion.KANTO),
+            Map.entry("神奈川県", ShippingRegion.KANTO),
+            Map.entry("千葉県", ShippingRegion.KANTO),
+            Map.entry("埼玉県", ShippingRegion.KANTO),
+            Map.entry("茨城県", ShippingRegion.KANTO),
+            Map.entry("栃木県", ShippingRegion.KANTO),
+            Map.entry("群馬県", ShippingRegion.KANTO),
 
+            // KANSAI
+            Map.entry("大阪府", ShippingRegion.KANSAI),
+            Map.entry("京都府", ShippingRegion.KANSAI),
+            Map.entry("兵庫県", ShippingRegion.KANSAI),
+            Map.entry("奈良県", ShippingRegion.KANSAI),
+            Map.entry("滋賀県", ShippingRegion.KANSAI),
+            Map.entry("和歌山県", ShippingRegion.KANSAI),
+
+            // CHUBU
+            Map.entry("愛知県", ShippingRegion.CHUBU),
+            Map.entry("静岡県", ShippingRegion.CHUBU),
+            Map.entry("新潟県", ShippingRegion.CHUBU),
+            Map.entry("富山県", ShippingRegion.CHUBU),
+            Map.entry("石川県", ShippingRegion.CHUBU),
+            Map.entry("福井県", ShippingRegion.CHUBU),
+            Map.entry("山梨県", ShippingRegion.CHUBU),
+            Map.entry("長野県", ShippingRegion.CHUBU),
+            Map.entry("岐阜県", ShippingRegion.CHUBU),
+
+            // TOHOKU
+            Map.entry("青森県", ShippingRegion.TOHOKU),
+            Map.entry("岩手県", ShippingRegion.TOHOKU),
+            Map.entry("宮城県", ShippingRegion.TOHOKU),
+            Map.entry("秋田県", ShippingRegion.TOHOKU),
+            Map.entry("山形県", ShippingRegion.TOHOKU),
+            Map.entry("福島県", ShippingRegion.TOHOKU),
+
+            // SHIKOKU
+            Map.entry("徳島県", ShippingRegion.SHIKOKU),
+            Map.entry("香川県", ShippingRegion.SHIKOKU),
+            Map.entry("愛媛県", ShippingRegion.SHIKOKU),
+            Map.entry("高知県", ShippingRegion.SHIKOKU),
+
+            // KYUSHU
+            Map.entry("福岡県", ShippingRegion.KYUSHU),
+            Map.entry("佐賀県", ShippingRegion.KYUSHU),
+            Map.entry("長崎県", ShippingRegion.KYUSHU),
+            Map.entry("熊本県", ShippingRegion.KYUSHU),
+            Map.entry("大分県", ShippingRegion.KYUSHU),
+            Map.entry("宮崎県", ShippingRegion.KYUSHU),
+            Map.entry("鹿児島県", ShippingRegion.KYUSHU),
+
+            // HOKKAIDO / OKINAWA
+            Map.entry("北海道", ShippingRegion.HOKKAIDO),
+            Map.entry("沖縄県", ShippingRegion.OKINAWA)
+    );
+    private static final Map<ShippingRegion, int[]> REGION_DAYS = Map.of(
+            ShippingRegion.KANTO, new int[]{1, 2},
+            ShippingRegion.KANSAI, new int[]{1, 2},
+            ShippingRegion.CHUBU, new int[]{1, 2},
+            ShippingRegion.TOHOKU, new int[]{2, 3},
+            ShippingRegion.SHIKOKU, new int[]{2, 3},
+            ShippingRegion.KYUSHU, new int[]{2, 3},
+            ShippingRegion.HOKKAIDO, new int[]{3, 4},
+            ShippingRegion.OKINAWA, new int[]{3, 5}
+    );
 
     @Override
     public CartResponse getMyCart(Long userId) {
@@ -108,7 +181,7 @@ public class CartServiceImpl implements CartService {
                     .quantity(request.quantity())
                     .unitPriceAtOrder(unitPriceAtOrder)
                     .unitPriceBefore(variant.getRegularPrice())
-                    .lineTotal(lineTotal.multiply(BigDecimal.valueOf(1.1)))
+                    .lineTotal(lineTotal)
                     .imageUrl(imageUrl)
                     .build();
             cart.getCartItems().add(newItem);
@@ -200,6 +273,17 @@ public class CartServiceImpl implements CartService {
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
         Integer quantity = items.stream().mapToInt(CartItem::getQuantity).sum();
         return new CartSummary(quantity);
+    }
+
+    @Override
+    public ShippingEstimateResponse estimate(Long userId, Long addressId) {
+        Address address = addressRepository.findByIdAndUser_IdAndStatus(addressId,userId, AddressStatus.ACTIVE)
+                .orElseThrow(()->new NotFoundException("{error.address.id.not-found}"));
+        ShippingRegion region = PREFECTURE_REGION_MAP.get(address.getPrefecture());
+        int[] days = REGION_DAYS.getOrDefault(region, new int[]{2, 4});
+        LocalDate from = LocalDate.now().plusDays(days[0]);
+        LocalDate to = LocalDate.now().plusDays(days[1]);
+        return new ShippingEstimateResponse(from,to);
     }
 
 

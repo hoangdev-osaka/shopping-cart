@@ -271,11 +271,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
         BigDecimal taxableBase = subtotalAmount
-                .subtract(discountAmount)
-                .add(shippingFee);
+                .subtract(discountAmount);
 
         BigDecimal taxAmount = taxableBase.multiply(taxRate);
-        BigDecimal grandTotal = taxableBase.add(taxAmount);
+        BigDecimal grandTotal = taxableBase.add(taxAmount).add(shippingFee);
         String name = address.getLastName() + " " + address.getFirstName();
 
         Order order = Order.builder()

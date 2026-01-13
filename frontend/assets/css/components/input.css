@@ -65,3 +65,13 @@
 .form-input.is-error + .form-error {
   display: block;
 }
+.form-message {
+  margin-top: 12px;
+  font-size: 14px;
+}
+.form-message__success {
+  color: #1f9d55;
+}
+.form-message__error {
+  color: #e02424;
+}

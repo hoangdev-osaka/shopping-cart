@@ -3,17 +3,105 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>購入手続き</title>
     <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo-16.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/logo-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
   </head>
   <body>
     <div class="top-bar">
       <p>今だけ！全品送料無料キャンペーン中 🎉</p>
     </div>
 
-    <header class="header">
+    <header class="site-main">
       <div class="header-inner">
         <div class="logo">
+          <button class="hamburger-btn" data-action="toggle-categories-popup" aria-label="Open categories">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <div class="categories-popup" id="categoriesPopup">
+            <div class="popup">
+              <header class="header-popup">
+                <img class="header-popup__img" src="./assets/images/logoshop.png" />
+                <button class="btn-close" type="button" aria-label="Close" data-action="close-popup-categories">
+                  <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </header>
+              <main class="main-popup" id="categoriesItem">
+                <!-- <article class="category-item">
+                  <span class="category-item__name">メンズ</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </article> -->
+              </main>
+              <div class="divider"></div>
+              <footer>
+                <a class="category-item" href="./pages/auth/register.html">
+                  <span class="category-item__name">新規登録</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a class="category-item" href="./pages/account/profile.html">
+                  <span class="category-item__name">アカウント</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a href="./pages/account/orders.html" class="category-item">
+                  <span class="category-item__name">注文検索</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </footer>
+            </div>
+          </div>
+
           <a href="/index.html">
             <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
           </a>
@@ -31,13 +119,7 @@
           </form>
         </div>
 
-        <section class="categories-list" id="categoriesList">
-          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
-          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
-        </section>
+        <section class="categories-list" id="categoriesList"></section>
 
         <nav class="header-actions">
           <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
@@ -62,13 +144,21 @@
             <span class="cart-badge" id="cartBadge">0</span>
           </a>
 
-          <button class="hamburger-btn" id="hamburgerBtn">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
+          <div class="right-header">
+            <button class="toggle-menu-btn" data-action="toggle-menu">
+              <img class="profile-image" src="/assets/images/default/image.png" alt="" />
+            </button>
+            <div id="menuList" class="menu-list">
+              <a class="popup-menu" href="/pages/account/orders.html">注文履歴</a>
+              <a class="popup-menu" href="/pages/account/profile.html">アカウント</a>
+              <div class="cart-summary__divider"></div>
+
+              <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
+            </div>
+          </div>
         </nav>
       </div>
+
       <ul class="suggestions" id="suggestList"></ul>
     </header>
 
@@ -91,16 +181,16 @@
             <h6>お届け先住所</h6>
             <form class="information__address">
               <div class="information__name">
-                <input  class="form-input information__name--first-name" name="lastName" type="text" placeholder="姓 * " required />
-                <input  class="form-input information__name--last-name" name="firstName" type="text" placeholder="名 *" required />
+                <input class="form-input information__name--first-name" name="lastName" type="text" placeholder="姓 * " required />
+                <input class="form-input information__name--last-name" name="firstName" type="text" placeholder="名 *" required />
               </div>
               <div class="postal-field">
-                <input  class="form-input" id="postalCode" type="text" name="postalCode" placeholder="郵便番号 *" required />
+                <input class="form-input" id="postalCode" type="text" name="postalCode" placeholder="郵便番号 *" required />
                 <span class="postal-spinner">
                   <span class="postal-spinner__ring"></span>
                 </span>
               </div>
-              <input class="form-input"  id="prefecture" type="text" name="prefecture" placeholder="都道府県 *" required />
+              <input class="form-input" id="prefecture" type="text" name="prefecture" placeholder="都道府県 *" required />
               <input class="form-input" id="municipality" type="text" name="municipality" placeholder="住所（町名以降）*" required />
               <input class="form-input" type="text" name="streetNumber" placeholder="番地 (3-2-29)" />
               <input class="form-input" type="text" name="building" placeholder="マンション・アパート／部屋番号(任意)" />
@@ -120,7 +210,7 @@
               <button class="address__edit" data-action="edit-address">編集する</button>
             </div>
 
-            <div class="confirm__postal-code"></div>  
+            <div class="confirm__postal-code"></div>
             <div class="confirm__address1"></div>
             <div class="confirm__address2"></div>
             <div class="confirm__phone"></div>
@@ -128,14 +218,6 @@
 
           <h4 class="checkout-section__title text-muted" id="deliveryAddress">お届け先住所への配送</h4>
           <div class="delivery hidden" id="deliveryComfirm">
-            <div class="delivery__detail">
-              <div class="delivery__menthod">
-                <span class="delivery__menthod--name">通常配送</span>
-                <span class="delivery__menthod--price">無料</span>
-              </div>
-              <div><span>12月25日（木）～12月26日（金）</span> <span>の間にお届け</span></div>
-              <div>09:00-21:00</div>
-            </div>
             <button class="delivery-confirm-btn" data-action="open-payment">次へ</button>
           </div>
 
@@ -182,12 +264,9 @@
         <section class="check-out__summary">
           <h3>注文内容</h3>
 
-          <div class="checkout-summary__body">
-          
-          </div>
+          <div class="checkout-summary__body"></div>
         </section>
       </div>
-      
     </main>
     <footer class="main-footer" id="app-footer"></footer>
     <script type="module" src="/assets/js/core/render/load-layout.js"></script>

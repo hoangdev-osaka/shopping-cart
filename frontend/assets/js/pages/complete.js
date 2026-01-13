@@ -15,6 +15,7 @@ const grandTotalEl = document.getElementById("grandTotal");
 const statusTextEl =  document.getElementById("statusText");
 
 const order = await loadComplete();
+orderCodeEl.innerHTML = `${order.orderNumber}`;
 paymentMethodEl.innerHTML = `${order.paymentMethod}`;
 fullAddressEl.innerHTML = `${order.fullAddress} `;
 grandTotalEl.innerHTML = `${yen(order.grandTotal)}`;
@@ -22,8 +23,7 @@ subtotalEl.innerHTML = `${yen(order.subtotalAmount)}`;
 shippingFeeEl.innerHTML = `${yen(order.shippingFee)}`;
 totalEl.innerHTML = `${yen(order.grandTotal)}`;
 taxFeeEl.innerHTML = `${yen(order.taxAmount)}`;
-orderCodeEl.innerHTML = `${order.orderNumber}`;
-discountAmountEl.innerHTML =`-¥${order.discountAmount}` 
+discountAmountEl.innerHTML =`- ¥${order.discountAmount}` 
 statusTextEl.innerHTML = `${order.orderStatus}`
 
 renderOrderItems(order);

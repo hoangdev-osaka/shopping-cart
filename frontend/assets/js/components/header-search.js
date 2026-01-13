@@ -5,6 +5,56 @@ import { checkLogin } from "../components/check-login.js";
 const suggestBox = document.getElementById("suggestList");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchButton");
+const popup = document.getElementById("categoriesPopup");
+const categoriesItemEl = document.getElementById("categoriesItem");
+
+try {
+  const categories = await fetchCategories();
+  console.log(JSON.stringify(categories, null, 4));
+
+  renderCategories(categories);
+  renderPopupCategories(categories);
+} catch (err) {
+  console.error(err);
+}
+
+document.addEventListener("click", async (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  switch (el.dataset.action) {
+    case "toggle-categories-popup":
+      popup.classList.toggle("is-open");
+      break;
+    case "close-popup-categories":
+      popup.classList.toggle("is-open");
+
+      break;
+  }
+});
+async function renderPopupCategories(categories) {
+  const html = categories
+    .map((it) => {
+      return `  <article>
+                  <a class="category-item" href="../../../pages/products/product-list.html?categorySlug=${encodeURIComponent(it.slug)}">
+                    <span class="category-item__name">${it.name}</span>
+                    <button class="category-item__arrow" type="button" aria-label="Open category" data-action="open-subcategory">
+                      <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                        <path
+                          d="M9.5 6.5L15 12L9.5 17.5"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </a>
+                </article>`;
+    })
+    .join("");
+  categoriesItemEl.insertAdjacentHTML("beforeend", html);
+}
 
 searchInput.addEventListener("input", () => {
   const keyword = searchInput.value.trim();
@@ -44,33 +94,27 @@ searchInput.addEventListener("input", async function () {
   suggestBox.style.display = products.length ? "block" : "none";
 });
 
-fetch(`${API_BASE}/api/categories`, {
-  method: "GET",
-  headers: {
-    Accept: "application/json",
-  },
-})
-  .then(async (response) => {
-    let result = null;
-    try {
-      result = await response.json();
-    } catch (e) {
-      result = null;
+async function fetchCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/api/categories`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Fetch categories failed: ${res.status}`);
     }
-    if (!response.ok) {
-      alert("サーバーエラーが発生しました。");
-      throw new Error("Fetch products failed: " + response.status);
-    }
-    return result;
-  })
-  .then((result) => {
-    const categories = result?.content || [];
-    renderCategories(categories);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
+
+    const data = await res.json();
+    return data?.content ?? [];
+  } catch (err) {
+    console.error("Load categories error:", err);
     alert("システムエラーが発生しました。");
-  });
+    return [];
+  }
+}
 
 function renderCategories(categories) {
   const container = document.getElementById("categoriesList");
@@ -101,6 +145,6 @@ if (user) {
       document.body.classList.remove("is-menu-open");
     }
   });
-}else{
+} else {
   document.getElementById("hamburgerBtn").classList.add("hidden");
 }

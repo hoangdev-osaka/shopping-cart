@@ -29,6 +29,20 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.btn--link {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 1000px;
+  min-width: 300px;
+  margin: 0 auto;
+  background: transparent;
+  color: #bababa;
+  background-color: black;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn--link:hover {
+  transform: translateY(-2px) scale(1.02);
+}
 
 .btn-primary {
   background-color: var(--color-primary);
@@ -144,4 +158,4 @@
   width: 100%;
   background: rgba(0, 0, 0, 0.08);
   margin: 16px 0;
-} 
+}

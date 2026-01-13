@@ -1,7 +1,10 @@
 package hoang.shop.cart.controller;
 
 import hoang.shop.cart.dto.request.CheckoutRequest;
+import hoang.shop.cart.dto.request.ShippingEstimateRequest;
 import hoang.shop.cart.dto.response.CartSummary;
+import hoang.shop.cart.dto.response.ShippingEstimateResponse;
+import hoang.shop.common.enums.ShippingRegion;
 import hoang.shop.identity.service.CurrentUserService;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -15,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/my-cart")
 @RequiredArgsConstructor
@@ -27,10 +32,13 @@ public class CartController {
     @GetMapping
     public ResponseEntity<CartResponse> getMyCart() {
         Long userId = currentUserService.getCurrentUserId();
+
         return ResponseEntity.ok(cartService.getMyCart(userId));
     }
+
+
     @GetMapping("/summary")
-    public ResponseEntity<CartSummary> getQuantity(){
+    public ResponseEntity<CartSummary> getQuantity() {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(cartService.getQuantity(userId));
     }
@@ -66,6 +74,17 @@ public class CartController {
     @PostMapping("/checkout")
     public ResponseEntity<OrderResponse> checkout(@RequestBody @Valid CheckoutRequest request) {
         Long userId = currentUserService.getCurrentUserId();
-        return ResponseEntity.ok(cartService.checkout(userId,request));
+        return ResponseEntity.ok(cartService.checkout(userId, request));
     }
+
+    @PostMapping("/shipping-estimate")
+    public ShippingEstimateResponse estimate(@RequestBody ShippingEstimateRequest req) {
+        Long userId = currentUserService.getCurrentUserId();
+        return cartService.estimate(userId, req.addressId());
+    }
+
+
 }
+
+
+

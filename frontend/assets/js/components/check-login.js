@@ -1,22 +1,41 @@
 import { API_BASE } from "../../js/api/config.js";
 
 export async function checkLogin() {
-  const token = localStorage.getItem("token");
-  if (!token) return false;
-
   try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("not logged in");
     const res = await fetch(`${API_BASE}/api/my-account`, {
       headers: {
+        Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
 
-    if (!res.ok) throw new Error("not logged in");
+    if (!res) throw new Error();
 
     const user = await res.json();
-    return user; 
+    return user;
+  } catch (e) {
+    console.log(e);
+    refreshToken();
+    return false;
+  }
+}
+async function refreshToken() {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("token invalid");
+    const data = await res.json();
+    localStorage.setItem("token", data.accessToken);
+    console.log(JSON.stringify(data, null, 4));
   } catch {
-    localStorage.removeItem("token");
     return false;
   }
 }

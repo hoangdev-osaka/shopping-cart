@@ -5,6 +5,7 @@ import hoang.shop.cart.dto.request.CartItemUpdateRequest;
 import hoang.shop.cart.dto.request.CheckoutRequest;
 import hoang.shop.cart.dto.response.CartResponse;
 import hoang.shop.cart.dto.response.CartSummary;
+import hoang.shop.cart.dto.response.ShippingEstimateResponse;
 import hoang.shop.order.dto.response.OrderResponse;
 
 public interface CartService {
@@ -17,4 +18,6 @@ public interface CartService {
 
 
     CartSummary getQuantity(Long userId);
+
+    ShippingEstimateResponse estimate(Long userId, Long addressId);
 }

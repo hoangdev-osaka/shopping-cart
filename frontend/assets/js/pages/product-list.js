@@ -17,6 +17,8 @@ const colorGroupEl = document.querySelector(".color-options");
 const priceRangeEl = document.getElementById("priceRange");
 const priceMaxLabelEl = document.getElementById("price-max");
 const categoriesPathEl = document.getElementById("categoryPath");
+const loadingEl = document.getElementById("loading");
+const modalEl = document.getElementById("modal");
 
 if (!productListEl) throw new Error("Missing #product-list");
 
@@ -277,11 +279,11 @@ async function loadNextPage() {
   if (isLoading || isLastPage) return;
 
   isLoading = true;
+  if (loadingEl) loadingEl.classList.remove("hidden");
   try {
     const requestUrl = buildProductsUrl(currentPage);
     const data = await fetchJson(requestUrl);
     const items = data?.content || [];
-
     renderProducts(items, productListEl, { append: true });
 
     isLastPage = Boolean(data?.last) || (typeof data?.totalPages === "number" && currentPage >= data.totalPages - 1);
@@ -292,6 +294,7 @@ async function loadNextPage() {
     alert("システムエラーが発生しました。");
   } finally {
     isLoading = false;
+    if (loadingEl) loadingEl.classList.add("hidden");
   }
 }
 
@@ -311,23 +314,28 @@ const io = new IntersectionObserver(
 );
 io.observe(sentinelEl);
 
-document.addEventListener("click", (e) => {
-  const filterPanelEl = document.getElementById("filterPanel");
-  const el = e.target.closest("[data-action]");
-  if (!el) return;
-  switch (el.dataset.action) {
-    case "open-filter":
-      filterPanelEl.style.display = "block";
-      if (filterPanelEl.classList.contains("hidden")) {
-        filterPanelEl.classList.toggle("hidden");
-      } else filterPanelEl.classList.toggle("hidden");
+const filterPanelEl = document.getElementById("filterPanel");
 
-      break;
+document.addEventListener("click", (e) => {
+  const actionEl = e.target.closest("[data-action]");
+
+  if (actionEl?.dataset.action === "open-filter") {
+    modalEl.classList.add("is-open");
+    filterPanelEl.classList.add("is-open");
+    return;
   }
-  const btn = e.target.closest(".category-path__back-btn");
-  if (!btn) return;
-  e.preventDefault();
-  history.back();
+
+  if (modalEl.classList.contains("is-open") && !filterPanelEl.contains(e.target) && !e.target.closest('[data-action="open-filter"]')) {
+    modalEl.classList.remove("is-open");
+    filterPanelEl.classList.remove("is-open");
+    return;
+  }
+
+  const backBtn = e.target.closest(".category-path__back-btn");
+  if (backBtn) {
+    e.preventDefault();
+    history.back();
+  }
 });
 
 if (categoryGroupEl) {

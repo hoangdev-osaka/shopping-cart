@@ -1,5 +1,6 @@
 package hoang.shop.common.api;
 
+import hoang.shop.common.exception.InvalidCredentialsException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -79,10 +81,11 @@ public class GlobalExceptionHandler {
         return problem(HttpStatus.NOT_FOUND, resolveMessage("error.not-found.title"), ex, req);
     }
 
-    @ExceptionHandler({ BadRequestException.class, IllegalArgumentException.class, IllegalStateException.class })
+    @ExceptionHandler({BadRequestException.class, IllegalArgumentException.class, IllegalStateException.class})
     public ProblemDetail handleBadRequest(RuntimeException ex, HttpServletRequest req) {
         return problem(HttpStatus.BAD_REQUEST, resolveMessage("error.bad-request.title"), ex, req);
     }
+
     @ExceptionHandler(DuplicateResourceException.class)
     public ProblemDetail handleDuplicate(DuplicateResourceException ex, HttpServletRequest req) {
         return problem(HttpStatus.CONFLICT, resolveMessage("error.duplicate.title"), ex, req);
@@ -106,5 +109,14 @@ public class GlobalExceptionHandler {
         String detail = resolveMessage("error.internal.detail");
         if ("error.internal.detail".equals(detail)) detail = "An unexpected error occurred.";
         return problem(HttpStatus.INTERNAL_SERVER_ERROR, title, detail, req);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> handleInvalidCredentials() {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of(
+                        "message", "error.auth.invalid-credentials"
+                ));
     }
 }

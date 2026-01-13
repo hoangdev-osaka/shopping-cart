@@ -1,4 +1,8 @@
 package hoang.shop.cart.dto.request;
 
-public class ShippingEstimateRequest {
+public record ShippingEstimateRequest(
+        Long addressId,
+        String shippingMethod
+) {
+
 }

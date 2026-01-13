@@ -3,65 +3,128 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>カート</title>
     <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo-16.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/logo-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
   </head>
   <body>
-      <div class="top-bar">
+    <div class="top-bar">
       <p>今だけ！全品送料無料キャンペーン中 🎉</p>
     </div>
 
-    <header class="header">
+    <header class="site-main">
       <div class="header-inner">
         <div class="logo">
-          <a href="/index.html">
-            <img
-              class="logo_img"
-              src="/assets/images/logoshop.png"
-              alt="roll shop"
-            />
-          </a>
-           <form class="header-search">
-          <div class="header-search__box">
-            <input class="header-search__input" id="searchInput"  type="text" placeholder="検索..." autocomplete="off"a />
-          </div>
-          
-          <a class="search-btn" href="/pages/products/product-list.html" id = "searchButton" type="submit" >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <button class="hamburger-btn" data-action="toggle-categories-popup" aria-label="Open categories">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
+          </button>
+
+          <div class="categories-popup" id="categoriesPopup">
+            <div class="popup">
+              <header class="header-popup">
+                <img class="header-popup__img" src="./assets/images/logoshop.png" />
+                <button class="btn-close" type="button" aria-label="Close" data-action="close-popup-categories">
+                  <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </header>
+              <main class="main-popup" id="categoriesItem">
+                <!-- <article class="category-item">
+                  <span class="category-item__name">メンズ</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </article> -->
+              </main>
+              <div class="divider"></div>
+              <footer>
+                <a class="category-item" href="./pages/auth/register.html">
+                  <span class="category-item__name">新規登録</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a class="category-item" href="./pages/account/profile.html">
+                  <span class="category-item__name">アカウント</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a href="./pages/account/orders.html" class="category-item">
+                  <span class="category-item__name">注文検索</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </footer>
+            </div>
+          </div>
+
+          <a href="/index.html">
+            <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
           </a>
-        </form>
+          <form class="header-search">
+            <div class="header-search__box">
+              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+            </div>
 
-
+            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </a>
+          </form>
         </div>
 
         <section class="categories-list" id="categoriesList">
-          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
-          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
-
         </section>
-     
-
-
-
-
 
         <nav class="header-actions">
-          <a
-            href="/pages/auth/login.html"
-            class="btn btn-outline btn-small"
-            >ログイン</a
-          >
-          <a
-            href="/pages/auth/register.html"
-            class="btn btn-primary btn-small"
-            >ユーザー登録</a
-          >
+          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
+          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
 
           <a href="/pages/cart/cart.html" class="cart-btn">
             <svg
@@ -81,46 +144,45 @@
             </svg>
             <span class="cart-badge" id="cartBadge">0</span>
           </a>
-          
-          <button class="hamburger-btn" id="hamburgerBtn">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-              <path
-                d="M3 6h18M3 12h18M3 18h18"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
+
+          <div class="right-header">
+            <button class="toggle-menu-btn" data-action="toggle-menu">
+              <img class="profile-image" src="/assets/images/default/image.png" alt="" />
+            </button>
+            <div id="menuList" class="menu-list">
+              <a class="popup-menu" href="/pages/account/orders.html">注文履歴</a>
+              <a class="popup-menu" href="/pages/account/profile.html">アカウント</a>
+              <div class="cart-summary__divider"></div>
+
+              <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
+            </div>
+          </div>
         </nav>
       </div>
-    <ul class="suggestions" id="suggestList"></ul>
-       
+
+      <ul class="suggestions" id="suggestList"></ul>
     </header>
 
-
-
-    
-
-      <main class="cart">
+    <main class="cart">
       <div class="container cart__inner">
         <div class="cart__head">
           <h1 class="cart__title">カート</h1>
           <div class="cart__sub" id="cartSub">読み込み中…</div>
+          <div class="cart__alert" id="cartAlert"></div>
+          <div class="address-loading hidden" id="loading">
+            <span class="spinner"></span>
+          </div>
         </div>
 
         <div class="cart__content">
           <section class="cart__items" aria-label="Cart items">
-            <div class="cart__state cart__state--loading" id="cartLoading">
-            
-            </div> 
+            <div class="cart__state cart__state--loading" id="cartLoading"></div>
             <div class="cart__state cart__state--empty" id="cartEmpty" hidden>
               <p class="cart-empty__title">カートは空です</p>
               <a class="btn btn-primary" href="/index.html">商品を見る</a>
             </div>
 
             <div class="cart__list" id="cartList" hidden></div>
-
           </section>
 
           <aside class="cart__summary" aria-label="Cart summary">
@@ -128,47 +190,40 @@
               <h2 class="cart-summary__title">注文内容</h2>
 
               <div class="cart-summary__row">
-                <span class="cart-summary__label">小計</span>
-                <span class="cart-summary__value" id="cartSubtotal">¥0</span>
+                <span class="cart-summary__label">商品合計（税抜）</span>
+                <span class="cart-summary__value" id="cartSubtotal"></span>
               </div>
 
               <div class="cart-summary__row">
-                <span class="cart-summary__label">送料</span>
-                <span class="cart-summary__value" id="cartShipping">無料</span>
+                <span class="cart-summary__label">消費税 (10%)</span>
+                <span class="cart-summary__value" id="taxFee"></span>
               </div>
 
               <div class="cart-summary__divider"></div>
 
               <div class="cart-summary__row cart-summary__row--total">
                 <span class="cart-summary__label">合計</span>
-                <span class="cart-summary__value" id="cartTotal">¥0</span>
+                <span class="cart-summary__value" id="cartTotal"></span>
               </div>
 
-              <button
-                class="cart-summary__checkout-btn"
-                id="checkoutBtn"
-                disabled
-              >
+              <button class="cart-summary__checkout-btn" id="checkoutBtn" disabled>
                 <span class="btn-spinner" aria-hidden="true"></span>
                 レジに進む
               </button>
 
-              <p class="cart-summary__note" id="cartNote">
-                在庫状況により注文できない場合があります。
-              </p>
-              
+              <p class="cart-summary__note" id="cartNote">在庫状況により注文できない場合があります。</p>
             </div>
             <section class="payment-methods">
-        <p class="payment-methods__title">ご利用可能なお支払い方法</p>
+              <p class="payment-methods__title">ご利用可能なお支払い方法</p>
 
-          <div class="payment-methods__list">
-            <img class="payment-methods__list--visa" src="/assets/images/payments/visa.png" alt="VISA">
-            <img class="payment-methods__list--mastercard"  src="/assets/images/payments/mastercard.png" alt="Mastercard">
-            <img class="payment-methods__list--paypay" src="/assets/images/payments/paypay.png" alt="PayPay">
-            <img class="payment-methods__list--rakuten" src="/assets/images/payments/rakuten.jpeg" alt="Rakuten Pay">
-            <img class="payment-methods__list--amz" src="/assets/images/payments/amazon.svg" alt="Amazon Pay">
-          </div>
-        </section>
+              <div class="payment-methods__list">
+                <img class="payment-methods__list--visa" src="/assets/images/payments/visa.png" alt="VISA" />
+                <img class="payment-methods__list--mastercard" src="/assets/images/payments/mastercard.png" alt="Mastercard" />
+                <img class="payment-methods__list--paypay" src="/assets/images/payments/paypay.png" alt="PayPay" />
+                <img class="payment-methods__list--rakuten" src="/assets/images/payments/rakuten.jpeg" alt="Rakuten Pay" />
+                <img class="payment-methods__list--amz" src="/assets/images/payments/amazon.svg" alt="Amazon Pay" />
+              </div>
+            </section>
           </aside>
         </div>
       </div>

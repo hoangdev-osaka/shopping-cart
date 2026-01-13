@@ -8,7 +8,7 @@ const municipality = document.getElementById("municipality");
 const postalField = document.querySelector(".postal-field");
 const form = document.querySelector(".information__address");
 const loadingSpin = document.getElementById("addressLoading");
-const deliveryComfirm = document.getElementById("deliveryComfirm");
+const deliveryComfirmEl = document.getElementById("deliveryComfirm");
 const deliveryAddress = document.getElementById("deliveryAddress");
 const addressEl = document.querySelector(".address-confirm");
 const checkoutSummaryBody = document.querySelector(".checkout-summary__body");
@@ -112,7 +112,9 @@ form.addEventListener("submit", async (e) => {
     loadingSpin.classList.add("hidden");
     addressConfirm.classList.remove("hidden");
     deliveryAddress.classList.remove("text-muted");
-    deliveryComfirm.classList.remove("hidden");
+    deliveryComfirmEl.classList.remove("hidden");
+    const estimateEl = deliveryComfirmEl.querySelector('[data-role="shipping-estimate"]');
+    loadAndRenderShippingEstimate(addressEl.dataset.addressId, estimateEl);
   }
 });
 async function loadDefaultAddress() {
@@ -140,18 +142,19 @@ async function loadDefaultAddress() {
       el.value = value ?? "";
     }
     addressConfirm.classList.remove("hidden");
-    deliveryComfirm.classList.remove("hidden");
+    deliveryComfirmEl.classList.remove("hidden");
 
     console.log("loadDefaultAddress success");
     renderConfirmAddress(r);
   } catch (e) {
     console.log(e);
-    deliveryComfirm.classList.add("hidden");
+    deliveryComfirmEl.classList.add("hidden");
     deliveryAddress.classList.add("hidden");
   } finally {
     loadingSpin.classList.add("hidden");
-
     deliveryAddress.classList.remove("text-muted");
+    const estimateEl = deliveryComfirmEl.querySelector('[data-role="shipping-estimate"]');
+    loadAndRenderShippingEstimate(addressEl.dataset.addressId, estimateEl);
   }
 }
 async function loadCheckoutSummaryBody() {
@@ -162,18 +165,86 @@ async function loadCheckoutSummaryBody() {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!res.ok) return;
+    if (!res.ok) {
+      throw new Error("lỗi khi lấy giỏ hàng");
+    }
     const data = await res.json();
     renderCheckoutSummaryBody(data);
     renderPriceTotal(data);
+    renderShippingSummary(data);
   } catch (e) {
-  } finally {
+    console.log(e);
   }
 }
 function renderPriceTotal(data) {
   priceTotal.innerHTML = `
-      <span>(${data.totalQuantity}点) </span><span>${yen(data.grandTotal)}</span>
+      <span>(${data.totalQuantity}点) </span><span>${yen(data.grandTotal + data.shippingFee)}</span>
   `;
+}
+function renderShippingSummary(data) {
+  deliveryComfirmEl.insertAdjacentHTML(
+    "beforeend",
+    `  <div class="delivery__detail">
+          <div class="delivery__menthod">
+            <span class="delivery__menthod--name">通常配送</span>
+            <span class="delivery__menthod--price">${yen(data.shippingFee)}</span>
+          </div>
+          <div data-role="shipping-estimate">配送予定を取得中...</div>
+          <div>09:00-21:00</div>
+        </div>
+    `
+  );
+}
+async function loadAndRenderShippingEstimate(addressId, element) {
+  try {
+    const estimate = await fetchShippingEstimate(addressId);
+    const text = renderShippingEstimate(estimate);
+    element.textContent = text || "配送予定が見つかりませんでした。";
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function renderShippingEstimate(estimate) {
+  if (!estimate?.estimatedDeliveryFrom || !estimate?.estimatedDeliveryTo) {
+    return;
+  }
+
+  const from = formatJpDateWithDow(estimate.estimatedDeliveryFrom);
+  const to = formatJpDateWithDow(estimate.estimatedDeliveryTo);
+
+  return `${from}～ ${to}の間にお届け`;
+}
+
+async function fetchShippingEstimate(addressId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/my-cart/shipping-estimate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ addressId }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Shipping estimate failed: ${res.status} `);
+    }
+    const data = await res.json();
+    console.log(JSON.stringify(data, null, 4));
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+function formatJpDateWithDow(isoDate) {
+  const d = new Date(`${isoDate}T00:00:00`);
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+
+  const dow = ["日", "月", "火", "水", "木", "金", "土"][d.getDay()];
+
+  return `${month}月${day}日（${dow}）`;
 }
 
 function yen(n) {
@@ -190,14 +261,14 @@ function renderCheckoutSummaryBody(data) {
   
             <div class="cart-summary__row">
               <span class="cart-summary__label">送料</span>
-              <span class="cart-summary__value" id="cartShipping">無料</span>
+              <span class="cart-summary__value" id="cartShipping">${yen(data.shippingFee)}</span>
             </div>
   
             <div class="cart-summary__divider"></div>
   
             <div class="cart-summary__row cart-summary__row--total">
               <span class="cart-summary__label">合計</span>
-              <span class="cart-summary__value" id="cartTotal">${yen(data.grandTotal)}</span>
+              <span class="cart-summary__value" id="cartTotal">${yen(data.grandTotal + data.shippingFee)}</span>
             </div>
             <div class="cart-summary__products">
               ${renderCart(data.cartItems)}

@@ -2,7 +2,9 @@ package hoang.shop.identity.service;
 
 import hoang.shop.common.enums.status.UserStatus;
 import hoang.shop.common.exception.BadRequestException;
+import hoang.shop.common.exception.InvalidCredentialsException;
 import hoang.shop.common.exception.NotFoundException;
+import hoang.shop.common.exception.UnauthorizedException;
 import hoang.shop.identity.dto.request.ForgotPasswordRequest;
 import hoang.shop.identity.dto.request.LoginRequest;
 import hoang.shop.identity.dto.request.RegisterRequest;
@@ -19,16 +21,22 @@ import hoang.shop.identity.security.JwtTokenProvider;
 import hoang.shop.identity.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -67,35 +75,41 @@ public class AuthServiceImpl implements AuthService {
         User saved = userRepository.save(user);
         return userMapper.toResponse(saved);
     }
+
     @Override
     public AuthResponse login(LoginRequest request) {
-        Authentication authToken = new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
-        );
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        User user = userRepository.findById(principal.getId())
-                .orElseThrow(() -> new IllegalStateException("User not found after authentication"));
-        Instant now = Instant.now();
-        user.setLastLogin(now);
-        String accessToken = jwtTokenProvider.generateAccessToken(principal);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(principal.getId());
-        Instant refreshExpiresAt = now.plusMillis(jwtTokenProvider.getRefreshTokenTtlMs());
-        UserSession session = UserSession.builder()
-                .user(user)
-                .refreshToken(refreshToken)
-                .device(null)
-                .ipAddress(null)
-                .createdAt(now)
-                .expiresAt(refreshExpiresAt)
-                .build();
+        try {
+            Authentication authToken = new UsernamePasswordAuthenticationToken(
+                    request.email(),
+                    request.password()
+            );
+            Authentication authentication = authenticationManager.authenticate(authToken);
+            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+            User user = userRepository.findById(principal.getId())
+                    .orElseThrow(() -> new IllegalStateException("User not found after authentication"));
+            Instant now = Instant.now();
+            user.setLastLogin(now);
+            String accessToken = jwtTokenProvider.generateAccessToken(principal);
+            String refreshToken = jwtTokenProvider.generateRefreshToken(principal.getId());
+            Instant refreshExpiresAt = now.plusMillis(jwtTokenProvider.getRefreshTokenTtlMs());
+            UserSession session = UserSession.builder()
+                    .user(user)
+                    .refreshToken(refreshToken)
+                    .device(null)
+                    .ipAddress(null)
+                    .createdAt(now)
+                    .expiresAt(refreshExpiresAt)
+                    .build();
 
-        userSessionRepository.save(session);
-        userRepository.save(user);
-        UserResponse userResponse = userMapper.toResponse(user);
-        return new AuthResponse(accessToken, refreshToken, userResponse);
+            userSessionRepository.save(session);
+            userRepository.save(user);
+            UserResponse userResponse = userMapper.toResponse(user);
+            return new AuthResponse(accessToken, refreshToken, userResponse);
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
+            throw new InvalidCredentialsException();
+        }
     }
+
     @Override
     public void logout(String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
@@ -108,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
                     userSessionRepository.save(session);
                 });
     }
+
     @Override
     public void forgotPassword(ForgotPasswordRequest request) {
         User user = userRepository.findByEmail(request.email())
@@ -145,5 +160,29 @@ public class AuthServiceImpl implements AuthService {
         passwordResetTokenRepository.save(resetToken);
         userSessionRepository.revokeAllActiveSessionsByUserId(user.getId(), now);
     }
+
+    @Override
+    public AuthResponse refresh(String refreshToken) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+
+        Long userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UnauthorizedException("User not found"));
+        Collection<? extends GrantedAuthority> authorities = user.getUserRoles().stream()
+                .map(UserRole::getRole)
+                .map(Role::getName)
+                .map(name -> "ROLE_" + name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+        UserPrincipal principal = UserPrincipal.from(user,authorities);
+
+        String newAccess = jwtTokenProvider.generateAccessToken(principal);
+        String newRefresh = jwtTokenProvider.generateRefreshToken(user.getId());
+
+        return new AuthResponse(newAccess, newRefresh, userMapper.toResponse(user));
+    }
+
 
 }

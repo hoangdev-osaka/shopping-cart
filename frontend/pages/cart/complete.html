@@ -5,15 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ご注文完了</title>
     <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo-16.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/logo-48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
   </head>
   <body>
-    <div class="top-bar">
+  <div class="top-bar">
       <p>今だけ！全品送料無料キャンペーン中 🎉</p>
     </div>
 
-    <header class="header">
+    <header class="site-main">
       <div class="header-inner">
         <div class="logo">
+          <button class="hamburger-btn" data-action="toggle-categories-popup" aria-label="Open categories">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+
+          <div class="categories-popup" id="categoriesPopup">
+            <div class="popup">
+              <header class="header-popup">
+                <img class="header-popup__img" src="./assets/images/logoshop.png" />
+                <button class="btn-close" type="button" aria-label="Close" data-action="close-popup-categories">
+                  <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                    <path d="M6 6L18 18M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </header>
+              <main class="main-popup" id="categoriesItem">
+                <!-- <article class="category-item">
+                  <span class="category-item__name">メンズ</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </article> -->
+              </main>
+              <div class="divider"></div>
+              <footer>
+                <a class="category-item" href="./pages/auth/register.html">
+                  <span class="category-item__name">新規登録</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a class="category-item" href="./pages/account/profile.html">
+                  <span class="category-item__name">アカウント</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+                <a href="./pages/account/orders.html" class="category-item">
+                  <span class="category-item__name">注文検索</span>
+                  <span class="category-item__arrow">
+                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
+                      <path
+                        d="M9.5 6.5L15 12L9.5 17.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </footer>
+            </div>
+          </div>
+
           <a href="/index.html">
             <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
           </a>
@@ -32,11 +120,6 @@
         </div>
 
         <section class="categories-list" id="categoriesList">
-          <!-- <a class="categories-list__text" href="/pages/products/product-list.html">メンズ</a>
-          <a class="categories-list__text" ref="/pages/products/product-list.html">レディース</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">キッズ</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">セール</a>
-          <a class="categories-list__text" href="/pages/products/product-list.html">スポーツ</a> -->
         </section>
 
         <nav class="header-actions">
@@ -62,13 +145,21 @@
             <span class="cart-badge" id="cartBadge">0</span>
           </a>
 
-          <button class="hamburger-btn" id="hamburgerBtn">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
+          <div class="right-header">
+            <button class="toggle-menu-btn" data-action="toggle-menu">
+              <img class="profile-image" src="/assets/images/default/image.png" alt="" />
+            </button>
+            <div id="menuList" class="menu-list">
+              <a class="popup-menu" href="/pages/account/orders.html">注文履歴</a>
+              <a class="popup-menu" href="/pages/account/profile.html">アカウント</a>
+              <div class="cart-summary__divider"></div>
+
+              <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
+            </div>
+          </div>
         </nav>
       </div>
+
       <ul class="suggestions" id="suggestList"></ul>
     </header>
 
@@ -120,8 +211,12 @@
             <div class="divider"></div>
 
             <div class="row">
-              <div class="row__label">小計</div>
+              <div class="row__label">商品合計（税抜）</div>
               <div class="row__value" id="subtotal">—</div>
+            </div>
+            <div class="row">
+              <div class="row__label">消費税（10%）</div>
+              <div class="row__value" id="taxFee">—</div>
             </div>
             <div class="row">
               <div class="row__label">送料</div>
@@ -131,10 +226,6 @@
             <div class="row">
               <div class="row__label">割引額</div>
               <div class="row__value" id="discountAmount">—</div>
-            </div>
-            <div class="row">
-              <div class="row__label">消費税</div>
-              <div class="row__value" id="taxFee">—</div>
             </div>
 
             <div class="row">

@@ -39,7 +39,7 @@ export function renderProducts(products, container, { append = false } = {}) {
     const defaultImg = API_BASE + "/uploads/default/no-image.png";
 
     html += `
-      <article>
+      <article class="cards" >
         <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(p.slug)}&colorId=${encodeURIComponent(p.colorId)}" class="card">
           <div class="card-inner">
             <img 

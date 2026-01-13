@@ -27,7 +27,6 @@ async function loadHomeProducts() {
     renderProducts(products, hotSaleEl);
   } catch (error) {   
     console.error("ERROR:", error);
-    alert("システムエラーが発生しました。");
   }
 }
 
@@ -49,7 +48,6 @@ async function loadNewProducts() {
     renderProducts(products, newEl);
   } catch (error) {
     console.error("ERROR:", error);
-    alert("システムエラーが発生しました。");
   }
 }
 loadNewProducts();
@@ -67,7 +65,6 @@ fetch(`${API_BASE}/api/brands`, {
     }
 
     if (!response.ok) {
-      alert("サーバーエラーが発生しました。");
       throw new Error("Fetch products failed: " + response.status);
     }
 
@@ -79,7 +76,6 @@ fetch(`${API_BASE}/api/brands`, {
   })
   .catch((error) => {
     console.error("ERROR:", error);
-    alert("システムエラーが発生しました。");
   });
 
 function renderBrands(brands) {

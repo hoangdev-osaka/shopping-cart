@@ -49,8 +49,16 @@ public interface CartItemMapper {
     @Mapping(target = "hexLabel", source = "hexLabel")
     @Mapping(target = "sizeLabel", source = "sizeLabel")
     @Mapping(target = "productSlug", source = "productVariant.color.product.slug")
+    @Mapping(target = "unitPriceBefore", expression = "java(toPriceTaxIncluded(item.getUnitPriceBefore()))")
+    @Mapping(target = "unitPriceAtOrder", expression = "java(toPriceTaxIncluded(item.getUnitPriceAtOrder()))")
     ItemResponse toResponse(CartItem item);
 
 
+    default BigDecimal toPriceTaxIncluded(BigDecimal price) {
+        if (price == null) return null;
+        return price
+                .multiply(BigDecimal.valueOf(110))
+                .divide(BigDecimal.valueOf(100)); // tax 10%
+    }
 
 }
