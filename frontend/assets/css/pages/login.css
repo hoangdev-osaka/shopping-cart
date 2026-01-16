@@ -48,7 +48,7 @@
 .login-form__error {
   color: red;
   font-size: 14px;
-  margin-top: 4px;
+  margin: 10px 0;
 }
 
 .open-register {

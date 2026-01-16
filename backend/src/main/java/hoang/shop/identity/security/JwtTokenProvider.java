@@ -50,7 +50,7 @@ public class JwtTokenProvider {
                     .getBody();
 
             String type = claims.get("type", String.class);
-            return "refresh".equals(type); // exp/signature đã được parseClaimsJws check
+            return "refresh".equals(type);
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }

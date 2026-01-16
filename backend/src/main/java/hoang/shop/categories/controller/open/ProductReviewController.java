@@ -7,6 +7,7 @@ import hoang.shop.categories.service.ProductReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,14 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/products/{productSlug}/my-reviews")
 @RequiredArgsConstructor
 public class ProductReviewController {
-    ProductReviewService reviewService;
+    private final ProductReviewService reviewService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductReviewResponse createReview(
             @PathVariable String productSlug,
-            @RequestBody ProductReviewCreateRequest request,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
-        return reviewService.createReview(productSlug, request,imageFile);
+            @ModelAttribute ProductReviewCreateRequest request,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        return reviewService.createReview(productSlug, request, imageFile);
     }
 
     @PutMapping("/{reviewId}")
@@ -29,8 +30,9 @@ public class ProductReviewController {
             @PathVariable String productSlug,
             @PathVariable Long reviewId,
             @RequestBody ProductReviewUpdateRequest request) {
-        return reviewService.updateReview(productSlug,reviewId, request);
+        return reviewService.updateReview(productSlug, reviewId, request);
     }
+
     @PatchMapping("/{reviewId}/delete")
     public void deleteReview(
             @PathVariable String productSlug,

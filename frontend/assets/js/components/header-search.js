@@ -4,10 +4,10 @@ import { checkLogin } from "../components/check-login.js";
 
 const suggestBox = document.getElementById("suggestList");
 const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchButton");
 const popup = document.getElementById("categoriesPopup");
 const categoriesItemEl = document.getElementById("categoriesItem");
-
+const searchBoxEl = document.getElementById("searchBox");
+const searchFormEl = document.getElementById("searchForm");
 try {
   const categories = await fetchCategories();
   console.log(JSON.stringify(categories, null, 4));
@@ -17,6 +17,7 @@ try {
 } catch (err) {
   console.error(err);
 }
+const keyword = searchInput.value.trim();
 
 document.addEventListener("click", async (e) => {
   const el = e.target.closest("[data-action]");
@@ -27,9 +28,31 @@ document.addEventListener("click", async (e) => {
       break;
     case "close-popup-categories":
       popup.classList.toggle("is-open");
-
+      break;
+    case "open-search-box":
+      searchBoxEl.classList.toggle("is-open");
+      setTimeout(() => {
+        searchInput?.focus();
+      }, 0);
+      break;
+    case "search-product": {
+      window.location.href = keyword
+        ? `/pages/products/product-list.html?keyword=${encodeURIComponent(keyword)}`
+        : `/pages/products/product-list.html`;
+      break;
+    }
+    case "logout":
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      sessionStorage.clear();
+      window.location.replace("/pages/auth/login.html");
       break;
   }
+});
+searchFormEl.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const url = keyword ? `/pages/products/product-list.html?keyword=${encodeURIComponent(keyword)}` : `/pages/products/product-list.html`;
+  window.location.assign(url);
 });
 async function renderPopupCategories(categories) {
   const html = categories
@@ -55,14 +78,6 @@ async function renderPopupCategories(categories) {
     .join("");
   categoriesItemEl.insertAdjacentHTML("beforeend", html);
 }
-
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.trim();
-
-  searchBtn.href = keyword
-    ? `/pages/products/product-list.html?keyword=${encodeURIComponent(keyword)}`
-    : `/pages/products/product-list.html`;
-});
 
 searchInput.addEventListener("input", async function () {
   const keyword = searchInput.value.trim();
@@ -111,7 +126,6 @@ async function fetchCategories() {
     return data?.content ?? [];
   } catch (err) {
     console.error("Load categories error:", err);
-    alert("システムエラーが発生しました。");
     return [];
   }
 }
@@ -138,6 +152,7 @@ if (user) {
 
     if (btn) {
       document.body.classList.toggle("is-menu-open");
+
       return;
     }
 
@@ -146,5 +161,14 @@ if (user) {
     }
   });
 } else {
-  document.getElementById("hamburgerBtn").classList.add("hidden");
+  checkLogin();
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-action]");
+    if (!el) return;
+    switch (el.dataset.action) {
+      case "toggle-menu":
+        window.location.href = "/pages/auth/login.html";
+        break;
+    }
+  });
 }

@@ -11,7 +11,7 @@ export function renderProducts(products, container, { append = false } = {}) {
     const hasRegular = regular != null;
     const hasSale = sale != null && sale > 0 && hasRegular && sale < regular;
     const hasAnyPrice = hasRegular || (sale != null && sale > 0);
-    
+
     let priceHtml = "";
 
     if (!hasAnyPrice) {
@@ -40,9 +40,16 @@ export function renderProducts(products, container, { append = false } = {}) {
 
     html += `
       <article class="cards" >
-        <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(p.slug)}&colorId=${encodeURIComponent(p.colorId)}" class="card">
+        <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(p.slug)}&colorId=${encodeURIComponent(
+      p.colorId
+    )}" class="card">
           <div class="card-inner">
             <img 
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              width="400"
+              height="400"
               src="${p.imageUrl ? API_BASE + p.imageUrl : defaultImg}"
               class="card-img"
               alt="${escapeHtml(p.name)}"

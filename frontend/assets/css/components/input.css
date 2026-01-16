@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .form-label {
@@ -59,7 +59,6 @@
   font-size: 12px;
   color: #e53935;
   margin-top: 4px;
-  display: none;
 }
 
 .form-input.is-error + .form-error {

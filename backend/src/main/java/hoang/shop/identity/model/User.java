@@ -1,6 +1,7 @@
 package hoang.shop.identity.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hoang.shop.categories.model.ProductReview;
 import hoang.shop.common.enums.status.UserStatus;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
@@ -51,6 +52,8 @@ public class User extends BaseEntity {
     @JsonIgnore
     private List<UserSession> sessions = new ArrayList<>();
     //field
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<ProductReview> reviews = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -26,11 +26,11 @@
   --color-text-light: #ffffff;
 
   /* ===== BACKGROUND ===== */
-  --color-bg-header: #efefef;
+  --color-bg-header: #ffffff;
   --color-bg-body: #ffffff;
   --color-bg-form: #abababee;
   --color-bg-card: #ffffff;
-  --color-bg-footer: #f1f1f1;
+  --color-bg-footer: #000000;
   /* ===== SHADOW ===== */
   --shadow-light: 0 2px 6px rgba(0, 0, 0, 0.08);
   --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -57,11 +57,11 @@
   --space-xl: 32px;
 
   /* ===== FONT SIZE (cỡ chữ /fɔnt saɪz/) ===== */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 24px;
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
 
   /* ===== Z-INDEX (/ˈziːˌɪndɛks/) ===== */
   --z-header: 100;

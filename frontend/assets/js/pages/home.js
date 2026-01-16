@@ -3,9 +3,51 @@ import { API_BASE } from "../api/config.js";
 
 const heroBtnEl = document.getElementById("heroBtn");
 
+const section1 = document.getElementById("section1");
+const section2 = document.getElementById("section2");
+
+const cards1 = section1.querySelectorAll(".categories-item__card--left1, .categories-item__card--right1");
+const cards2 = section2.querySelectorAll(".categories-item__card--left2, .categories-item__card--right2");
+
+window.addEventListener("load", () => {
+  document.querySelector(".hero-section")?.classList.add("is-visible");
+});
+
+function openCards2() {
+  cards2.forEach((el) => el.classList.add("is-open"));
+}
+
+function openCards1() {
+  cards1.forEach((el) => el.classList.add("is-open"));
+}
+
 heroBtnEl.addEventListener("click", () => {
   window.location.href = "/pages/products/product-list.html";
 });
+
+const io1 = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) openCards1();
+  },
+  {
+    root: null,
+    rootMargin: "50px 0px",
+    threshold: 0.2,
+  }
+);
+const io2 = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) openCards2();
+  },
+  {
+    root: null,
+    rootMargin: "50px 0px",
+    threshold: 0.4,
+  }
+);
+
+io1.observe(section1);
+io2.observe(section2);
 
 async function loadHomeProducts() {
   try {
@@ -25,7 +67,7 @@ async function loadHomeProducts() {
     const hotSaleEl = document.getElementById("productHotSale");
 
     renderProducts(products, hotSaleEl);
-  } catch (error) {   
+  } catch (error) {
     console.error("ERROR:", error);
   }
 }

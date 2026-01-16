@@ -24,7 +24,7 @@ document.addEventListener("click", async (e) => {
     case "open-payment":
       const paymentEl = document.querySelector(".payment-confirm");
       document.getElementById("paymentTitle")?.classList.remove("text-muted");
-
+      el.classList.add("hidden");
       paymentEl.classList.remove("hidden");
       paymentEl.scrollIntoView({
         behavior: "smooth",
@@ -35,7 +35,7 @@ document.addEventListener("click", async (e) => {
     case "confirm-order":
       const result = await createOrder();
       if (result?.orderNumber) {
-        window.location.href = `/pages/cart/complete.html?orderNumber=${result.orderNumber}`;
+        window.location.href = `/pages/cart/complete.html?orderNumber=${encodeURIComponent(result.orderNumber)}`;
       }
       break;
     case "edit-address":
@@ -89,6 +89,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   form.classList.add("hidden");
   loadingSpin.classList.remove("hidden");
+  document.querySelector(".delivery-confirm-btn").classList.remove("hidden");
   const formData = new FormData(form);
   const addressData = Object.fromEntries(formData.entries());
 
@@ -136,6 +137,8 @@ async function loadDefaultAddress() {
     const r = data;
     if (!r) return;
     form.classList.add("hidden");
+    document.querySelector(".delivery-confirm-btn").classList.remove("hidden");
+
     for (const [key, value] of Object.entries(r)) {
       const el = form.elements[key];
       if (!el) continue;

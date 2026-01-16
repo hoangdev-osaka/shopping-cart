@@ -1,0 +1,139 @@
+.profile-page {
+  padding-top: 18px;
+  padding-bottom: 40px;
+}
+
+.profile-page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.profile-page__title {
+  font-size: 20px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.profile-page__desc {
+  margin: 6px 0 0;
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.profile-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+}
+
+.profile-state {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px 10px;
+}
+
+.profile-state__text {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.85;
+  text-align: center;
+}
+
+.profile-spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.12);
+  border-top-color: rgba(0, 0, 0, 0.45);
+  animation: profileSpin 0.9s linear infinite;
+}
+
+@keyframes profileSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-view__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.profile-view__item {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.profile-view__item--full {
+  grid-column: 1 / -1;
+}
+
+.profile-view__label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.profile-view__value {
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.profile-view__hint {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.profile-form__field {
+  display: grid;
+  gap: 6px;
+}
+
+.profile-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.profile-form__label {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.profile-form__footer {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.profile-form__msg {
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .profile-view__row,
+  .profile-form__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,45 +1,45 @@
 .main-footer {
-    background-color: var(--color-bg-footer);
-    color: var(--color-text-main);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-sm);
-    border-top: 1px solid var(--color-border-light);
+  background-color: var(--color-bg-footer);
+  color: var(--color-text-light);
+  padding: var(--space-lg) var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  border-top: 1px solid var(--color-border-light);
 }
 
 .footer-content {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-lg);
-    flex-wrap: wrap;
-    margin-bottom: var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
 }
 
 .footer-section h3,
 .footer-section h4 {
-    margin-bottom: var(--space-sm);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-main);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-light);
 }
 
 .footer-section p,
 .footer-section a {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
 }
 
-
 .footer-section ul li {
-    margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
 .footer-section a:hover {
-    color: var(--color-primary);
+  color: rgb(248, 252, 4);
+  text-decoration: underline;
 }
 
 .footer-bottom {
-    text-align: center;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    padding-top: var(--space-sm);
-    border-top: 1px solid var(--color-border-light);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border-light);
 }

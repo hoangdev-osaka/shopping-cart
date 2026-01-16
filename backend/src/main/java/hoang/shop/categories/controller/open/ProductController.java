@@ -12,10 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -40,12 +43,19 @@ public class ProductController {
 
 
     @GetMapping
-        public ResponseEntity<Slice<ProductListItemResponse>> search(@ModelAttribute PublicProductSearchCondition condition, Pageable pageable){
-        Slice<ProductListItemResponse> products = productService.search(condition,pageable);
+    public ResponseEntity<Slice<ProductListItemResponse>> search(
+            @ModelAttribute PublicProductSearchCondition condition,
+            @PageableDefault(
+                    size = 20,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable) {
+        Slice<ProductListItemResponse> products = productService.search(condition, pageable);
         return ResponseEntity.ok(products);
     }
+
     @GetMapping("/new")
-    public ResponseEntity<Slice<ProductListItemResponse>> getBestSale(Pageable pageable){
+    public ResponseEntity<Slice<ProductListItemResponse>> getBestSale(Pageable pageable) {
         Slice<ProductListItemResponse> products = productService.getNewProducts(pageable);
         return ResponseEntity.ok(products);
     }

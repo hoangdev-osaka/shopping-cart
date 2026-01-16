@@ -9,24 +9,24 @@ loginBtnEl.addEventListener("click", function (event) {
   console.log("CLICK LOGIN");
   event.preventDefault();
 
-  const email = emailEl.value;
-  const password = passwordEl.value;
+  const email = emailEl.value.trim();
+  const password = passwordEl.value.trim();
 
   document.getElementById("login-error").innerHTML = "";
 
   let hasError = false;
 
   if (!email) {
-    document.getElementById("login-error").innerHTML = "メールアドレスを入力してください。";
+    document.getElementById("login-error").innerHTML = "メールアドレスを入力してください";
     hasError = true;
   }
 
   if (!password) {
-    document.getElementById("login-error").innerHTML = "パスワードを入力してください。";
+    document.getElementById("login-error").innerHTML = "パスワードを入力してください";
     hasError = true;
   }
-  if (!confirm - password) {
-    document.getElementById("login-error").innerHTML = "パスワードを入力してください。";
+  if (password.length < 8) {
+    document.getElementById("login-error").textContent = "パスワードは8文字以上で入力してください。";
     hasError = true;
   }
 

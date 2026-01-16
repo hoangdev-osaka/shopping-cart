@@ -6,17 +6,23 @@
     <title>商品一覧・絞り込み</title>
 
     <link rel="stylesheet" href="/assets/css/main.css" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo-16.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/logo-48.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
+<link rel="stylesheet" href="/assets/css/main.css" />
+
+<link rel="icon" href="/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+<link rel="manifest" href="/site.webmanifest" />
+
   </head>
   <body>
-  <div class="top-bar">
+    <div id="app-header"></div>
+    <div class="top-bar">
       <p>今だけ！全品送料無料キャンペーン中 🎉</p>
     </div>
 
-    <header class="site-main">
+    <header class="header">
       <div class="header-inner">
         <div class="logo">
           <button class="hamburger-btn" data-action="toggle-categories-popup" aria-label="Open categories">
@@ -35,26 +41,10 @@
                   </svg>
                 </button>
               </header>
-              <main class="main-popup" id="categoriesItem">
-                <!-- <article class="category-item">
-                  <span class="category-item__name">メンズ</span>
-                  <span class="category-item__arrow">
-                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
-                      <path
-                        d="M9.5 6.5L15 12L9.5 17.5"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </article> -->
-              </main>
+              <main class="main-popup" id="categoriesItem"></main>
               <div class="divider"></div>
               <footer>
-                <a class="category-item" href="./pages/auth/register.html">
+                <a class="category-item" href="/pages/auth/register.html">
                   <span class="category-item__name">新規登録</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -69,7 +59,7 @@
                     </svg>
                   </span>
                 </a>
-                <a class="category-item" href="./pages/account/profile.html">
+                <a class="category-item" href="/pages/account/profile.html">
                   <span class="category-item__name">アカウント</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -84,7 +74,7 @@
                     </svg>
                   </span>
                 </a>
-                <a href="./pages/account/orders.html" class="category-item">
+                <a class="category-item" href="/pages/account/orders.html" class="category-item">
                   <span class="category-item__name">注文検索</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -106,27 +96,26 @@
           <a href="/index.html">
             <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
           </a>
-          <form class="header-search">
-            <div class="header-search__box">
-              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
-            </div>
-
-            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </a>
-          </form>
         </div>
-
-        <section class="categories-list" id="categoriesList">
-        </section>
+        <!-- Categories 表示するところ -->
+        <section class="categories-list" id="categoriesList"></section>
 
         <nav class="header-actions">
-          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
-          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
-
+          <button class="header-actions__search-btn" data-action="open-search-box">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
           <a href="/pages/cart/cart.html" class="cart-btn">
             <svg
               width="24"
@@ -145,30 +134,43 @@
             </svg>
             <span class="cart-badge" id="cartBadge">0</span>
           </a>
-
           <div class="right-header">
-            <button class="toggle-menu-btn" data-action="toggle-menu">
-              <img class="profile-image" src="/assets/images/default/image.png" alt="" />
+            <button class="user-menu" data-action="toggle-menu">
+              <img src="/assets/images/default/image.png" class="user-avatar" />
+              <span class="user-name" id="toastLogin">ログイン</span>
             </button>
             <div id="menuList" class="menu-list">
               <a class="popup-menu" href="/pages/account/orders.html">注文履歴</a>
               <a class="popup-menu" href="/pages/account/profile.html">アカウント</a>
-              <div class="cart-summary__divider"></div>
+              <a class="popup-menu" href="/pages/auth/login.html">ログイン</a>
 
+              <div class="cart-summary__divider"></div>
               <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
             </div>
           </div>
         </nav>
       </div>
-
-      <ul class="suggestions" id="suggestList"></ul>
+      <!-- search box -->
+      <div class="search-product" id="searchBox">
+        <form class="header-search" id="searchForm">
+          <div class="header-search__box">
+            <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+          </div>
+          <button class="search-btn" type="submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+        <ul class="suggestions" id="suggestList"></ul>
+      </div>
     </header>
 
     <main class="site-main">
       <div class="category-layout">
         <div class="category-modal" id="modal">
           <aside class="filter-panel" id="filterPanel">
-  
             <form id="filter-form">
               <div class="filter-group filter__categories">
                 <h4>カテゴリー</h4>
@@ -204,15 +206,15 @@
               <hr />
               <div class="filter-group filter__price">
                 <h4>価格</h4>
-  
+
                 <div class="price-values">
                   <span id="price-min">0¥</span>
-                  <span id="price-max">50,000¥</span>
+                  <span id="price-max">200,000¥</span>
                 </div>
-  
-                <input type="range" id="priceRange" min="0" max="50000" step="500" value="50000" />
+
+                <input type="range" id="priceRange" min="5000" max="200000" step="500" value="200000" />
               </div>
-  
+
               <hr />
               <div class="filter-group" data-filter="color">
                 <div class="filter-group" data-filter="color">
@@ -222,22 +224,22 @@
                       <input type="checkbox" value="black" />
                       <span class="swatch" style="background: #000"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="white" />
                       <span class="swatch" style="background: #fff"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="gray" />
                       <span class="swatch" style="background: #9e9e9e"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="red" />
                       <span class="swatch" style="background: #e53935"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="blue" />
                       <span class="swatch" style="background: #1e88e5"></span>
@@ -250,12 +252,12 @@
                       <input type="checkbox" value="green" />
                       <span class="swatch" style="background: #43a047"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="brown" />
                       <span class="swatch" style="background: #6d4c41"></span>
                     </label>
-  
+
                     <label class="color-swatch">
                       <input type="checkbox" value="navy" />
                       <span class="swatch" style="background: #1a237e"></span>
@@ -265,7 +267,6 @@
               </div>
             </form>
           </aside>
-          <aside class="product-list">
         </div>
         <aside class="product-list">
           <div class="listing-toolbar">
@@ -276,9 +277,6 @@
             <div class="listing-toolbar__filter">
               <button class="btn-outline btn-small" data-action="open-filter">フィルター＆並び替え</button>
             </div>
-          </div>
-          <div class="address-loading hidden" id="loading">
-            <span class="spinner"></span>
           </div>
 
           <section class="product-grid" id="product-list">
@@ -293,6 +291,9 @@
               <div class="card-price"></div>
             </a> -->
           </section>
+          <div class="address-loading hidden" id="loading">
+            <span class="spinner"></span>
+          </div>
         </aside>
       </div>
     </main>

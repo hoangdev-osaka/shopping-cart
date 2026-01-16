@@ -1,8 +1,9 @@
 import { renderProducts } from "../core/render/product-renderer.js";
 import { API_BASE } from "../api/config.js";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 let currentPage = 0;
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 6;
 const url = new URL(window.location.href);
 const categorySlug = url.searchParams.get("categorySlug");
 let isLastPage = false;
@@ -32,12 +33,14 @@ function formatYen(n) {
 
 async function fetchJson(url) {
   const res = await fetch(url, { headers: { Accept: "application/json" } });
-  const data = await res.json().catch(() => null);
+
+  const raw = await res.text();
+  const data = raw ? JSON.parse(raw) : null;
+
   if (!res.ok) {
-    console.error("Fetch failed:", res.status, url, data);
     console.error("❌ HTTP", res.status, res.statusText);
     console.error("❌ URL:", url);
-    console.error("❌ Body:", text);
+    console.error("❌ Body:", raw);
     throw new Error(String(res.status));
   }
   return data;
@@ -279,22 +282,43 @@ async function loadNextPage() {
   if (isLoading || isLastPage) return;
 
   isLoading = true;
-  if (loadingEl) loadingEl.classList.remove("hidden");
+  io.unobserve(sentinelEl);
+
+  loadingEl?.classList.toggle("hidden");
+
   try {
     const requestUrl = buildProductsUrl(currentPage);
     const data = await fetchJson(requestUrl);
-    const items = data?.content || [];
+
+    const items = Array.isArray(data?.content) ? data.content : [];
+    const page = data?.page;
+
+    const pageNumber = Number(page?.number ?? currentPage);
+    const totalPages = Number(page?.totalPages ?? NaN);
+
+    if (items.length === 0) {
+      isLastPage = true;
+      io.disconnect();
+      return;
+    }
+
+    await sleep(500);
+
     renderProducts(items, productListEl, { append: true });
 
-    isLastPage = Boolean(data?.last) || (typeof data?.totalPages === "number" && currentPage >= data.totalPages - 1);
+    if (Number.isFinite(totalPages)) {
+      isLastPage = pageNumber >= totalPages - 1;
+    }
 
-    currentPage++;
+    currentPage = pageNumber + 1;
+
+    if (isLastPage) io.disconnect();
   } catch (e) {
     console.error(e);
-    alert("システムエラーが発生しました。");
   } finally {
     isLoading = false;
-    if (loadingEl) loadingEl.classList.add("hidden");
+    loadingEl?.classList.toggle("hidden");
+    if (!isLastPage) io.observe(sentinelEl);
   }
 }
 
@@ -310,7 +334,7 @@ const io = new IntersectionObserver(
     if (!entries[0]?.isIntersecting) return;
     loadNextPage();
   },
-  { root: null, rootMargin: "300px 0px", threshold: 0 }
+  { root: null, rootMargin: "0px 0px", threshold: 0 }
 );
 io.observe(sentinelEl);
 

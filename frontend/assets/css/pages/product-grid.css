@@ -10,12 +10,17 @@
   margin-top: 20px;
   margin-bottom: 20px;
   gap: 6px;
+  align-items: center;
 }
 .product-list {
-  display: grid;
+  align-self: start;
   width: 100%;
+  overflow-anchor: none;
+  margin-bottom: 200px;
 }
 .listing-toolbar {
+  align-self: start;
+  height: fit-content;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   width: 100%;
@@ -84,6 +89,7 @@
   max-width: 1300px;
   margin: 0 auto;
   display: grid;
+  align-items: start;
   grid-template-columns: auto 1fr;
   gap: 24px;
 }

@@ -49,7 +49,7 @@ public class ProductReviewServiceImpl implements ProductReviewService{
         Product product = productRepository.findBySlugAndStatus(productSlug,ProductStatus.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("{error.product.slug.not-found}"));
 
-        User user = userRepository.findById(userId)
+            User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("{error.user.id.not-found}"));
         if (reviewRepository.existsByProductIdAndUserIdAndStatus(product.getId(), userId, ProductReviewStatus.ACTIVE)) {
             throw new BadRequestException("{error.review.product-user.already-exists}");

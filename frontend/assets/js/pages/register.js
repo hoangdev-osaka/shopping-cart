@@ -22,7 +22,8 @@ form.addEventListener("submit", async (e) => {
   errEl.textContent = "";
 
   const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("password").value.trim();
+  const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
   let hasError = false;
 
@@ -31,6 +32,12 @@ form.addEventListener("submit", async (e) => {
     hasError = true;
   } else if (!password) {
     errEl.textContent = "パスワードを入力してください。";
+    hasError = true;
+  } else if (confirmPassword !== password) {
+    errEl.textContent = "パスワードが一致しません。";
+    hasError = true;
+  } else if (password.length < 8) {
+    errEl.textContent = "パスワードは8文字以上で入力してください。";
     hasError = true;
   }
 
@@ -43,7 +50,7 @@ form.addEventListener("submit", async (e) => {
     const res = await fetch(`${API_BASE}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email: email, password: password }),
     });
 
     const data = await res.json().catch(() => null);

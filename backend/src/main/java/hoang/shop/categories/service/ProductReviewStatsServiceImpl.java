@@ -1,6 +1,8 @@
 package hoang.shop.categories.service;
 
+import hoang.shop.categories.model.Product;
 import hoang.shop.categories.model.ProductReviewStats;
+import hoang.shop.categories.repository.ProductRepository;
 import hoang.shop.categories.repository.ProductReviewStatsRepository;
 import hoang.shop.common.exception.BadRequestException;
 import hoang.shop.common.exception.NotFoundException;
@@ -15,8 +17,10 @@ import java.time.Instant;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
+public class ProductReviewStatsServiceImpl implements ProductReviewStatsService {
     private final ProductReviewStatsRepository statsRepository;
+    private final ProductRepository productRepository;
+
     @Override
     public void increaseRating(Long productId, int rating) {
         ProductReviewStats stats = statsRepository.findById(productId)
@@ -31,7 +35,7 @@ public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
             default -> throw new BadRequestException("{error.product-review-stats.bad-request}");
         }
         long totalScore =
-                        stats.getRating1() +
+                stats.getRating1() +
                         stats.getRating2() * 2 +
                         stats.getRating3() * 3 +
                         stats.getRating4() * 4 +
@@ -92,9 +96,12 @@ public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
         statsRepository.save(stats);
 
     }
+
     private ProductReviewStats createEmptyStats(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new NotFoundException("{error.product.id.not-found}"));
         return ProductReviewStats.builder()
-                .productId(productId)
+                .product(product)
                 .reviewCount(0)
                 .rating1(0)
                 .rating2(0)
@@ -103,6 +110,7 @@ public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
                 .rating5(0)
                 .build();
     }
+
     private void increaseBucket(ProductReviewStats stats, int rating) {
         switch (rating) {
             case 1 -> stats.setRating1(stats.getRating1() + 1L);
@@ -121,9 +129,10 @@ public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
             case 3 -> stats.setRating3(Math.max(0, stats.getRating3() - 1L));
             case 4 -> stats.setRating4(Math.max(0, stats.getRating4() - 1L));
             case 5 -> stats.setRating5(Math.max(0, stats.getRating5() - 1L));
-            default -> throw new  BadRequestException("{error.product-review-stats.bad-request}");
+            default -> throw new BadRequestException("{error.product-review-stats.bad-request}");
         }
     }
+
     private void recalculateAverage(ProductReviewStats stats) {
         long totalScore =
                 stats.getRating1() +
@@ -136,7 +145,7 @@ public class ProductReviewStatsServiceImpl implements ProductReviewStatsService{
             stats.setAverageRating(BigDecimal.valueOf(0));
         } else {
             stats.setAverageRating(
-                    BigDecimal.valueOf(totalScore).divide(BigDecimal.valueOf(stats.getReviewCount(),2),RoundingMode.HALF_UP));
+                    BigDecimal.valueOf(totalScore).divide(BigDecimal.valueOf(stats.getReviewCount(), 2), RoundingMode.HALF_UP));
         }
     }
 

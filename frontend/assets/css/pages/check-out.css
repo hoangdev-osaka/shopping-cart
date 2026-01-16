@@ -145,6 +145,7 @@
   color: rgba(0, 0, 0, 0.4);
 }
 .address-loading {
+  justify-self: center;
   margin: 50px auto;
 }
 .spinner {
@@ -289,8 +290,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
+  width: 80%;
   border-radius: 100px;
+  margin: 0 auto;
   height: 45px;
   background-color: #000;
   color: aliceblue;

@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ご注文完了</title>
     <link rel="stylesheet" href="/assets/css/main.css" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logo-16.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/logo-48.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   </head>
   <body>
-  <div class="top-bar">
+    <div id="app-header"></div>
+    <div class="top-bar">
       <p>今だけ！全品送料無料キャンペーン中 🎉</p>
     </div>
 
-    <header class="site-main">
+    <header class="header">
       <div class="header-inner">
         <div class="logo">
           <button class="hamburger-btn" data-action="toggle-categories-popup" aria-label="Open categories">
@@ -34,26 +35,10 @@
                   </svg>
                 </button>
               </header>
-              <main class="main-popup" id="categoriesItem">
-                <!-- <article class="category-item">
-                  <span class="category-item__name">メンズ</span>
-                  <span class="category-item__arrow">
-                    <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
-                      <path
-                        d="M9.5 6.5L15 12L9.5 17.5"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </article> -->
-              </main>
+              <main class="main-popup" id="categoriesItem"></main>
               <div class="divider"></div>
               <footer>
-                <a class="category-item" href="./pages/auth/register.html">
+                <a class="category-item" href="/pages/auth/register.html">
                   <span class="category-item__name">新規登録</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -68,7 +53,7 @@
                     </svg>
                   </span>
                 </a>
-                <a class="category-item" href="./pages/account/profile.html">
+                <a class="category-item" href="/pages/account/profile.html">
                   <span class="category-item__name">アカウント</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -83,7 +68,7 @@
                     </svg>
                   </span>
                 </a>
-                <a href="./pages/account/orders.html" class="category-item">
+                <a class="category-item" href="/pages/account/orders.html" class="category-item">
                   <span class="category-item__name">注文検索</span>
                   <span class="category-item__arrow">
                     <svg viewBox="0 0 24 24" width="35" height="35" aria-hidden="true">
@@ -105,27 +90,26 @@
           <a href="/index.html">
             <img class="logo_img" src="/assets/images/logoshop.png" alt="roll shop" />
           </a>
-          <form class="header-search">
-            <div class="header-search__box">
-              <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
-            </div>
-
-            <a class="search-btn" href="/pages/products/product-list.html" id="searchButton" type="submit">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </a>
-          </form>
         </div>
-
-        <section class="categories-list" id="categoriesList">
-        </section>
+        <!-- Categories 表示するところ -->
+        <section class="categories-list" id="categoriesList"></section>
 
         <nav class="header-actions">
-          <a href="/pages/auth/login.html" class="btn btn-outline btn-small">ログイン</a>
-          <a href="/pages/auth/register.html" class="btn btn-primary btn-small">ユーザー登録</a>
-
+          <button class="header-actions__search-btn" data-action="open-search-box">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
           <a href="/pages/cart/cart.html" class="cart-btn">
             <svg
               width="24"
@@ -144,23 +128,37 @@
             </svg>
             <span class="cart-badge" id="cartBadge">0</span>
           </a>
-
           <div class="right-header">
-            <button class="toggle-menu-btn" data-action="toggle-menu">
-              <img class="profile-image" src="/assets/images/default/image.png" alt="" />
+            <button class="user-menu" data-action="toggle-menu">
+              <img src="/assets/images/default/image.png" class="user-avatar" />
+              <span class="user-name" id="toastLogin">ログイン</span>
             </button>
             <div id="menuList" class="menu-list">
               <a class="popup-menu" href="/pages/account/orders.html">注文履歴</a>
               <a class="popup-menu" href="/pages/account/profile.html">アカウント</a>
-              <div class="cart-summary__divider"></div>
+              <a class="popup-menu" href="/pages/auth/login.html">ログイン</a>
 
+              <div class="cart-summary__divider"></div>
               <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
             </div>
           </div>
         </nav>
       </div>
-
-      <ul class="suggestions" id="suggestList"></ul>
+      <!-- search box -->
+      <div class="search-product" id="searchBox">
+        <form class="header-search" id="searchForm">
+          <div class="header-search__box">
+            <input class="header-search__input" id="searchInput" type="text" placeholder="検索..." autocomplete="off" a />
+          </div>
+          <button class="search-btn" type="submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+        <ul class="suggestions" id="suggestList"></ul>
+      </div>
     </header>
 
     <main>
@@ -257,8 +255,8 @@
             <div class="divider"></div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap">
-              <a class="complete-btn btn--primary" id="viewOrderBtn" href="/pages/account/orders.html">注文履歴を見る</a>
-              <a class="complete-btn" href="/pages/products/product-list.html">買い物を続ける</a>
+              <a class="complete-btn btn--primary btn-small" id="viewOrderBtn" href="/pages/account/orders.html">注文履歴を見る</a>
+              <a class="btn btn-outline btn-small" href="/pages/products/product-list.html">買い物を続ける</a>
             </div>
 
             <p class="muted" style="margin: 12px 0 0; font-size: 12px">※ このページはブックマークできます（注文番号で再表示）。</p>

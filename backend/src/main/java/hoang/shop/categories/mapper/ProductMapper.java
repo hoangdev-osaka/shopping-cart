@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        uses = {ColorMapper.class}, config = MapStructConfig.class)
+        uses = {ColorMapper.class,ProductReviewMapper.class}, config = MapStructConfig.class)
 public interface ProductMapper {
     @Mapping(target = "brandId", source = "product.brand.id")
     @Mapping(target = "brandName", source = "product.brand.name")

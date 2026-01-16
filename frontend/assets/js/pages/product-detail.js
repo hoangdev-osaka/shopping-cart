@@ -1,5 +1,6 @@
 import { API_BASE } from "../api/config.js";
 import { loadCartBadge } from "../core/render/loadCartBadge.js";
+import { createReview } from "../api/review.js";
 
 const token = localStorage.getItem("token");
 
@@ -7,14 +8,12 @@ const url = new URL(window.location.href);
 const slug = url.searchParams.get("slug");
 const colorId = url.searchParams.get("colorId");
 if (!slug) {
-  alert("商品が見つかりません。");
   throw new Error("Missing product slug");
 }
 const DEFAULT_IMG = "/assets/images/default/no-image.png";
 
 const nameEl = document.getElementById("productName");
 
-const mainImgEl = document.querySelector(".product-img__main img");
 const thumbWrapEl = document.querySelector(".product-img__thumbnails");
 
 const priceCurrentEl = document.querySelector(".price-current");
@@ -26,10 +25,86 @@ const sizeListEl = document.querySelector(".size-selector");
 const addToCartBtn = document.getElementById("addToCartBtn");
 const productDescriptionEl = document.getElementById("productDescription");
 const reviewListEl = document.getElementById("reviewList");
+const reviewForm = document.getElementById("reviewForm");
+const reviewToast = document.getElementById("errorMessage");
+const loginPopupEl = document.getElementById("loginPopup");
+const modal = document.getElementById("reviewModal");
 
 let currentProduct = null;
 let currentColor = null;
 let currentVariant = null;
+function openReviewModal() {
+  modal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeReviewModal() {
+  modal.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    closeReviewModal();
+  }
+});
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  switch (el.dataset.action) {
+    case "open-review-form":
+      openReviewModal();
+      break;
+    case "close-review":
+      closeReviewModal();
+      break;
+    case "login-popup-login":
+      window.location.href = "/pages/auth/login.html";
+      break;
+    case "login-popup-cancel":
+      loginPopupEl.classList.toggle("hidden");
+      break;
+  }
+});
+reviewForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const fd = new FormData(form);
+  const rating = Number(fd.get("rating") || 0);
+
+  if (rating <= 0) {
+    showToast("評価を選択してください");
+    return;
+  }
+
+  try {
+    const reviewData = await createReview(currentProduct.slug, fd);
+    showToast("レビューを送信しました");
+    form.reset();
+    ratingInput.value = "";
+    document.querySelectorAll(".rating-stars .star").forEach((s) => s.classList.remove("is-active"));
+    if (!reviewData) return;
+    renderReviewList([reviewData]);
+    closeReviewModal();
+  } catch {
+    showToast("レビュー送信に失敗しました");
+  }
+});
+function showToast(message) {
+  reviewToast.textContent = message;
+}
+const ratingInput = document.getElementById("ratingValue");
+
+document.addEventListener("click", (e) => {
+  const star = e.target.closest(".rating-stars .star");
+  if (!star) return;
+
+  const v = star.dataset.value;
+  ratingInput.value = v;
+
+  document.querySelectorAll(".rating-stars .star").forEach((s) => {
+    s.classList.toggle("is-active", Number(s.dataset.value) <= Number(v));
+  });
+});
 
 function formatYen(n) {
   const num = Number(n);
@@ -80,7 +155,6 @@ fetch(`${API_BASE}/api/products/${encodeURIComponent(slug)}`, {
   })
   .catch((e) => {
     console.error(e);
-    alert("システムエラーが発生しました。");
   });
 
 function renderProduct(product) {
@@ -172,7 +246,7 @@ function renderImages(images) {
     thumb.className = "product-img__thumbnail";
     bindImageFallback(thumb);
 
-    thumb.addEventListener("mousedown", (e) => e.preventDefault()); 
+    thumb.addEventListener("mousedown", (e) => e.preventDefault());
 
     thumb.addEventListener("click", () => {
       slide.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
@@ -181,7 +255,6 @@ function renderImages(images) {
     thumbWrapEl.appendChild(thumb);
   });
 }
-
 
 function renderSizes(variants) {
   sizeListEl.innerHTML = "";
@@ -252,12 +325,12 @@ function setBtnText(btn, text) {
 
 function syncAddToCartBtn() {
   if (!addToCartBtn) return;
-  addToCartBtn.disabled = !(token && currentVariant?.id);
+  addToCartBtn.disabled = !currentVariant?.id;
 }
 
 addToCartBtn?.addEventListener("click", async () => {
   const btn = addToCartBtn;
-  if (!btn || !token || !currentVariant?.id) return;
+  if (!btn || !currentVariant?.id) return;
 
   const baseTextEl = btn.querySelector(".btn-text");
   const baseText = baseTextEl ? baseTextEl.textContent.trim() : btn.textContent.trim();
@@ -284,6 +357,7 @@ addToCartBtn?.addEventListener("click", async () => {
       const err = await res.json().catch(() => null);
       console.log("ADD TO CART ERROR", res.status, err);
       setBtnText(btn, "失敗しました");
+      loginPopupEl.classList.toggle("hidden");
       return;
     }
 
@@ -357,8 +431,6 @@ function renderReviewList(reviews) {
     return;
   }
 
-  reviewListEl.innerHTML = "";
-
   if (!Array.isArray(reviews) || reviews.length === 0) {
     reviewListEl.innerHTML = `<p class="review-empty">まだレビューはありません。</p>`;
     return;
@@ -370,7 +442,7 @@ function renderReviewList(reviews) {
       const title = r?.title ?? "";
       const content = r?.content ?? "";
       const img = r?.imageUrl ? resolveImageUrl(r.imageUrl) : "";
-      const userName = r?.userName ?? "匿名";
+      const userName = r?.userEmail ?? "匿名";
       const date = formatDateJP(r?.createdAt);
 
       const imgHtml = img
@@ -379,17 +451,21 @@ function renderReviewList(reviews) {
         : "";
 
       return `
-        <article class="review-item">
+        <article class="review-item" data-review-id="${r.id}">
           <div class="review-item__header">
             <div class="review-item__meta">
-              <strong class="review-item__title">${title}</strong>
               <div class="review-item__sub">
+                <img class="review_item__avatar" src="${r.userAvatarUrl ? API_BASE + r.userAvatarUrl : "/assets/images/default/image.png"}">
                 <span class="review-item__user">${userName}</span>
-                <span class="review-item__date">${date}</span>
               </div>
+              <strong class="review-item__title">${title}</strong>
+            
             </div>
-            <div class="review-item__stars">
-              ${"★".repeat(rating)}${"☆".repeat(Math.max(0, 5 - rating))}
+            <div>
+              <div class="review-item__stars">
+                ${"★".repeat(rating)}${"☆".repeat(Math.max(0, 5 - rating))}
+              </div>
+              <div class="review-item__date">${date}</div>
             </div>
           </div>
           <p class="review-item__content">${content}</p>
@@ -401,3 +477,11 @@ function renderReviewList(reviews) {
 
   reviewListEl.insertAdjacentHTML("beforeend", html);
 }
+const fileInput = document.querySelector(".review-form__input-file");
+const btn = document.querySelector(".review-form__upload-btn");
+
+fileInput.addEventListener("change", () => {
+  if (fileInput.files.length > 0) {
+    btn.textContent = "✔ " + fileInput.files[0].name;
+  }
+});

@@ -15,6 +15,7 @@
   color: #dcdcdc;
   background-color: black;
 }
+
 .btn-text {
   background: none;
   border: none;
@@ -29,6 +30,7 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 .btn--link {
   display: inline-block;
   padding: 10px 16px;
@@ -52,6 +54,11 @@
 .btn-primary:hover:not(:disabled) {
   background-color: var(--color-primary-dark);
 }
+.btn-wrapper {
+  height: fit-content;
+  width: fit-content;
+  margin: 0 auto;
+}
 
 .btn-secondary {
   background-color: var(--color-secondary);
@@ -62,14 +69,34 @@
 }
 
 .btn-outline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 0;
   background-color: transparent;
   border: 2px solid var(--color-primary);
   color: var(--color-primary);
   white-space: nowrap;
 }
-.btn-outline:hover:not(:disabled) {
-  background-color: var(--color-primary);
-  color: #fff;
+
+.btn-outline::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #8a8a88;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.btn-outline:hover::before {
+  transform: scaleX(1);
 }
 
 .btn-danger {
@@ -79,15 +106,51 @@
 .btn-danger:hover:not(:disabled) {
   background-color: var(--color-danger-dark);
 }
-
+.btn-xs {
+  padding: 4px 10px;
+  font-size: 12px;
+}
 .btn-small {
   padding: calc(var(--space-xs) + 2px) var(--space-sm);
   font-size: var(--font-size-xs);
 }
-
+.btn-medium {
+  padding: 10px 18px;
+  font-size: 14px;
+}
 .btn-large {
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-md);
+}
+
+.btn-cancel {
+  min-width: 80px;
+  padding: 6px 14px;
+
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #f2f2f2;
+  color: #222;
+  border-color: #bbb;
+}
+
+.btn-cancel:active {
+  transform: scale(0.96);
+}
+
+.btn-cancel:focus-visible {
+  outline: 2px solid #222;
+  outline-offset: 2px;
 }
 
 .btn-full {
@@ -123,12 +186,6 @@
   border: 2px solid rgba(255, 255, 255, 0.6);
   border-top-color: rgba(255, 255, 255, 1);
   animation: btn-spin 0.7s linear infinite;
-}
-
-.btn-outline.btn-loading::after,
-.btn-secondary.btn-loading::after {
-  border-color: rgba(0, 0, 0, 0.2);
-  border-top-color: rgba(0, 0, 0, 0.5);
 }
 
 .btn-spinner {

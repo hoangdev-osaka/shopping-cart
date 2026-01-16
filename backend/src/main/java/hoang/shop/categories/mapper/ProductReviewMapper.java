@@ -17,9 +17,8 @@ public interface ProductReviewMapper {
     ProductReview toEntity(ProductReviewCreateRequest productReviewCreateRequest);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void merge(ProductReviewUpdateRequest productReviewUpdateRequest, @MappingTarget ProductReview productReview);
-    @Mapping(target = "userId",source = "review.user.id")
-    @Mapping(target = "userName",source = "review.user.fullName")
-    @Mapping(target = "userAvatarUrl",source = "review.user.avatarUrl")
+    @Mapping(target = "userEmail",source = "user.email")
+    @Mapping(target = "userAvatarUrl",source = "user.avatarUrl")
     ProductReviewResponse toResponse(ProductReview review);
 
 }

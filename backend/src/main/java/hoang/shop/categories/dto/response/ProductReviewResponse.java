@@ -8,8 +8,7 @@ public record ProductReviewResponse (
         String title,
         String content,
         String imageUrl,
-        Long userId,
-        String userName,
+        String userEmail,
         String userAvatarUrl,
         Instant createdAt,
         Instant updatedAt
