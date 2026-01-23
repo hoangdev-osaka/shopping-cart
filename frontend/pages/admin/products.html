@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <div>
+      <div class="dashboard-main">
+        <aside class="admin-sidebar">
+          <div class="admin-sidebar_header">
+            <img class="admin-sidebar_header-logo" src="/assets/images/logoshop.png" alt="" /> <span>oll Shop</span>
+          </div>
+          <nav class="admin-sidebar_nav">
+            <a class="admin-sidebar_nav-secondary" href="./dashboard.html"
+              ><svg class="sidebar-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M4 13.5a1.5 1.5 0 0 1 1.5-1.5H9a1.5 1.5 0 0 1 1.5 1.5V19A1.5 1.5 0 0 1 9 20.5H5.5A1.5 1.5 0 0 1 4 19v-5.5Z
+       M13.5 4A1.5 1.5 0 0 0 12 5.5V9a1.5 1.5 0 0 0 1.5 1.5H19A1.5 1.5 0 0 0 20.5 9V5.5A1.5 1.5 0 0 0 19 4h-5.5Z
+       M12 13.5a1.5 1.5 0 0 1 1.5-1.5H19a1.5 1.5 0 0 1 1.5 1.5V19A1.5 1.5 0 0 1 19 20.5h-5.5A1.5 1.5 0 0 1 12 19v-5.5Z
+       M4 5.5A1.5 1.5 0 0 1 5.5 4H9a1.5 1.5 0 0 1 1.5 1.5V9A1.5 1.5 0 0 1 9 10.5H5.5A1.5 1.5 0 0 1 4 9V5.5Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>ダッシュボード</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="./orders.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="4" y="3" width="16" height="18" rx="2" />
+                <path d="M8 7h8M8 11h8M8 15h6" />
+              </svg>
+              <span>注文管理</span></a
+            >
+            <a class="admin-sidebar_nav-main" href="./products.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                <path d="M3 7v10l9 4 9-4V7" />
+                <path d="M12 11v10" />
+              </svg>
+              <span>商品管理</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="./users.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 6h6l2 2h10v10a2 2 0 0 1-2 2H3z" />
+              </svg>
+              <span>カテゴリー管理</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="./users.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-label="ブランド管理"
+              >
+                <path d="M4 9l4 3 4-6 4 6 4-3v9H4V9z" />
+                <path d="M4 18h16" />
+              </svg>
+              <span>ブランド管理</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="./users.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M7 7h6l8 8-6 6-8-8z" />
+                <path d="M3 11h6l6 6-6 6-6-6z" />
+              </svg>
+              <span>タッグ管理</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="./users.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="8" cy="7" r="3" />
+                <circle cx="17" cy="7" r="2.5" />
+                <path d="M2 19c0-3 3-5.5 6-5.5" />
+                <path d="M12 19c0-2.5 2.5-4.5 5-4.5" />
+              </svg>
+              <span>ユーザー管理</span></a
+            >
+            <a class="admin-sidebar_nav-secondary" href="/index.html"
+              ><svg
+                class="sidebar-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 11l9-8 9 8" />
+                <path d="M5 10v10h14V10" />
+              </svg>
+              <span>ホーム</span></a
+            >
+          </nav>
+        </aside>
+
+        <aside class="dashboard-content">
+          <header class="dashboard-content_header">
+            <h3>Products</h3>
+            <select id="rangeFilter" class="filter-select">
+              <option value="LAST_7_DAYS">過去7日間</option>
+              <option value="TODAY">今日</option>
+              <option value="WTD">今週</option>
+              <option value="MTD">今月</option>
+              <option value="YTD">今年</option>
+            </select>
+          </header>
+
+          <main class="dashboard-content_main">
+            <section class="padmin">
+              <div class="padmin__card">
+                <div class="padmin__tableWrap" role="region" aria-label="Products table" tabindex="0">
+                  <table class="padminTable">
+                    <colgroup>
+                      <col style="width: 44px" />
+                      <col style="width: 44px" />
+                      <col />
+                      <col style="width: 86px" />
+                      <col style="width: 120px" />
+                      <col style="width: 75px" />
+                      <col style="width: 140px" />
+                      <col style="width: 120px" />
+                      <col style="width: 50px" />
+                    </colgroup>
+
+                    <thead class="padminTable__head">
+                      <tr class="padminTable__row">
+                        <th class="pcol pcol--checkbox">
+                          <input class="padminCheck" type="checkbox" aria-label="Select all products" />
+                        </th>
+                        <th class="pcol pcol--id">ID</th>
+                        <th class="pcol pcol--product">Product</th>
+                        <th class="pcol pcol--image">Image</th>
+                        <th class="pcol pcol--brand">Brand</th>
+                        <th class="pcol pcol--variants">Variants</th>
+                        <th class="pcol pcol--date">Date</th>
+                        <th class="pcol pcol--status">Status</th>
+                        <th class="pcol pcol--actions" aria-label="Actions"></th>
+                      </tr>
+                    </thead>
+
+                    <tbody class="padminTable__body" id="padminTable"></tbody>
+                  </table>
+                  <div class="address-loading" id="loading">
+                    <span class="spinner"></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="dashboard_right">
+              <aside class="dashboard_top">
+                <div class="dashboard_top-header">
+                  <div class="header_title">Overview</div>
+                </div>
+                <div class="dashboard_top-main">
+                  <aside class="overview-panel">
+                    <!-- Header -->
+                    <header class="overview-header">
+                      <div class="overview-name">アディダス ランニングシューズ</div>
+                      <div class="overview-sub">
+                        <span class="overview-id">#390561</span>
+                        <span class="dot">•</span>
+                        <span class="overview-stock">Stock <b>10</b></span>
+                      </div>
+                    </header>
+
+                    <!-- Variants -->
+                    <div class="overview-variants">
+                      <!-- Color block -->
+                      <section class="color-block">
+                        <!-- TOP: image + name -->
+                        <div class="color-top">
+                          <img class="color-image" src="/assets/images/default/no-image.png" alt="Black" />
+                          <div class="color-title">
+                            <div class="color-name">Black</div>
+                            <div class="color-hint">Sizes & stock</div>
+                          </div>
+                        </div>
+
+                        <!-- BOTTOM: size boxes -->
+                        <div class="size-grid">
+                          <div class="size-box is-ok">
+                            <div class="size-box-size">40</div>
+                            <div class="size-box-qty">5</div>
+                          </div>
+
+                          <div class="size-box is-low">
+                            <div class="size-box-size">41</div>
+                            <div class="size-box-qty">2</div>
+                          </div>
+
+                          <div class="size-box is-ok">
+                            <div class="size-box-size">42</div>
+                            <div class="size-box-qty">3</div>
+                          </div>
+
+                          <div class="size-box is-zero">
+                            <div class="size-box-size">43</div>
+                            <div class="size-box-qty">0</div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <!-- Color block -->
+                      <section class="color-block">
+                        <div class="color-top">
+                          <img class="color-image" src="/assets/images/default/no-image.png" alt="Blue" />
+                          <div class="color-title">
+                            <div class="color-name">Blue</div>
+                            <div class="color-hint">Sizes & stock</div>
+                          </div>
+                        </div>
+
+                        <div class="size-grid">
+                          <div class="size-box is-zero">
+                            <div class="size-box-size">41</div>
+                            <div class="size-box-qty">0</div>
+                          </div>
+
+                          <div class="size-box is-zero">
+                            <div class="size-box-size">42</div>
+                            <div class="size-box-qty">0</div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </aside>
+                </div>
+              </aside>
+            </section>
+          </main>
+        </aside>
+      </div>
+    </div>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script type="module" src="/assets/js/pages/admin-product.js"></script>
+  </body>
+</html>

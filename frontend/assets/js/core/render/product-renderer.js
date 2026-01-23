@@ -40,9 +40,9 @@ export function renderProducts(products, container, { append = false } = {}) {
 
     html += `
       <article class="cards" >
-        <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(p.slug)}&colorId=${encodeURIComponent(
+        <a class="card" href="/pages/products/product-detail.html?slug=${encodeURIComponent(p.slug)}&colorId=${encodeURIComponent(
       p.colorId
-    )}" class="card">
+    )}" >
           <div class="card-inner">
             <img 
               loading="lazy"
@@ -55,6 +55,7 @@ export function renderProducts(products, container, { append = false } = {}) {
               alt="${escapeHtml(p.name)}"
               onerror="this.onerror=null; this.src='${defaultImg}';"
             />
+            
           </div>
           <h3 class="card-title">${escapeHtml(p.name)}</h3>
           ${priceHtml}

@@ -14,6 +14,7 @@ const addressEl = document.querySelector(".address-confirm");
 const checkoutSummaryBody = document.querySelector(".checkout-summary__body");
 const priceTotal = document.querySelector(".price-total");
 const informationEmail = document.querySelector(".information__email");
+const welcomeEl = document.getElementById("welcome");
 loadDefaultAddress();
 loadCheckoutSummaryBody();
 loadInformationEmail();
@@ -80,6 +81,8 @@ async function loadInformationEmail() {
 
     const data = await res.json();
     informationEmail.innerHTML = `${data.email}`;
+    const name = data?.email?.split("@")[0];
+    welcomeEl.textContent = `こんにちは、${name}さん！`;
   } catch (e) {
     console.log("postal lookup failed", e);
   } finally {

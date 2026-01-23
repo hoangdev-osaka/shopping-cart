@@ -56,7 +56,6 @@ public class UserSession {
     private Instant revokedAt;
 
 
-
     public boolean isActive() {
         return revokedAt == null && Instant.now().isBefore(expiresAt);
     }

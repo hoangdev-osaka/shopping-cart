@@ -19,14 +19,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Setter @Getter
-@NoArgsConstructor @AllArgsConstructor
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 @EntityListeners(AuditingEntityListener.class)
 
 public class Order extends BaseEntity {
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
@@ -35,51 +37,53 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_number",unique = true)
+    @Column(name = "order_number", unique = true)
     private String orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_orders_users"))
     private User user;
 
-    @Column(name = "subtotal_amount",nullable = false,precision = 12,scale = 2)
+    @Column(name = "subtotal_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotalAmount;
 
-    @Column(name = "discount_amount",precision = 12,scale = 2)
+    @Column(name = "discount_amount", precision = 12, scale = 2)
     private BigDecimal discountAmount;
 
-    @Column(name = "shipping_fee",nullable = false,precision = 12,scale = 2)
+    @Column(name = "shipping_fee", nullable = false, precision = 12, scale = 2)
     private BigDecimal shippingFee;
 
-    @Column(name = "tax_amount",precision = 12,scale = 2)
+    @Column(name = "tax_amount", precision = 12, scale = 2)
     private BigDecimal taxAmount;
 
-    @Column(name = "grand_total",nullable = false,precision = 12,scale = 2)
+    @Column(name = "grand_total", nullable = false, precision = 12, scale = 2)
     private BigDecimal grandTotal;
 
     @Column(name = "order_status")
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.CREATED;
 
     @Column(name = "payment_status")
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
-    @Column(name = "payment_method",nullable = false)
+    @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
 
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "postal_code",nullable = false)
+    @Column(name = "postal_code", nullable = false)
     private String postalCode;
 
 
     @Column(nullable = false)
     private String phone;
 
-    @Column(name = "full_address",nullable = false)
+    @Column(name = "full_address", nullable = false)
     private String fullAddress;
 
     @Column(name = "placed_at")

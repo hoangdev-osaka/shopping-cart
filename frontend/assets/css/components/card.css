@@ -1,10 +1,8 @@
 .card {
-  align-self: start;
   position: relative;
   background: var(--color-bg-card);
   border-radius: var(--radius-md);
   display: flex;
-  align-self: start;
   flex-direction: column;
   padding-bottom: 6px;
   overflow: hidden;
@@ -13,6 +11,7 @@
   height: 480px;
   gap: 8px;
   flex-shrink: 0;
+  height: 100%;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -20,14 +19,17 @@
 }
 
 .card-title {
-  margin: 0px 10px;
-  font-size: 14px;
+  display: flex;
+  font-size: 18px;
   font-weight: 500;
   color: var(--color-text-main);
   white-space: normal;
   word-wrap: break-word;
-
-  min-width: 0;
+  align-items: center;
+}
+.card-filter_sum{
+  font-size: 15px;
+  font-weight: 400;
 }
 .card-price {
   display: flex;
@@ -61,8 +63,7 @@
   display: grid;
   align-self: start;
   justify-self: start;
-  width: fit-content;
-  height: fit-content;
+  height: 100%;
 }
 
 .card-inner {

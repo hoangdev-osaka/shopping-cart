@@ -113,14 +113,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            return;
+            throw new NotFoundException("{error.refresh-token.not.found}");
         }
         userSessionRepository
                 .findByRefreshTokenAndRevokedAtIsNullAndExpiresAtAfter(refreshToken, Instant.now())
-                .ifPresent(session -> {
-                    session.revoke();
-                    userSessionRepository.save(session);
-                });
+                .ifPresent(UserSession::revoke);
     }
 
     @Override
@@ -144,6 +141,40 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public AuthResponse refresh(String refreshToken) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+
+        Long userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UnauthorizedException("User not found"));
+        Collection<? extends GrantedAuthority> authorities = user.getUserRoles().stream()
+                .map(UserRole::getRole)
+                .map(Role::getName)
+                .map(name -> "ROLE_" + name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+        UserPrincipal principal = UserPrincipal.from(user, authorities);
+        Instant now = Instant.now();
+        String newAccess = jwtTokenProvider.generateAccessToken(principal);
+        String newRefresh = jwtTokenProvider.generateRefreshToken(user.getId());
+        Instant refreshExpiresAt = now.plusMillis(jwtTokenProvider.getRefreshTokenTtlMs());
+        UserSession session = UserSession.builder()
+                .user(user)
+                .refreshToken(refreshToken)
+                .device(null)
+                .ipAddress(null)
+                .createdAt(now)
+                .expiresAt(refreshExpiresAt)
+                .build();
+
+        userSessionRepository.save(session);
+        userRepository.save(user);
+        return new AuthResponse(newAccess, newRefresh, userMapper.toResponse(user));
+    }
+
+    @Override
     public void resetPassword(ResetPasswordRequest request) {
         PasswordResetToken resetToken = passwordResetTokenRepository
                 .findByTokenAndUsedAtIsNull(request.token())
@@ -159,29 +190,6 @@ public class AuthServiceImpl implements AuthService {
         resetToken.markUsed(now);
         passwordResetTokenRepository.save(resetToken);
         userSessionRepository.revokeAllActiveSessionsByUserId(user.getId(), now);
-    }
-
-    @Override
-    public AuthResponse refresh(String refreshToken) {
-        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
-            throw new UnauthorizedException("Invalid refresh token");
-        }
-
-        Long userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UnauthorizedException("User not found"));
-        Collection<? extends GrantedAuthority> authorities = user.getUserRoles().stream()
-                .map(UserRole::getRole)
-                .map(Role::getName)
-                .map(name -> "ROLE_" + name)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
-        UserPrincipal principal = UserPrincipal.from(user,authorities);
-
-        String newAccess = jwtTokenProvider.generateAccessToken(principal);
-        String newRefresh = jwtTokenProvider.generateRefreshToken(user.getId());
-
-        return new AuthResponse(newAccess, newRefresh, userMapper.toResponse(user));
     }
 
 

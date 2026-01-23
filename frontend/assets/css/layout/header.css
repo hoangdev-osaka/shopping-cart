@@ -329,9 +329,11 @@
 .btn-close {
   grid-column: 3;
   margin-right: 10px;
-  justify-self: end;
+  justify-items: center;
+  align-items: center;
   background: transparent;
   border: none;
+
   box-shadow: none;
   cursor: pointer;
 }

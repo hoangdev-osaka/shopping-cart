@@ -1,0 +1,221 @@
+/* =========================
+   Products Admin (isolated)
+   ========================= */
+
+/* scope tuyệt đối: KHÔNG đụng global */
+.padmin,
+.padmin *,
+.padmin *::before,
+.padmin *::after {
+  box-sizing: border-box;
+}
+
+.padmin {
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --head: #f7f8fa;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e6e8eb;
+  --row: #ffffff;
+  --rowHover: #fafafa;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --radius: 14px;
+
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+}
+
+/* topbar */
+.padmin__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+
+.padmin__title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.padmin__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.padmin__select {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #2f3137;
+  color: #fff;
+  font-weight: 700;
+  outline: none;
+}
+
+/* card + scroll container */
+.padmin__card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.padmin__tableWrap {
+  overflow: auto;
+  /* nếu bạn muốn sticky header khi scroll trong bảng, đặt max-height */
+  /* max-height: 520px; */
+}
+
+/* table */
+.padminTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed; /* chống lệch */
+  background: var(--bg);
+}
+
+.padminTable__head th {
+  position: sticky; /* sticky header đúng bài */
+  top: 0;
+  z-index: 2;
+  background: var(--head);
+  border-bottom: 1px solid var(--border);
+}
+
+.padminTable__row {
+  background: var(--row);
+}
+
+.padminTable__body .padminTable__row:hover {
+  background: var(--rowHover);
+}
+
+/* cells */
+.pcol,
+.pcell {
+  padding: 14px 14px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.pcol {
+  font-size: 14px;
+  font-weight: 800;
+  color: #4b5563;
+}
+.pcell {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* checkbox */
+.padminCheck {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* product name */
+.pnameBtn {
+  max-width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  color: #1a73e8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pnameBtn:hover {
+  text-decoration: underline;
+}
+
+/* image */
+.pthumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  background: #eee;
+}
+
+/* badge */
+.pbadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.pbadge--active {
+  background: #e6f4ea;
+  color: #1e8e3e;
+}
+
+.pbadge--inactive {
+  background: #fdecea;
+  color: #d93025;
+}
+
+/* actions button */
+.piconBtn {
+  border: none;
+  background: transparent;
+  padding: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.piconBtn:hover {
+  background: #f1f3f4;
+  color: #111;
+}
+
+/* utilities */
+.ptext-muted {
+  color: var(--muted);
+}
+.ptext-center {
+  text-align: center;
+}
+.ptext-right {
+  text-align: right;
+}
+.ptext-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+/* responsive: mobile ẩn bớt cột (tùy bạn) */
+@media (max-width: 820px) {
+  .pcol--brand,
+  .pcol--date {
+    display: none;
+  }
+}
+@media (max-width: 620px) {
+  .pcol--image,
+  .pcol--variants {
+    display: none;
+  }
+}

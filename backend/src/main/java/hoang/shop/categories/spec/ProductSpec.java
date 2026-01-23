@@ -39,6 +39,7 @@ public class ProductSpec {
                 .and(minPrice(condition.minPrice()))
                 .and(maxPrice(condition.maxPrice()))
                 .and(keywordLike(condition.keyword())
+                        .and(statusEq(ProductStatus.ACTIVE))
                 );
     }
 
@@ -61,10 +62,10 @@ public class ProductSpec {
     }
 
     private static Specification<Product> hasBrandSlugs(List<String> brandSlugs) {
-        return (root, query, cb) ->{
+        return (root, query, cb) -> {
             if (brandSlugs == null || brandSlugs.isEmpty()) return null;
             if (query != null) query.distinct(true);
-          return root.get("brand").get("slug").in(brandSlugs);
+            return root.get("brand").get("slug").in(brandSlugs);
         };
     }
 

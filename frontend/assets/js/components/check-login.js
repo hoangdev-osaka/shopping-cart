@@ -1,4 +1,5 @@
 import { API_BASE } from "../../js/api/config.js";
+import { refreshToken } from "../api/auth.js";
 const loginBtnEl = document.getElementById("loginBtn");
 const registerBtnEl = document.getElementById("registerBtn");
 const toastLoginEl = document.getElementById("toastLogin");
@@ -25,24 +26,8 @@ export async function checkLogin() {
     }
     return user;
   } catch {
+    refreshToken();
     return false;
   }
 }
-async function refreshToken() {
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/refresh`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-      },
-    });
 
-    if (!res.ok) return null;
-    const data = await res.json();
-    localStorage.setItem("token", data.accessToken);
-    console.log(JSON.stringify(data, null, 4));
-  } catch {
-    return null;
-  }
-}

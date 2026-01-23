@@ -7,6 +7,7 @@ import hoang.shop.categories.model.ProductColorImage;
 import hoang.shop.common.enums.ShippingRegion;
 import hoang.shop.common.enums.status.AddressStatus;
 import hoang.shop.common.enums.status.CartItemStatus;
+import hoang.shop.common.enums.status.ProductVariantStatus;
 import hoang.shop.identity.model.Address;
 import hoang.shop.identity.repository.AddressRepository;
 import hoang.shop.order.service.OrderService;
@@ -136,10 +137,11 @@ public class CartServiceImpl implements CartService {
 
         ProductVariant variant = productVariantRepository.findById(request.variantId())
                 .orElseThrow(() -> new NotFoundException("{error.product-variant.id.not-found}"));
-
+        // 足すしかできない
         if (request.quantity() == null || request.quantity() <= 0) {
             throw new BadRequestException("{error.cart-item.quantity.invalid}");
         }
+
         String nameLabel = variant.getColor().getProduct().getName()
                 + " " + variant.getColor().getName()
                 + " " + variant.getSize();
@@ -166,11 +168,14 @@ public class CartServiceImpl implements CartService {
         if (unitPriceAtOrder.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("{error.product-variant.price.invalid}");
         }
+
         CartItem item = cartItemRepository
                 .findByCart_IdAndProductVariant_IdAndStatus(cart.getId(), variant.getId(), CartItemStatus.ACTIVE)
                 .orElse(null);
+        Integer stock = variant.getStock();
         if (item == null) {
             BigDecimal lineTotal = unitPriceAtOrder.multiply(BigDecimal.valueOf(request.quantity()));
+            if (request.quantity() > stock) throw new BadRequestException("{error.product-variant.stock.invalid}");
             CartItem newItem = CartItem.builder()
                     .cart(cart)
                     .productVariant(variant)
@@ -190,6 +195,8 @@ public class CartServiceImpl implements CartService {
         } else {
             int oldLineTotalQuantity = item.getQuantity();
             int freshLineTotalQuantity = oldLineTotalQuantity + request.quantity();
+            if (freshLineTotalQuantity > stock) throw new BadRequestException("{error.product-variant.stock.invalid}");
+
             item.setUnitPriceAtOrder(unitPriceAtOrder);
             item.setUnitPriceBefore(variant.getRegularPrice());
             item.setQuantity(freshLineTotalQuantity);
@@ -216,6 +223,9 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new NotFoundException("error.cart.active.not-found"));
         CartItem item = cartItemRepository.findByCart_IdAndId(cart.getId(), itemId)
                 .orElseThrow(() -> new NotFoundException("{error.cart-item.id.not-found}"));
+        ProductVariant variant = productVariantRepository.findByIdAndStatus(item.getProductVariant().getId(), ProductVariantStatus.ACTIVE).orElseThrow(() -> new BadRequestException("{error.product-variant.id.not-found}"));
+        Integer stock = variant.getStock();
+        if (stock < request.quantity()) throw new BadRequestException("{error.product-variant.stock.invalid}");
         cartItemMapper.merge(request, item);
         cartItemRepository.save(item);
         item.recalculateLineTotals();
@@ -277,13 +287,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ShippingEstimateResponse estimate(Long userId, Long addressId) {
-        Address address = addressRepository.findByIdAndUser_IdAndStatus(addressId,userId, AddressStatus.ACTIVE)
-                .orElseThrow(()->new NotFoundException("{error.address.id.not-found}"));
+        Address address = addressRepository.findByIdAndUser_IdAndStatus(addressId, userId, AddressStatus.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("{error.address.id.not-found}"));
         ShippingRegion region = PREFECTURE_REGION_MAP.get(address.getPrefecture());
         int[] days = REGION_DAYS.getOrDefault(region, new int[]{2, 4});
         LocalDate from = LocalDate.now().plusDays(days[0]);
         LocalDate to = LocalDate.now().plusDays(days[1]);
-        return new ShippingEstimateResponse(from,to);
+        return new ShippingEstimateResponse(from, to);
     }
 
 

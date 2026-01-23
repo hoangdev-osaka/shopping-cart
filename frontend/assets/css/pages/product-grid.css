@@ -75,9 +75,8 @@
   position: sticky;
   background: var(--color-bg-body);
   padding: 10px;
+  margin-top: 10px;
   border-radius: 8px;
-  overflow-y: scroll;
-  top: 50px;
   height: 90vh;
 }
 .filter-panel.is-hidden {
@@ -85,7 +84,6 @@
 }
 
 .category-layout {
-  padding-top: 20px;
   max-width: 1300px;
   margin: 0 auto;
   display: grid;

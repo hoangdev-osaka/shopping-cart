@@ -17,7 +17,7 @@ public class JwtTokenProvider {
 
     private final String jwtSecret = "hoang-shopping-cart-super-secret-key-123";
 
-    private final long accessTokenTtlMs = 15 * 60 * 1000L;
+    private final long accessTokenTtlMs = 30 * 60 * 1000L;
 
     private final long refreshTokenTtlMs = 30 * 24 * 60 * 60 * 1000L;
 

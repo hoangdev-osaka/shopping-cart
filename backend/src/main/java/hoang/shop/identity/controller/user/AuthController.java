@@ -1,9 +1,6 @@
 package hoang.shop.identity.controller.user;
 
-import hoang.shop.identity.dto.request.ForgotPasswordRequest;
-import hoang.shop.identity.dto.request.LoginRequest;
-import hoang.shop.identity.dto.request.RegisterRequest;
-import hoang.shop.identity.dto.request.ResetPasswordRequest;
+import hoang.shop.identity.dto.request.*;
 import hoang.shop.identity.dto.response.AuthResponse;
 import hoang.shop.identity.dto.response.LoginResponse;
 import hoang.shop.identity.dto.response.UserResponse;
@@ -34,16 +31,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request, HttpServletResponse response) {
-        var user = authService.login(request);
-        String accessToken = user.accessToken();
+        AuthResponse user = authService.login(request);
         String refreshToken = user.refreshToken();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(Duration.ofDays(30))
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
@@ -51,8 +47,23 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout() {
-        authService.logout(null);
+    public ResponseEntity<Void> logout(
+            @CookieValue(name = "refresh_token", required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        authService.logout(refreshToken);
+
+        ResponseCookie deleteCookie = ResponseCookie
+                .from("refresh_token", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+
         return ResponseEntity.noContent().build();
     }
 
@@ -69,7 +80,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "refresh_token", required = false) String refreshToken,
+    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "refresh_token", required = false) String
+                                                        refreshToken,
                                                 HttpServletResponse response) {
         if (refreshToken == null || refreshToken.isBlank()) {
             return ResponseEntity.status(401).build();
@@ -79,7 +91,7 @@ public class AuthController {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", newTokens.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(Duration.ofDays(30))
                 .sameSite("None")

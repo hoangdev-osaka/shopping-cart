@@ -8,7 +8,15 @@ const section2 = document.getElementById("section2");
 
 const cards1 = section1.querySelectorAll(".categories-item__card--left1, .categories-item__card--right1");
 const cards2 = section2.querySelectorAll(".categories-item__card--left2, .categories-item__card--right2");
+const row = document.getElementById("productHotSale");
 
+document.getElementById("next").onclick = () => {
+  row.scrollBy({ left: 600, behavior: "smooth" });
+};
+
+document.getElementById("prev").onclick = () => {
+  row.scrollBy({ left: -600, behavior: "smooth" });
+};
 window.addEventListener("load", () => {
   document.querySelector(".hero-section")?.classList.add("is-visible");
 });

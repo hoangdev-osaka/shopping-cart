@@ -1,6 +1,7 @@
 import { API_BASE } from "../../js/api/config.js";
 import { loadCartBadge } from "../core/render/loadCartBadge.js";
 import { checkLogin } from "../components/check-login.js";
+import { logout } from "../api/auth.js";
 
 const suggestBox = document.getElementById("suggestList");
 const searchInput = document.getElementById("searchInput");
@@ -42,11 +43,22 @@ document.addEventListener("click", async (e) => {
       break;
     }
     case "logout":
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      sessionStorage.clear();
-      window.location.replace("/pages/auth/login.html");
+      try {
+        await logout();
+      } catch (e) {
+        console.error(e.status);
+        console.error(e.body);
+      } finally {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        sessionStorage.clear();
+        location.href = "/pages/auth/login.html";
+      }
       break;
+      case "open-admin-dashboard":{
+        location.href = "/pages/admin/dashboard.html";
+        break;
+      }
   }
 });
 searchFormEl.addEventListener("submit", (e) => {

@@ -46,3 +46,40 @@ export async function login(email, password) {
     if (errorEl && !errorEl.textContent) setError(systemMsg);
   }
 }
+export async function logout() {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      const err = new Error("error: logout");
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+export async function refreshToken() {
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    localStorage.setItem("token", data.accessToken);
+    console.log(JSON.stringify(data, null, 4));
+  } catch (e) {
+    console.log(e);
+  }
+}

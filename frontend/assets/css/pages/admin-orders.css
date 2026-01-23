@@ -1,0 +1,44 @@
+
+
+.admin-orders_main {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.order-row {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  min-height: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+}
+.order-row:hover {
+  background-color: white;
+}
+
+
+
+.admin-orders_name,
+.admin-orders_content {
+  display: flex;
+  width: 100px;
+  font-size: 14px;
+}
+.admin-orders_content-btn {
+  position: absolute;
+  display: flex;
+  right: 50px;
+  justify-self: center;
+  align-self: center;
+  align-items: center;
+  justify-items: center;
+  border: none;
+  background-color: transparent;
+}
+.admin-orders_title-name,
+.admin-orders_name {
+  width: 300px;
+}

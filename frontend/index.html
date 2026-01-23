@@ -144,6 +144,7 @@
 
               <div class="cart-summary__divider"></div>
               <button class="btn-text popup-menu" data-action="logout">ログアウト</button>
+              <button class="btn-text popup-menu" data-action="open-admin-dashboard">管理画面</button>
             </div>
           </div>
         </nav>
@@ -259,23 +260,36 @@
 
         <hr />
         <h2>人気商品</h2>
-        <section class="product-row" id="productHotSale">
-          <!-- <a href="/pages/products/product-detail.html" class="card">
-            <img src="/assets/image/default/no-image.png" class="card-img" />
-  
-            <h3 class="card-title">No Content</h3>
-            <div class="card-rating">
-              <span class="stars"></span>
-              <span class="rating-count"></span>
-            </div>
-  
-            <div v class="card-price">
-              <span id="priceCurrent">19999¥</span>
-              <span id="priceOld">25000¥</span>
-              <span class="discount-percent">| -20% OFF</span>
-            </div>
-          </a> -->
+        <section class="list-product__recoment">
+          <button class="prev-left" id="prev">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="product-row" id="productHotSale">
+            <!-- <a href="/pages/products/product-detail.html" class="card">
+              <img src="/assets/image/default/no-image.png" class="card-img" />
+    
+              <h3 class="card-title">No Content</h3>
+              <div class="card-rating">
+                <span class="stars"></span>
+                <span class="rating-count"></span>
+              </div>
+    
+              <div v class="card-price">
+                <span id="priceCurrent">19999¥</span>
+                <span id="priceOld">25000¥</span>
+                <span class="discount-percent">| -20% OFF</span>
+              </div>
+            </a> -->
+          </div>
+          <button class="next-right" id="next">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </section>
+
         <hr />
         <h2>NEW</h2>
         <section class="product-row" id="productNew"></section>

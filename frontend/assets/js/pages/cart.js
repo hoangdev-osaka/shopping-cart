@@ -14,6 +14,7 @@ const elTaxAmount = document.getElementById("taxFee");
 const elTotal = document.getElementById("cartTotal");
 const elCheckoutBtn = document.getElementById("checkoutBtn");
 const loadingEl = document.getElementById("loading");
+const cartAlert = document.getElementById("cartAlert");
 
 function yen(n) {
   const v = Number(n);
@@ -133,7 +134,7 @@ function renderCart(cart) {
 async function loadCart() {
   const user = await checkLogin();
   if (!user) {
-    document.getElementById("cartAlert").textContent = "ログインしてください！";
+    cartAlert.textContent = "ログインしてください！";
 
     showState({ empty: true });
     elCheckoutBtn.disabled = true;
@@ -175,21 +176,28 @@ async function loadCart() {
 async function updateQty(cartItemId, newQty) {
   const qty = Math.max(1, Number(newQty || 1));
 
-  const { res, raw } = await fetchText(`${API_BASE}/api/my-cart/items/${cartItemId}`, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ quantity: qty }),
-  });
+  try {
+    const { res, raw } = await fetchText(`${API_BASE}/api/my-cart/items/${cartItemId}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ quantity: qty }),
+    });
 
-  if (!res.ok) {
-    console.log("UPDATE QTY ERROR", raw);
+    if (!res.ok) {
+      console.log("UPDATE QTY ERROR", raw);
+      throw new Error();
+    }
+    return true;
+  } catch (e) {
+    loadCart();
+    cartAlert.textContent = "在庫数を超えています";
+
     return false;
   }
-  return true;
 }
 
 async function removeItem(cartItemId) {
@@ -220,18 +228,31 @@ elList?.addEventListener("click", async (e) => {
   const input = itemEl.querySelector('.cart-qty__input[data-action="input"]');
   if (!input) return;
 
-  if (action === "inc") {
-    const next = Number(input.value || 1) + 1;
-    input.value = String(next);
-    const ok = await updateQty(itemId, next);
-    if (ok) loadCart();
-  }
+  const min = Number(input.min || 1);
+  const max = Number(input.max || 999999);
 
-  if (action === "dec") {
-    const next = Math.max(1, Number(input.value || 1) - 1);
+  const clamp = (v) => Math.min(Math.max(v, min), max);
+
+  if (action === "inc" || action === "dec") {
+    const cur = Number(input.value || min);
+    const rawNext = action === "inc" ? cur + 1 : cur - 1;
+    const next = clamp(rawNext);
+
+    if (next === cur) {
+      return;
+    }
+
     input.value = String(next);
+
     const ok = await updateQty(itemId, next);
-    if (ok) loadCart();
+
+    if (!ok) {
+      input.value = String(cur);
+      return;
+    }
+
+    loadCart();
+    return;
   }
 
   if (action === "remove") {
