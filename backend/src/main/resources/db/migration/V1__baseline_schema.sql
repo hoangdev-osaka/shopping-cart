@@ -1,8 +1,4 @@
-START TRANSACTION;
-CREATE DATABASE IF NOT EXISTS shopping_cart;
-USE shopping_cart;
 
-SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -321,15 +317,15 @@ CREATE TABLE `orders` (
   `currency` char(3) NOT NULL DEFAULT 'JPY',
   `full_address` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `order_status` tinyint DEFAULT NULL,
-  `payment_status` tinyint DEFAULT NULL,
+  `order_status` varchar(20) DEFAULT NULL,
+  `payment_status` varchar(20) DEFAULT NULL,
   `note` varchar(500) DEFAULT NULL,
   `paid_at` datetime(6) DEFAULT NULL,
   `shipped_at` datetime DEFAULT NULL,
   `delivered_at` datetime DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
   `placed_at` datetime(6) DEFAULT NULL,
-  `payment_method` tinyint DEFAULT NULL,
+  `payment_method` varchar(20) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL,
   `created_by` bigint DEFAULT NULL,
@@ -491,5 +487,3 @@ CREATE TABLE `user_sessions` (
   CONSTRAINT `FK8klxsgb8dcjjklmqebqp1twd5` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-SET FOREIGN_KEY_CHECKS = 1;
-COMMIT;

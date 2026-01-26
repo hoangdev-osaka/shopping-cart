@@ -70,6 +70,7 @@ public class Order extends BaseEntity {
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @Column(name = "payment_method", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
 
