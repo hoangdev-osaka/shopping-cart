@@ -1,2 +1,2 @@
-export const API_BASE = "http://localhost:8080";
+export const API_BASE = "https://api.hoangdev.com";
 console.log("[CONFIG] API_BASE =", API_BASE);
