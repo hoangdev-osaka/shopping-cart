@@ -55,10 +55,10 @@ document.addEventListener("click", async (e) => {
         location.href = "/pages/auth/login.html";
       }
       break;
-      case "open-admin-dashboard":{
-        location.href = "/pages/admin/dashboard.html";
-        break;
-      }
+    case "open-admin-dashboard": {
+      location.href = "/pages/admin/dashboard.html";
+      break;
+    }
   }
 });
 searchFormEl.addEventListener("submit", (e) => {
@@ -108,11 +108,29 @@ searchInput.addEventListener("input", async function () {
 
   products.slice(0, 6).forEach((item) => {
     const li = document.createElement("li");
+    let price = 0;
+    if (item.salePrice === 0 || !item.salePrice) {
+      price = item?.regularPrice;
+    } else {
+      price = item?.salePrice;
+    }
+    let status = "";
+    if (item.inStock) {
+      status = "商品は在庫があり";
+    } else {
+      status = "商品売り切れ";
+    }
 
     li.innerHTML = `
-      <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(item.slug)}" class = suggest__inner>  
+      <a href="/pages/products/product-detail.html?slug=${encodeURIComponent(item.slug)}" class = "suggest__inner">  
         <img src="${API_BASE}${item.imageUrl || "/uploads/default/no-image.png"}">
         <span class="suggest__name">${item.name}</span>
+        <div class="suggest__consummer">
+          <div>${formatJst(item.createdAt)}</div>
+          <div>${yen(price)}</div>
+          <div>${status}</div>
+        </div>
+
       </a>`;
 
     suggestBox.appendChild(li);
@@ -183,4 +201,24 @@ if (user) {
         break;
     }
   });
+}
+function formatJst(value) {
+  if (!value) return "-";
+
+  const d = value instanceof Date ? value : new Date(value);
+
+  if (isNaN(d.getTime())) return "-";
+
+  return d.toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    });
+}
+
+function yen(n) {
+  const v = Number(n);
+  if (!v) return `無料`;
+  return `¥${v.toLocaleString()}`;
 }

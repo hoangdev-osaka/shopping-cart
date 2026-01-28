@@ -1,6 +1,8 @@
 package hoang.shop.categories.dto.response;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+
 public record ProductListItemResponse(
         Long id,
         Long colorId,
@@ -21,7 +23,7 @@ public record ProductListItemResponse(
         Long reviewCount,
 
         String imageUrl,
-
+        Instant createdAt,
         boolean inStock
 ) {
 }

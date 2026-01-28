@@ -37,8 +37,7 @@ public interface ProductMapper {
     @Mapping(target = "averageRating",source = "stats.averageRating")
     @Mapping(target = "reviewCount",source = "stats.reviewCount")
     @Mapping(target = "imageUrl", expression = "java(toDefaultImageUrl(product))")
-
-
+    @Mapping(target = "createdAt", source = "product.createdAt")
     ProductListItemResponse toListItemResponse(Product product,ProductReviewStats stats);
 
 

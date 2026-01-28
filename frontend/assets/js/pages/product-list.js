@@ -302,7 +302,6 @@ async function loadNextPage() {
       return;
     }
 
-    await sleep(500);
 
     renderProducts(items, productListEl, { append: true });
 

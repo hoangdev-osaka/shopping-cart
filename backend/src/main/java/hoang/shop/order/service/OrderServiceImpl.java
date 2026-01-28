@@ -247,6 +247,7 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 price = cartItem.getProductVariant().getSalePrice();
             }
+            System.out.println(price);
             BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
             subtotalAmount = subtotalAmount.add(lineTotal);
@@ -274,7 +275,7 @@ public class OrderServiceImpl implements OrderService {
                 .subtract(discountAmount);
 
         BigDecimal taxAmount = taxableBase.multiply(taxRate);
-        BigDecimal grandTotal = taxableBase.add(taxAmount).add(shippingFee);
+        BigDecimal grandTotal = taxableBase.add(shippingFee).add(taxAmount);
         String name = address.getLastName() + " " + address.getFirstName();
 
         Order order = Order.builder()

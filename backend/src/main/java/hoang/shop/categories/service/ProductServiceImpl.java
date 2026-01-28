@@ -190,6 +190,7 @@ public class ProductServiceImpl implements ProductService {
                             base.averageRating(),
                             base.reviewCount(),
                             imgUrl,
+                            base.createdAt(),
                             productInStock
 
                     );
@@ -245,6 +246,7 @@ public class ProductServiceImpl implements ProductService {
                             base.averageRating(),
                             base.reviewCount(),
                             imgUrl,
+                            base.createdAt(),
                             productInStock
 
                     );

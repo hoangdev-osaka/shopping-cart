@@ -3,3 +3,6 @@ spring:
     url: jdbc:mysql://localhost:3306/shopping_cart
     username: ${DB_USER}
     password: ${DB_PASS}
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE

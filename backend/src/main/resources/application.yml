@@ -36,7 +36,3 @@ springdoc:
 file:
   upload-dir: ${FILE_UPLOAD_DIR:uploads}
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE

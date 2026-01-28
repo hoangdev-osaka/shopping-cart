@@ -279,7 +279,7 @@ elCheckoutBtn?.addEventListener("click", async () => {
   elCheckoutBtn.classList.add("loading");
   elCheckoutBtn.disabled = true;
 
-  await wait(700);
+  await wait(100);
 
   elCheckoutBtn.classList.remove("loading");
   elCheckoutBtn.disabled = false;
